@@ -267,7 +267,7 @@ const ProductDetail = () => {
             </div>
 
             <div className="space-y-6">
-              <div className="text-2xl text-foreground" data-testid="text-price">€{product.price.toFixed(2)}</div>
+              <div className="text-2xl text-foreground" data-testid="text-price">₹{product.price.toFixed(2)}</div>
               <h1 className="font-heading text-4xl md:text-5xl text-foreground" data-testid="text-product-name">{product.name}</h1>
               <p className="text-muted-foreground text-lg" data-testid="text-description">{product.description}</p>
 
@@ -438,7 +438,7 @@ const ProductDetail = () => {
                   </div>
                   <div className="text-center">
                     <h3 className="font-heading text-xl mb-1 text-foreground">{prod.name}</h3>
-                    <span className="text-muted-foreground">€{prod.price.toFixed(2)}</span>
+                    <span className="text-muted-foreground">₹{prod.price.toFixed(2)}</span>
                   </div>
                 </Link>
               ))}

@@ -291,7 +291,7 @@ const HeroSection = () => {
                             <p className="text-sm text-gray-500">
                               {typeof product.price === "number" &&
                               product.price > 0
-                                ? `€${product.price.toFixed(2)}`
+                                ? `₹${product.price.toFixed(2)}`
                                 : typeof product.price === "string" &&
                                     product.price
                                   ? product.price

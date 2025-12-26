@@ -571,7 +571,7 @@ const Account = () => {
                                 </p>
                               </div>
                               <div className="text-right">
-                                <p className="font-medium">{order.total.toFixed(2)} EUR</p>
+                                <p className="font-medium">₹{order.total.toFixed(2)}</p>
                                 <span className={`inline-block px-2 py-0.5 text-xs rounded-full ${getStatusColor(order.status)}`}>
                                   {order.status}
                                 </span>
@@ -611,7 +611,7 @@ const Account = () => {
                                 />
                               </div>
                               <p className="text-sm font-medium truncate">{item.name}</p>
-                              <p className="text-sm text-muted-foreground">{item.price.toFixed(2)} EUR</p>
+                              <p className="text-sm text-muted-foreground">₹{item.price.toFixed(2)}</p>
                             </Link>
                           ))}
                         </div>
@@ -665,7 +665,7 @@ const Account = () => {
                                 </p>
                               </div>
                               <div className="text-right">
-                                <p className="text-2xl font-bold">{order.total.toFixed(2)} EUR</p>
+                                <p className="text-2xl font-bold">₹{order.total.toFixed(2)}</p>
                                 <p className="text-sm text-muted-foreground">{order.items?.length || 0} items</p>
                               </div>
                             </div>
@@ -733,7 +733,7 @@ const Account = () => {
                                     >
                                       {item.name}
                                     </Link>
-                                    <p className="text-lg font-semibold mt-1">{item.price.toFixed(2)} EUR</p>
+                                    <p className="text-lg font-semibold mt-1">₹{item.price.toFixed(2)}</p>
                                   </div>
                                   <Button 
                                     variant="ghost" 

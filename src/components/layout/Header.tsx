@@ -130,9 +130,9 @@ const Header = () => {
     }));
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("de-DE", {
+    return new Intl.NumberFormat("en-IN", {
       style: "currency",
-      currency: "EUR",
+      currency: "INR",
     }).format(price);
   };
 

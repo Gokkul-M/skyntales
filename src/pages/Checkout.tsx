@@ -76,10 +76,10 @@ const Checkout = () => {
   // Validate location and calculate shipping
   const isLocationValid = validateLocation(shippingInfo.city, shippingInfo.state, shippingInfo.zipCode, shippingInfo.country);
   const shipping = isLocationValid ? calculateShippingCost(shippingInfo.state) : 0;
-  const shippingInEUR = shipping > 0 ? (shipping / 100).toFixed(2) : "0.00"; // Convert INR to EUR (simplified: 100 INR ≈ 1.2 EUR, but using direct value for now)
+  const shippingCost = shipping;
   
   const tax = subtotal * 0.1;
-  const total = subtotal + parseFloat(shippingInEUR) + tax;
+  const total = subtotal + shippingCost + tax;
 
   const handleShippingChange = (field: string, value: string) => {
     const updatedInfo = { ...shippingInfo, [field]: value };
@@ -156,7 +156,7 @@ const Checkout = () => {
         },
         paymentMethod,
         subtotal,
-        shippingCost: parseFloat(shippingInEUR),
+        shippingCost: shippingCost,
         shippingCostINR: shipping,
         tax,
         total,
@@ -448,7 +448,7 @@ const Checkout = () => {
                           {isProcessing ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
                           ) : (
-                            `Place Order - ${total.toFixed(2)} EUR`
+                            `Place Order - ₹${total.toFixed(2)}`
                           )}
                         </Button>
                       </div>
@@ -476,7 +476,7 @@ const Checkout = () => {
                         <p className="text-xs text-muted-foreground">
                           Qty: {item.quantity}
                         </p>
-                        <p className="text-sm">{(item.price * item.quantity).toFixed(2)} EUR</p>
+                        <p className="text-sm">₹{(item.price * item.quantity).toFixed(2)}</p>
                       </div>
                     </div>
                   ))}
@@ -486,12 +486,12 @@ const Checkout = () => {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Subtotal</span>
-                      <span>{subtotal.toFixed(2)} EUR</span>
+                      <span>₹{subtotal.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Shipping</span>
                       <div className="text-right">
-                        <span data-testid="text-shipping-cost">{parseFloat(shippingInEUR) === 0 ? "Not calculated" : `${shippingInEUR} EUR (₹${shipping})`}</span>
+                        <span data-testid="text-shipping-cost">{shippingCost === 0 ? "Not calculated" : `₹${shippingCost}`}</span>
                         {isLocationValid && (
                           <p className="text-xs text-muted-foreground mt-1">
                             {shippingInfo.state.toLowerCase().includes("tamil") ? "Tamil Nadu" : "Outside Tamil Nadu"}
@@ -501,7 +501,7 @@ const Checkout = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Tax</span>
-                      <span>{tax.toFixed(2)} EUR</span>
+                      <span>₹{tax.toFixed(2)}</span>
                     </div>
                   </div>
                   
@@ -509,7 +509,7 @@ const Checkout = () => {
                   
                   <div className="flex justify-between font-medium">
                     <span>Total</span>
-                    <span data-testid="text-total">{total.toFixed(2)} EUR</span>
+                    <span data-testid="text-total">₹{total.toFixed(2)}</span>
                   </div>
                   
                   {!isLocationValid && (

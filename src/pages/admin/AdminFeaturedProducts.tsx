@@ -227,7 +227,7 @@ const AdminFeaturedProducts = () => {
                                   <Badge variant="secondary" className="text-xs">{item.productCategory}</Badge>
                                 )}
                                 <Badge variant="secondary" className="text-xs">
-                                  €{item.productPrice?.toFixed(2) || '0.00'}
+                                  ₹{item.productPrice?.toFixed(2) || '0.00'}
                                 </Badge>
                               </div>
                             </div>
@@ -337,7 +337,7 @@ const AdminFeaturedProducts = () => {
                       <div className="flex-1 min-w-0">
                         <span className="text-sm font-medium truncate block">{product.name}</span>
                         <span className={`text-xs ${selectedProduct?.id === product.id ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
-                          {product.category} • €{product.price.toFixed(2)}
+                          {product.category} • ₹{product.price.toFixed(2)}
                         </span>
                       </div>
                     </button>
@@ -350,7 +350,7 @@ const AdminFeaturedProducts = () => {
                   <p className="text-xs text-muted-foreground mb-1">Selected:</p>
                   <p className="text-sm font-medium">{selectedProduct.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    {selectedProduct.category} • €{selectedProduct.price.toFixed(2)}
+                    {selectedProduct.category} • ₹{selectedProduct.price.toFixed(2)}
                   </p>
                 </div>
               )}

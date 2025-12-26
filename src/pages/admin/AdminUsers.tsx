@@ -152,7 +152,7 @@ const AdminUsers = () => {
                   <DollarSign className="text-blue-600 dark:text-blue-400" size={24} />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-foreground">{totalRevenue.toFixed(2)} EUR</p>
+                  <p className="text-2xl font-bold text-foreground">₹{totalRevenue.toFixed(2)}</p>
                   <p className="text-sm text-muted-foreground">Total Revenue</p>
                 </div>
               </div>
@@ -221,7 +221,7 @@ const AdminUsers = () => {
                             </div>
                           </td>
                           <td className="py-4 px-4 text-foreground">{user.orderCount || 0}</td>
-                          <td className="py-4 px-4 font-medium text-foreground">{(user.totalSpent || 0).toFixed(2)} EUR</td>
+                          <td className="py-4 px-4 font-medium text-foreground">₹{(user.totalSpent || 0).toFixed(2)}</td>
                           <td className="py-4 px-4">
                             <Badge variant="secondary" className={
                               user.status === "Active" 
@@ -306,7 +306,7 @@ const AdminUsers = () => {
                                 {user.orderCount || 0} orders
                               </span>
                               <span className="text-sm font-medium">
-                                {(user.totalSpent || 0).toFixed(2)} EUR
+                                ₹{(user.totalSpent || 0).toFixed(2)}
                               </span>
                             </div>
                           </div>
@@ -378,7 +378,7 @@ const AdminUsers = () => {
                     <CardContent className="p-4 text-center">
                       <DollarSign className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
                       <p className="text-2xl font-bold text-foreground">{(selectedUser.totalSpent || 0).toFixed(2)}</p>
-                      <p className="text-xs text-muted-foreground">Total Spent (EUR)</p>
+                      <p className="text-xs text-muted-foreground">Total Spent (₹)</p>
                     </CardContent>
                   </Card>
                 </div>

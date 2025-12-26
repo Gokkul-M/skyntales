@@ -192,7 +192,7 @@ const AdminOrders = () => {
                 <CheckCircle className="text-green-600 dark:text-green-400" size={20} />
               </div>
               <div className="min-w-0">
-                <p className="text-xl font-bold text-foreground truncate" data-testid="text-revenue">{totalRevenue.toFixed(2)} EUR</p>
+                <p className="text-xl font-bold text-foreground truncate" data-testid="text-revenue">₹{totalRevenue.toFixed(2)}</p>
                 <p className="text-xs text-muted-foreground">Revenue</p>
               </div>
             </CardContent>
@@ -262,7 +262,7 @@ const AdminOrders = () => {
                             <p className="text-xs text-muted-foreground truncate max-w-[200px]">{order.userEmail}</p>
                           </td>
                           <td className="py-4">{order.items.length} items</td>
-                          <td className="py-4 font-semibold">{order.total.toFixed(2)} EUR</td>
+                          <td className="py-4 font-semibold">₹{order.total.toFixed(2)}</td>
                           <td className="py-4">
                             <Badge variant="secondary" className={`${getStatusColor(order.status)} gap-1`}>
                               {getStatusIcon(order.status)}
@@ -329,7 +329,7 @@ const AdminOrders = () => {
                           </div>
                           <div className="flex justify-between">
                             <span className="text-muted-foreground">Total</span>
-                            <span className="font-semibold">{order.total.toFixed(2)} EUR</span>
+                            <span className="font-semibold">₹{order.total.toFixed(2)}</span>
                           </div>
                         </div>
                         <Separator className="my-3" />
@@ -427,7 +427,7 @@ const AdminOrders = () => {
                             <p className="font-medium truncate">{item.name}</p>
                             <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
                           </div>
-                          <p className="font-semibold">{(item.price * item.quantity).toFixed(2)} EUR</p>
+                          <p className="font-semibold">₹{(item.price * item.quantity).toFixed(2)}</p>
                         </div>
                       ))}
                     </div>
@@ -437,20 +437,20 @@ const AdminOrders = () => {
                     <CardContent className="p-4 space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Subtotal</span>
-                        <span>{selectedOrder.subtotal.toFixed(2)} EUR</span>
+                        <span>₹{selectedOrder.subtotal.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Shipping</span>
-                        <span>{selectedOrder.shippingCost === 0 ? "Free" : `${selectedOrder.shippingCost.toFixed(2)} EUR`}</span>
+                        <span>{selectedOrder.shippingCost === 0 ? "Free" : `₹${selectedOrder.shippingCost.toFixed(2)}`}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Tax</span>
-                        <span>{selectedOrder.tax.toFixed(2)} EUR</span>
+                        <span>₹{selectedOrder.tax.toFixed(2)}</span>
                       </div>
                       <Separator />
                       <div className="flex justify-between font-semibold text-lg">
                         <span>Total</span>
-                        <span>{selectedOrder.total.toFixed(2)} EUR</span>
+                        <span>₹{selectedOrder.total.toFixed(2)}</span>
                       </div>
                     </CardContent>
                   </Card>

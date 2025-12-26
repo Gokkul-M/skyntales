@@ -139,7 +139,7 @@ const SearchPopup = ({ open, onOpenChange }: SearchPopupProps) => {
                       </div>
                       <div>
                         <h4 className="font-medium text-foreground">{product.name}</h4>
-                        <p className="text-sm text-muted-foreground">€{product.price.toFixed(2)}</p>
+                        <p className="text-sm text-muted-foreground">₹{product.price.toFixed(2)}</p>
                       </div>
                     </Link>
                   ))}
@@ -202,7 +202,7 @@ const SearchPopup = ({ open, onOpenChange }: SearchPopupProps) => {
                           />
                         </div>
                         <h4 className="font-medium text-foreground">{product.name}</h4>
-                        <p className="text-sm text-muted-foreground">€{product.price.toFixed(2)}</p>
+                        <p className="text-sm text-muted-foreground">₹{product.price.toFixed(2)}</p>
                       </Link>
                     ))}
                   </div>
