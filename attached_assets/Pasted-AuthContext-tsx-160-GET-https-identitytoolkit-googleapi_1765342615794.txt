@@ -1,0 +1,90 @@
+AuthContext.tsx:160  GET https://identitytoolkit.googleapis.com/v1/projects?key=AIzaSyACAIFK6tpyr436UZJcuVsTbjyYZ6YMaeQ 400 (Bad Request)
+(anonymous) @ firebase_auth.js?v=d2e8484f:1107
+await in (anonymous)
+_performFetchWithErrorHandling @ firebase_auth.js?v=d2e8484f:1116
+_performApiRequest @ firebase_auth.js?v=d2e8484f:1069
+_getProjectConfig @ firebase_auth.js?v=d2e8484f:7342
+_validateOrigin @ firebase_auth.js?v=d2e8484f:7350
+_originValidation @ firebase_auth.js?v=d2e8484f:7741
+onExecution @ firebase_auth.js?v=d2e8484f:7045
+await in onExecution
+(anonymous) @ firebase_auth.js?v=d2e8484f:6909
+await in (anonymous)
+execute @ firebase_auth.js?v=d2e8484f:6905
+executeNotNull @ firebase_auth.js?v=d2e8484f:7025
+signInWithPopup @ firebase_auth.js?v=d2e8484f:6990
+signInWithGoogle @ AuthContext.tsx:160
+handleGoogleSignIn @ Account.tsx:52
+callCallback2 @ chunk-R6S4VRB5.js?v=d2e8484f:3674
+invokeGuardedCallbackDev @ chunk-R6S4VRB5.js?v=d2e8484f:3699
+invokeGuardedCallback @ chunk-R6S4VRB5.js?v=d2e8484f:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-R6S4VRB5.js?v=d2e8484f:3736
+executeDispatch @ chunk-R6S4VRB5.js?v=d2e8484f:7014
+processDispatchQueueItemsInOrder @ chunk-R6S4VRB5.js?v=d2e8484f:7034
+processDispatchQueue @ chunk-R6S4VRB5.js?v=d2e8484f:7043
+dispatchEventsForPlugins @ chunk-R6S4VRB5.js?v=d2e8484f:7051
+(anonymous) @ chunk-R6S4VRB5.js?v=d2e8484f:7174
+batchedUpdates$1 @ chunk-R6S4VRB5.js?v=d2e8484f:18913
+batchedUpdates @ chunk-R6S4VRB5.js?v=d2e8484f:3579
+dispatchEventForPluginEventSystem @ chunk-R6S4VRB5.js?v=d2e8484f:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-R6S4VRB5.js?v=d2e8484f:5478
+dispatchEvent @ chunk-R6S4VRB5.js?v=d2e8484f:5472
+dispatchDiscreteEvent @ chunk-R6S4VRB5.js?v=d2e8484f:5449Understand this error
+installHook.js:1 Google sign in error: FirebaseError: Firebase: Error (auth/configuration-not-found).
+    at createErrorInternal (firebase_auth.js?v=d2e8484f:698:37)
+    at _fail (firebase_auth.js?v=d2e8484f:660:9)
+    at _performFetchWithErrorHandling (firebase_auth.js?v=d2e8484f:1140:9)
+    at async _validateOrigin (firebase_auth.js?v=d2e8484f:7350:33)
+overrideMethod @ installHook.js:1
+signInWithGoogle @ AuthContext.tsx:163
+await in signInWithGoogle
+handleGoogleSignIn @ Account.tsx:52
+callCallback2 @ chunk-R6S4VRB5.js?v=d2e8484f:3674
+invokeGuardedCallbackDev @ chunk-R6S4VRB5.js?v=d2e8484f:3699
+invokeGuardedCallback @ chunk-R6S4VRB5.js?v=d2e8484f:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-R6S4VRB5.js?v=d2e8484f:3736
+executeDispatch @ chunk-R6S4VRB5.js?v=d2e8484f:7014
+processDispatchQueueItemsInOrder @ chunk-R6S4VRB5.js?v=d2e8484f:7034
+processDispatchQueue @ chunk-R6S4VRB5.js?v=d2e8484f:7043
+dispatchEventsForPlugins @ chunk-R6S4VRB5.js?v=d2e8484f:7051
+(anonymous) @ chunk-R6S4VRB5.js?v=d2e8484f:7174
+batchedUpdates$1 @ chunk-R6S4VRB5.js?v=d2e8484f:18913
+batchedUpdates @ chunk-R6S4VRB5.js?v=d2e8484f:3579
+dispatchEventForPluginEventSystem @ chunk-R6S4VRB5.js?v=d2e8484f:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-R6S4VRB5.js?v=d2e8484f:5478
+dispatchEvent @ chunk-R6S4VRB5.js?v=d2e8484f:5472
+dispatchDiscreteEvent @ chunk-R6S4VRB5.js?v=d2e8484f:5449Understand this error
+iframe.js:272  GET https://www.googleapis.com/identitytoolkit/v3/relyingparty/getProjectConfig?key=AIzaSyACAIFK6tpyr436UZJcuVsTbjyYZ6YMaeQ&cb=1765342596434 400 (Bad Request)
+k.send @ iframe.js:272
+Qm.hm @ iframe.js:371
+Xm @ iframe.js:369
+(anonymous) @ iframe.js:375
+F @ iframe.js:156
+an @ iframe.js:375
+(anonymous) @ iframe.js:383
+a @ iframe.js:155
+(anonymous) @ iframe.js:155
+c @ iframe.js:155
+e.Rc @ iframe.js:163
+hg @ iframe.js:166
+dg @ iframe.js:166
+F.Bk @ iframe.js:165
+a @ iframe.js:155
+(anonymous) @ iframe.js:155
+c @ iframe.js:155
+Mf @ iframe.js:156
+a
+Ff @ iframe.js:156
+Zf @ iframe.js:162
+F.then @ iframe.js:159
+Q @ iframe.js:383
+gn @ iframe.js:375
+(anonymous) @ iframe.js:575
+hs.start @ iframe.js:574
+is.start @ iframe.js:575
+ks.start @ iframe.js:577
+ns @ iframe.js:579
+(anonymous) @ iframe.js:580
+Yi @ iframe.js:240
+b @ iframe.js:238Understand this error
+2installHook.js:1 Google sign in error: FirebaseError: Firebase: Error (auth/configuration-not-found).

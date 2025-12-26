@@ -1,0 +1,549 @@
+@import "@fontsource/playfair-display/400.css";
+@import "@fontsource/playfair-display/400-italic.css";
+@import "@fontsource/playfair-display/700.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Kanva Color Palette */
+    --background: 40 20% 98%;
+    --foreground: 0 0% 0%;
+
+    --card: 40 20% 98%;
+    --card-foreground: 0 0% 17%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 17%;
+
+    /* Teal/Dark Green - Header & Footer */
+    --primary: 180 35% 17%;
+    --primary-foreground: 40 20% 96%;
+
+    /* Sage Green */
+    --sage: 90 12% 55%;
+    --sage-foreground: 0 0% 100%;
+
+    /* Warm Cream */
+    --secondary: 40 30% 94%;
+    --secondary-foreground: 0 0% 17%;
+
+    /* Accent - Terracotta/Earth */
+    --accent: 28 45% 65%;
+    --accent-foreground: 0 0% 100%;
+
+    --muted: 40 20% 94%;
+    --muted-foreground: 0 0% 42%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 40 15% 88%;
+    --input: 40 15% 88%;
+    --ring: 180 35% 17%;
+
+    --radius: 0.5rem;
+
+    /* Custom Kanva Variables */
+    --cream: 40 30% 94%;
+    --off-white: 40 20% 98%;
+    --warm-gray: 40 10% 92%;
+    --text-primary: 0 0% 17%;
+    --text-secondary: 0 0% 42%;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .dark {
+    --background: 180 35% 10%;
+    --foreground: 40 20% 96%;
+
+    --card: 180 30% 12%;
+    --card-foreground: 40 20% 96%;
+
+    --popover: 180 30% 12%;
+    --popover-foreground: 40 20% 96%;
+
+    --primary: 40 20% 96%;
+    --primary-foreground: 180 35% 17%;
+
+    --secondary: 180 25% 15%;
+    --secondary-foreground: 40 20% 96%;
+
+    --muted: 180 20% 18%;
+    --muted-foreground: 40 10% 70%;
+
+    --accent: 28 45% 65%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 180 20% 20%;
+    --input: 180 20% 20%;
+    --ring: 40 20% 96%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    
+  width: 100%;
+  overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  .container-kanva {
+    @apply mx-auto max-w-[1440px] px-8;
+  }
+
+  .section-padding {
+    @apply py-32;
+  }
+
+  .section-padding-sm {
+    @apply py-16;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-sage to-primary bg-clip-text text-transparent;
+  }
+
+  /* Text Sizes */
+  .text-h1 {
+    @apply text-5xl font-bold;
+  }
+  .text-h2 {
+    @apply text-4xl font-bold;
+  }
+  .text-h3 {
+    @apply text-3xl font-bold;
+  }
+
+  /* Button Variants */
+  .btn-kanva {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-8 py-4 text-base font-semibold transition-all duration-300;
+  }
+
+  .btn-kanva-primary {
+    @apply btn-kanva bg-foreground text-background hover:-translate-y-1 hover:shadow-kanva-lg;
+  }
+
+  .btn-kanva-secondary {
+    @apply btn-kanva border-2 border-foreground bg-transparent text-foreground hover:bg-foreground hover:text-background;
+  }
+
+  .btn-kanva-ghost {
+    @apply btn-kanva text-foreground underline-offset-4 hover:underline;
+  }
+
+  /* Card Styles */
+  .card-kanva {
+    @apply rounded-2xl bg-card p-6 shadow-kanva-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-kanva-md;
+  }
+
+  /* Product Card */
+  .product-card {
+    @apply group relative overflow-hidden rounded-xl bg-warm-gray transition-all duration-300;
+  }
+
+  .product-card:hover {
+    @apply -translate-y-2 shadow-kanva-lg;
+  }
+
+  /* Marquee Animation */
+  .marquee {
+    animation: marquee 30s linear infinite;
+  }
+
+  .marquee-reverse {
+    animation-direction: reverse;
+  }
+
+  @keyframes heroTextReveal {
+    0% {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-hero-text {
+    animation: heroTextReveal 0.9s ease-out both;
+  }
+  @keyframes mobileMenu {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-mobile-menu {
+    animation: mobileMenu 0.35s ease-out both;
+  }
+  @keyframes featureReveal {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  .animate-feature-reveal {
+    animation: featureReveal 0.7s ease-out forwards;
+  }
+  @keyframes statementReveal {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-statement-reveal {
+    animation: statementReveal 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+  
+  @keyframes statementFloat {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+    100% { transform: translateY(0); }
+  }
+  
+  .statement-float {
+    animation: statementFloat 4s ease-in-out infinite;
+  }
+  
+  @keyframes leafPulse {
+    0% { transform: scale(1) rotate(12deg); }
+    50% { transform: scale(1.1) rotate(12deg); }
+    100% { transform: scale(1) rotate(12deg); }
+  }
+  
+  .statement-leaf {
+    animation: leafPulse 3s ease-in-out infinite;
+  }
+  @keyframes productsReveal {
+    from {
+      opacity: 0;
+      transform: translateY(60px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  .animate-products-reveal {
+    animation: productsReveal 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+  
+  @keyframes productFloatA {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  
+  @keyframes productFloatB {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+  
+  @keyframes productFloatC {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .animate-float-0 { animation: productFloatA 6s ease-in-out infinite; }
+  .animate-float-1 { animation: productFloatB 8s ease-in-out infinite; }
+  .animate-float-2 { animation: productFloatC 7s ease-in-out infinite; }
+  
+  @keyframes productsFadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .animate-products-tag {
+    animation: productsFadeUp 0.6s ease-out forwards;
+  }
+  
+  .animate-products-title {
+    animation: productsFadeUp 0.8s ease-out forwards;
+  }
+  
+  .animate-products-fade {
+    animation: productsFadeUp 0.9s ease-out forwards;
+  }
+  
+  .animate-products-button {
+    animation: productsFadeUp 1s ease-out forwards;
+  }
+  @keyframes ecoReveal {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-eco-reveal {
+    animation: ecoReveal 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+  
+  @keyframes ecoItem {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .animate-eco-item {
+    animation: ecoItem 0.6s ease-out forwards;
+  }
+  
+  @keyframes ecoImageZoom {
+    from {
+      transform: scale(1.12);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  
+  .eco-image {
+    animation: ecoImageZoom 1.2s ease-out forwards;
+  }
+  @keyframes socialReveal {
+    from {
+      opacity: 0;
+      transform: translateY(60px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-social-reveal {
+    animation: socialReveal 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+  
+  @keyframes socialCardReveal {
+    from {
+      opacity: 0;
+      transform: translateY(40px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  .animate-social-card {
+    animation: socialCardReveal 0.8s ease-out forwards;
+  }
+  
+  @keyframes socialImageZoom {
+    from {
+      transform: scale(1.15);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  
+  .social-image {
+    animation: socialImageZoom 1.2s ease-out forwards;
+  }
+  @keyframes testimonialReveal {
+    from {
+      opacity: 0;
+      transform: translateY(60px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  .animate-testimonial-reveal {
+    animation: testimonialReveal 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+  
+  @keyframes starPop {
+    0% {
+      opacity: 0;
+      transform: scale(0.5) rotate(-20deg);
+    }
+    70% {
+      opacity: 1;
+      transform: scale(1.15) rotate(5deg);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(0);
+    }
+  }
+  
+  .animate-star-pop {
+    animation: starPop 0.5s ease-out forwards;
+  }
+/* ✅ SCROLL REVEAL */
+@keyframes instagramReveal {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-instagram-reveal {
+  animation: instagramReveal 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* ✅ SMOOTH INFINITE MARQUEE */
+@keyframes instagramMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.instagram-marquee {
+  animation: instagramMarquee 45s linear infinite;
+}
+@keyframes newsletterReveal {
+  from {
+    opacity: 0;
+    transform: translateY(60px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-newsletter-reveal {
+  animation: newsletterReveal 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes newsletterItemReveal {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-newsletter-item {
+  animation: newsletterItemReveal 0.7s ease-out forwards;
+}
+
+@keyframes newsletterFloat {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.newsletter-image {
+  animation: newsletterFloat 6s ease-in-out infinite;
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.animate-reveal {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+}
+    
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Fade-In Animation */
+  .fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
