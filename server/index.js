@@ -106,8 +106,92 @@ app.post('/api/verify-payment', (req, res) => {
   }
 });
 
+let shiprocketToken = null;
+let shiprocketTokenExpiry = null;
+
+const getShiprocketToken = async () => {
+  if (shiprocketToken && shiprocketTokenExpiry && Date.now() < shiprocketTokenExpiry) {
+    return shiprocketToken;
+  }
+
+  const email = process.env.SHIPROCKET_EMAIL;
+  const password = process.env.SHIPROCKET_PASSWORD;
+
+  if (!email || !password) {
+    throw new Error('Shiprocket credentials not configured');
+  }
+
+  try {
+    const response = await fetch('https://apiv2.shiprocket.in/v1/external/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to authenticate with Shiprocket');
+    }
+
+    const data = await response.json();
+    shiprocketToken = data.token;
+    shiprocketTokenExpiry = Date.now() + (9 * 24 * 60 * 60 * 1000);
+    return shiprocketToken;
+  } catch (error) {
+    console.error('Shiprocket auth error:', error);
+    throw error;
+  }
+};
+
+app.get('/api/track-shipment/:awbCode', async (req, res) => {
+  const { awbCode } = req.params;
+
+  if (!awbCode) {
+    return res.status(400).json({ error: 'AWB code is required' });
+  }
+
+  try {
+    const token = await getShiprocketToken();
+
+    const response = await fetch(
+      `https://apiv2.shiprocket.in/v1/external/courier/track/awb/${awbCode}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return res.status(response.status).json({ 
+        error: errorData.message || 'Failed to fetch tracking information' 
+      });
+    }
+
+    const data = await response.json();
+    
+    const trackingInfo = {
+      awb_code: awbCode,
+      courier_name: data.tracking_data?.shipment_track?.[0]?.courier_name || 'Unknown',
+      current_status: data.tracking_data?.shipment_status || 'Unknown',
+      delivered_date: data.tracking_data?.shipment_track?.[0]?.delivered_date || null,
+      activities: (data.tracking_data?.shipment_track_activities || []).map(activity => ({
+        date: activity.date,
+        activity: activity.activity,
+        location: activity.location || ''
+      }))
+    };
+
+    res.json(trackingInfo);
+  } catch (error) {
+    console.error('Shiprocket tracking error:', error);
+    res.status(500).json({ error: error.message || 'Failed to track shipment' });
+  }
+});
+
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Razorpay API server is running' });
+  res.json({ status: 'ok', message: 'API server is running' });
 });
 
 const PORT = process.env.API_PORT || 3001;

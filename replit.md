@@ -226,6 +226,27 @@ Products in Firestore include the following fields:
 - Payment signatures are verified before order creation
 - For production, implement Firebase Admin SDK to verify product prices from database
 
+## Shiprocket Integration (Order Tracking)
+
+### Configuration
+Shiprocket API credentials are stored as Replit Secrets:
+- `SHIPROCKET_EMAIL` - Shiprocket API user email
+- `SHIPROCKET_PASSWORD` - Shiprocket API user password
+
+### Getting Shiprocket Credentials
+1. Log in to Shiprocket Panel
+2. Go to Settings → API → Configure
+3. Create an API User with email and password
+4. Add these credentials as Replit Secrets
+
+### Order Tracking Flow
+1. When an order is shipped, update the order in Firebase with `awbCode` (tracking number)
+2. Customers can click on their order to see detailed tracking information
+3. The server fetches real-time tracking data from Shiprocket API
+
+### API Endpoint
+- `GET /api/track-shipment/:awbCode` - Fetches real-time tracking from Shiprocket
+
 ### Firebase Security Rules
 To enable featured products functionality, add these rules in Firebase Console:
 ```

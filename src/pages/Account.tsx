@@ -14,14 +14,35 @@ import { useToast } from "@/hooks/use-toast";
 import { User, Package, Heart, MapPin, Settings, Shield, Loader2, Trash2, ChevronRight, LogOut, ShoppingBag, Lock } from "lucide-react";
 import { collection, query, where, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import OrderDetailsPopup from "@/components/popups/OrderDetailsPopup";
 
 interface Order {
   id: string;
   orderNumber: string;
   status: string;
   total: number;
+  subtotal: number;
+  shippingCost: number;
+  tax: number;
   createdAt: any;
   items: any[];
+  shipping: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+  paymentDetails?: {
+    paymentId: string;
+    orderId: string;
+    status: string;
+  };
+  awbCode?: string;
 }
 
 type PageView = "overview" | "orders" | "wishlist" | "addresses" | "settings";
@@ -53,6 +74,8 @@ const Account = () => {
   });
   const [newPassword, setNewPassword] = useState("");
   const [savingProfile, setSavingProfile] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [isOrderPopupOpen, setIsOrderPopupOpen] = useState(false);
 
   const currentPage = (searchParams.get("view") as PageView) || "overview";
 
@@ -648,7 +671,15 @@ const Account = () => {
                   ) : (
                     <div className="space-y-4">
                       {orders.map((order) => (
-                        <Card key={order.id} data-testid={`order-${order.id}`}>
+                        <Card 
+                          key={order.id} 
+                          data-testid={`order-${order.id}`}
+                          className="cursor-pointer hover:shadow-md transition-shadow"
+                          onClick={() => {
+                            setSelectedOrder(order);
+                            setIsOrderPopupOpen(true);
+                          }}
+                        >
                           <CardContent className="p-6">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                               <div>
@@ -683,6 +714,9 @@ const Account = () => {
                                 )}
                               </div>
                             )}
+                            <div className="mt-3 text-sm text-primary flex items-center gap-1">
+                              View Details <ChevronRight className="h-4 w-4" />
+                            </div>
                           </CardContent>
                         </Card>
                       ))}
@@ -923,6 +957,15 @@ const Account = () => {
         </div>
       </main>
       <Footer />
+      
+      <OrderDetailsPopup
+        order={selectedOrder}
+        isOpen={isOrderPopupOpen}
+        onClose={() => {
+          setIsOrderPopupOpen(false);
+          setSelectedOrder(null);
+        }}
+      />
     </div>
   );
 };
