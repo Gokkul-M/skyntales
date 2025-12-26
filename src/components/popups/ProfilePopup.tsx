@@ -1,4 +1,4 @@
-import { User, Settings, ShoppingBag, Heart, LogOut, CreditCard, MapPin, Shield } from "lucide-react";
+import { User, Settings, ShoppingBag, Heart, LogOut, MapPin, Shield } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -12,11 +12,11 @@ interface ProfilePopupProps {
 }
 
 const menuItems = [
-  { icon: ShoppingBag, label: "My Orders", href: "/account" },
-  { icon: Heart, label: "Wishlist", href: "/favorites" },
-  { icon: MapPin, label: "Addresses", href: "/account" },
-  { icon: CreditCard, label: "Payment Methods", href: "/account" },
-  { icon: Settings, label: "Account Settings", href: "/account" },
+  { icon: User, label: "Overview", href: "/account?view=overview" },
+  { icon: ShoppingBag, label: "My Orders", href: "/account?view=orders" },
+  { icon: Heart, label: "Wishlist", href: "/account?view=wishlist" },
+  { icon: MapPin, label: "Addresses", href: "/account?view=addresses" },
+  { icon: Settings, label: "Settings", href: "/account?view=settings" },
 ];
 
 const ProfilePopup = ({ open, onOpenChange }: ProfilePopupProps) => {
