@@ -5,7 +5,8 @@ Kanva is a full-stack skincare e-commerce web application migrated from Lovable 
 
 ## Tech Stack
 - **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, Shadcn UI
-- **Backend**: Firebase (Firestore, Authentication, Storage)
+- **Backend**: Firebase (Firestore, Authentication, Storage), Express.js (Payment API)
+- **Payment**: RazorPay Payment Gateway
 - **State Management**: React Context API, TanStack Query
 - **Routing**: React Router DOM v6
 - **Styling**: Tailwind CSS with custom design tokens
@@ -33,11 +34,17 @@ src/
 └── services/        # API services (product service)
 ```
 
-## Firebase Configuration
-Firebase is configured with the following environment variables:
+## Environment Variables
+The application uses the following environment variables (stored as Replit Secrets):
+
+### Firebase Configuration
 - `VITE_FIREBASE_API_KEY` - Firebase API key
 - `VITE_FIREBASE_APP_ID` - Firebase App ID
 - `VITE_FIREBASE_PROJECT_ID` - Firebase Project ID
+
+### RazorPay Configuration
+- `VITE_RAZORPAY_KEY_ID` - RazorPay Key ID (used on frontend)
+- `RAZORPAY_KEY_SECRET` - RazorPay Key Secret (used on backend only)
 
 ### Firestore Collections
 - `users` - User profiles and preferences
@@ -112,15 +119,21 @@ Google Sign-In requires additional configuration in Firebase Console:
 - `/admin/users` - User management
 
 ## Running the Application
-The application runs on port 5000 using Vite dev server:
+The application runs both the frontend (port 5000) and payment API server (port 3001):
 ```bash
 npm run dev
 ```
 
+This command starts:
+- Vite dev server on port 5000 (frontend)
+- Express API server on port 3001 (RazorPay payment processing)
+
+The Vite config proxies `/api/*` requests to the Express server.
+
 ## Product Data Model
 Products in Firestore include the following fields:
 - `name` - Product name (required)
-- `price` - Price in EUR (required)
+- `price` - Price in INR (required)
 - `category` - Product category (required)
 - `stock` - Inventory count
 - `status` - "Active", "Draft", or "Out of Stock"
@@ -185,6 +198,33 @@ Products in Firestore include the following fields:
   - Cart and Wishlist contexts now accept Firebase string IDs
 - **Position Control**: 5 positions per slide (center, top-left, top-right, bottom-left, bottom-right)
 - **Admin Menu**: "Featured" menu item with sparkle icon in admin sidebar
+
+## Payment Integration (RazorPay)
+
+### Payment Flow
+1. Customer fills shipping details and proceeds to payment
+2. Frontend sends cart items to `/api/create-order`
+3. Server validates cart and calculates total server-side
+4. Server creates RazorPay order and returns order_id
+5. Frontend opens RazorPay checkout modal
+6. After payment, frontend sends payment details to `/api/verify-payment`
+7. Server verifies payment signature
+8. On success, order is created in Firebase with payment details
+
+### API Endpoints
+- `POST /api/create-order` - Creates RazorPay order with server-calculated total
+- `POST /api/verify-payment` - Verifies payment signature
+- `GET /api/health` - Health check endpoint
+
+### Test Cards (for testing)
+- Card: `4111 1111 1111 1111`
+- Expiry: Any future date
+- CVV: Any 3 digits
+
+### Security Notes
+- Cart totals are recalculated server-side to prevent price manipulation
+- Payment signatures are verified before order creation
+- For production, implement Firebase Admin SDK to verify product prices from database
 
 ### Firebase Security Rules
 To enable featured products functionality, add these rules in Firebase Console:

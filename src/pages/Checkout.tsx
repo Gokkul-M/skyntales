@@ -13,7 +13,12 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, CreditCard, Truck, ShoppingBag, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import useRazorpay from "react-razorpay";
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 const calculateShippingCost = (state: string): number => {
   if (!state) return 0;
@@ -33,12 +38,25 @@ const validateLocation = (city: string, state: string, zipCode: string, country:
   return city.trim() !== "" && state.trim() !== "" && zipCode.trim() !== "" && country.trim() !== "";
 };
 
+const loadRazorpayScript = (): Promise<boolean> => {
+  return new Promise((resolve) => {
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 const Checkout = () => {
   const { user, userProfile } = useAuth();
   const { items: cartItems, clearCart } = useCart();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [Razorpay] = useRazorpay();
   
   const [step, setStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -105,8 +123,8 @@ const Checkout = () => {
 
   const createOrderInFirebase = async (paymentDetails: {
     razorpay_payment_id: string;
-    razorpay_order_id?: string;
-    razorpay_signature?: string;
+    razorpay_order_id: string;
+    razorpay_signature: string;
   }) => {
     const orderNum = `ORD-${Date.now().toString(36).toUpperCase()}`;
     const shippingLocation = shippingInfo.state.toLowerCase().includes("tamil") ? "Tamil Nadu" : "Outside Tamil Nadu";
@@ -138,8 +156,8 @@ const Checkout = () => {
       paymentMethod: "razorpay",
       paymentDetails: {
         paymentId: paymentDetails.razorpay_payment_id,
-        orderId: paymentDetails.razorpay_order_id || null,
-        signature: paymentDetails.razorpay_signature || null,
+        orderId: paymentDetails.razorpay_order_id,
+        signature: paymentDetails.razorpay_signature,
         status: "paid",
       },
       subtotal,
@@ -153,7 +171,7 @@ const Checkout = () => {
     return orderNum;
   };
 
-  const handleRazorpayPayment = useCallback(() => {
+  const handleRazorpayPayment = useCallback(async () => {
     if (!isLocationValid) {
       toast({ title: "Please complete shipping details first", variant: "destructive" });
       return;
@@ -161,58 +179,100 @@ const Checkout = () => {
 
     setIsProcessing(true);
 
-    const amountInPaise = Math.round(total * 100);
-
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      amount: amountInPaise.toString(),
-      currency: "INR",
-      name: "Skyntales",
-      description: `Order for ${cartProducts.length} item(s)`,
-      image: "/logo.png",
-      handler: async (response: {
-        razorpay_payment_id: string;
-        razorpay_order_id?: string;
-        razorpay_signature?: string;
-      }) => {
-        try {
-          const orderNum = await createOrderInFirebase(response);
-          await clearCart();
-          setOrderNumber(orderNum);
-          setOrderComplete(true);
-          toast({ title: "Payment successful!", description: `Order ${orderNum} has been placed.` });
-        } catch (error: any) {
-          console.error("Order creation error:", error);
-          toast({ 
-            title: "Payment received but order creation failed", 
-            description: "Please contact support with your payment ID: " + response.razorpay_payment_id,
-            variant: "destructive" 
-          });
-        } finally {
-          setIsProcessing(false);
-        }
-      },
-      prefill: {
-        name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
-        email: shippingInfo.email,
-        contact: shippingInfo.phone || "",
-      },
-      notes: {
-        address: `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state} ${shippingInfo.zipCode}`,
-      },
-      theme: {
-        color: "#1a1a1a",
-      },
-      modal: {
-        ondismiss: () => {
-          setIsProcessing(false);
-          toast({ title: "Payment cancelled", description: "You can try again when ready.", variant: "destructive" });
-        },
-      },
-    };
-
     try {
-      const razorpayInstance = new Razorpay(options);
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        throw new Error("Failed to load payment gateway");
+      }
+
+      const orderResponse = await fetch('/api/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cartItems: cartProducts.map(item => ({
+            productId: item.productId,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+          })),
+          shippingState: shippingInfo.state,
+          currency: 'INR'
+        })
+      });
+
+      if (!orderResponse.ok) {
+        const errorData = await orderResponse.json();
+        throw new Error(errorData.error || 'Failed to create order');
+      }
+
+      const orderData = await orderResponse.json();
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        order_id: orderData.order_id,
+        name: "Skyntales",
+        description: `Order for ${cartProducts.length} item(s)`,
+        image: "/logo.png",
+        handler: async (response: {
+          razorpay_payment_id: string;
+          razorpay_order_id: string;
+          razorpay_signature: string;
+        }) => {
+          try {
+            const verifyResponse = await fetch('/api/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(response)
+            });
+
+            const verifyData = await verifyResponse.json();
+            
+            if (verifyData.status === 'success') {
+              const orderNum = await createOrderInFirebase(response);
+              await clearCart();
+              setOrderNumber(orderNum);
+              setOrderComplete(true);
+              toast({ title: "Payment successful!", description: `Order ${orderNum} has been placed.` });
+            } else {
+              toast({ 
+                title: "Payment verification failed", 
+                description: "Please contact support with your payment ID: " + response.razorpay_payment_id,
+                variant: "destructive" 
+              });
+            }
+          } catch (error: any) {
+            console.error("Order creation error:", error);
+            toast({ 
+              title: "Payment received but order creation failed", 
+              description: "Please contact support with your payment ID: " + response.razorpay_payment_id,
+              variant: "destructive" 
+            });
+          } finally {
+            setIsProcessing(false);
+          }
+        },
+        prefill: {
+          name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
+          email: shippingInfo.email,
+          contact: shippingInfo.phone || "",
+        },
+        notes: {
+          address: `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state} ${shippingInfo.zipCode}`,
+        },
+        theme: {
+          color: "#1a1a1a",
+        },
+        modal: {
+          ondismiss: () => {
+            setIsProcessing(false);
+            toast({ title: "Payment cancelled", description: "You can try again when ready.", variant: "destructive" });
+          },
+        },
+      };
+
+      const razorpayInstance = new window.Razorpay(options);
       razorpayInstance.on("payment.failed", (response: any) => {
         setIsProcessing(false);
         toast({ 
@@ -224,13 +284,14 @@ const Checkout = () => {
       razorpayInstance.open();
     } catch (error: any) {
       setIsProcessing(false);
+      console.error("Payment error:", error);
       toast({ 
-        title: "Could not open payment gateway", 
+        title: "Could not initiate payment", 
         description: error.message || "Please try again.",
         variant: "destructive" 
       });
     }
-  }, [Razorpay, total, shippingInfo, cartProducts, isLocationValid, clearCart, toast]);
+  }, [total, shippingInfo, cartProducts, isLocationValid, clearCart, toast]);
 
   if (cartItems.length === 0 && !orderComplete) {
     return (
