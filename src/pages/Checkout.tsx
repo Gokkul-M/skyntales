@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -8,14 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, CreditCard, Truck, ShoppingBag, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import useRazorpay from "react-razorpay";
 
-// Helper function to calculate shipping cost based on location
 const calculateShippingCost = (state: string): number => {
   if (!state) return 0;
   const tamilNaduVariants = [
@@ -30,7 +29,6 @@ const calculateShippingCost = (state: string): number => {
   return isInTamilNadu ? 70 : 100;
 };
 
-// Helper function to validate location fields
 const validateLocation = (city: string, state: string, zipCode: string, country: string): boolean => {
   return city.trim() !== "" && state.trim() !== "" && zipCode.trim() !== "" && country.trim() !== "";
 };
@@ -40,6 +38,7 @@ const Checkout = () => {
   const { items: cartItems, clearCart } = useCart();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [Razorpay] = useRazorpay();
   
   const [step, setStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -58,14 +57,6 @@ const Checkout = () => {
     zipCode: userProfile?.address?.zipCode || "",
     country: userProfile?.address?.country || "",
   });
-  
-  const [paymentMethod, setPaymentMethod] = useState("card");
-  const [cardInfo, setCardInfo] = useState({
-    cardNumber: "",
-    expiry: "",
-    cvv: "",
-    name: "",
-  });
 
   const cartProducts = cartItems;
 
@@ -73,7 +64,6 @@ const Checkout = () => {
     sum + item.price * item.quantity, 0
   );
   
-  // Validate location and calculate shipping
   const isLocationValid = validateLocation(shippingInfo.city, shippingInfo.state, shippingInfo.zipCode, shippingInfo.country);
   const shipping = isLocationValid ? calculateShippingCost(shippingInfo.state) : 0;
   const shippingCost = shipping;
@@ -85,7 +75,6 @@ const Checkout = () => {
     const updatedInfo = { ...shippingInfo, [field]: value };
     setShippingInfo(updatedInfo);
     
-    // Validate location in real-time
     if (field === "state" || field === "city" || field === "zipCode" || field === "country") {
       if (validateLocation(updatedInfo.city, updatedInfo.state, updatedInfo.zipCode, updatedInfo.country)) {
         setLocationError("");
@@ -114,72 +103,134 @@ const Checkout = () => {
     setStep(2);
   };
 
-  const handlePaymentSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const createOrderInFirebase = async (paymentDetails: {
+    razorpay_payment_id: string;
+    razorpay_order_id?: string;
+    razorpay_signature?: string;
+  }) => {
+    const orderNum = `ORD-${Date.now().toString(36).toUpperCase()}`;
+    const shippingLocation = shippingInfo.state.toLowerCase().includes("tamil") ? "Tamil Nadu" : "Outside Tamil Nadu";
     
-    if (paymentMethod === "card") {
-      if (!cardInfo.cardNumber || !cardInfo.expiry || !cardInfo.cvv || !cardInfo.name) {
-        toast({ title: "Please fill in all card details", variant: "destructive" });
-        return;
-      }
+    const orderData = {
+      orderNumber: orderNum,
+      userId: user?.uid || "guest",
+      userEmail: shippingInfo.email,
+      status: "processing",
+      items: cartProducts.map(item => ({
+        productId: item.productId,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image,
+      })),
+      shipping: {
+        firstName: shippingInfo.firstName,
+        lastName: shippingInfo.lastName,
+        email: shippingInfo.email,
+        phone: shippingInfo.phone,
+        address: shippingInfo.address,
+        city: shippingInfo.city,
+        state: shippingInfo.state,
+        zipCode: shippingInfo.zipCode,
+        country: shippingInfo.country,
+        location: shippingLocation,
+      },
+      paymentMethod: "razorpay",
+      paymentDetails: {
+        paymentId: paymentDetails.razorpay_payment_id,
+        orderId: paymentDetails.razorpay_order_id || null,
+        signature: paymentDetails.razorpay_signature || null,
+        status: "paid",
+      },
+      subtotal,
+      shippingCost: shippingCost,
+      tax,
+      total,
+      createdAt: serverTimestamp(),
+    };
+    
+    await addDoc(collection(db, "orders"), orderData);
+    return orderNum;
+  };
+
+  const handleRazorpayPayment = useCallback(() => {
+    if (!isLocationValid) {
+      toast({ title: "Please complete shipping details first", variant: "destructive" });
+      return;
     }
-    
+
     setIsProcessing(true);
-    
-    try {
-      const orderNum = `ORD-${Date.now().toString(36).toUpperCase()}`;
-      const shippingLocation = shippingInfo.state.toLowerCase().includes("tamil") ? "Tamil Nadu" : "Outside Tamil Nadu";
-      
-      const orderData = {
-        orderNumber: orderNum,
-        userId: user?.uid || "guest",
-        userEmail: shippingInfo.email,
-        status: "pending",
-        items: cartProducts.map(item => ({
-          productId: item.productId,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          image: item.image,
-        })),
-        shipping: {
-          firstName: shippingInfo.firstName,
-          lastName: shippingInfo.lastName,
-          email: shippingInfo.email,
-          phone: shippingInfo.phone,
-          address: shippingInfo.address,
-          city: shippingInfo.city,
-          state: shippingInfo.state,
-          zipCode: shippingInfo.zipCode,
-          country: shippingInfo.country,
-          location: shippingLocation,
+
+    const amountInPaise = Math.round(total * 100);
+
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: amountInPaise.toString(),
+      currency: "INR",
+      name: "Skyntales",
+      description: `Order for ${cartProducts.length} item(s)`,
+      image: "/logo.png",
+      handler: async (response: {
+        razorpay_payment_id: string;
+        razorpay_order_id?: string;
+        razorpay_signature?: string;
+      }) => {
+        try {
+          const orderNum = await createOrderInFirebase(response);
+          await clearCart();
+          setOrderNumber(orderNum);
+          setOrderComplete(true);
+          toast({ title: "Payment successful!", description: `Order ${orderNum} has been placed.` });
+        } catch (error: any) {
+          console.error("Order creation error:", error);
+          toast({ 
+            title: "Payment received but order creation failed", 
+            description: "Please contact support with your payment ID: " + response.razorpay_payment_id,
+            variant: "destructive" 
+          });
+        } finally {
+          setIsProcessing(false);
+        }
+      },
+      prefill: {
+        name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
+        email: shippingInfo.email,
+        contact: shippingInfo.phone || "",
+      },
+      notes: {
+        address: `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state} ${shippingInfo.zipCode}`,
+      },
+      theme: {
+        color: "#1a1a1a",
+      },
+      modal: {
+        ondismiss: () => {
+          setIsProcessing(false);
+          toast({ title: "Payment cancelled", description: "You can try again when ready.", variant: "destructive" });
         },
-        paymentMethod,
-        subtotal,
-        shippingCost: shippingCost,
-        shippingCostINR: shipping,
-        tax,
-        total,
-        createdAt: serverTimestamp(),
-      };
-      
-      await addDoc(collection(db, "orders"), orderData);
-      
-      await clearCart();
-      setOrderNumber(orderNum);
-      setOrderComplete(true);
-      
+      },
+    };
+
+    try {
+      const razorpayInstance = new Razorpay(options);
+      razorpayInstance.on("payment.failed", (response: any) => {
+        setIsProcessing(false);
+        toast({ 
+          title: "Payment failed", 
+          description: response.error?.description || "Please try again.",
+          variant: "destructive" 
+        });
+      });
+      razorpayInstance.open();
     } catch (error: any) {
-      console.error("Order error:", error);
+      setIsProcessing(false);
       toast({ 
-        title: "Error processing order", 
-        description: error.message,
+        title: "Could not open payment gateway", 
+        description: error.message || "Please try again.",
         variant: "destructive" 
       });
-    } finally {
-      setIsProcessing(false);
     }
-  };
+  }, [Razorpay, total, shippingInfo, cartProducts, isLocationValid, clearCart, toast]);
 
   if (cartItems.length === 0 && !orderComplete) {
     return (
@@ -207,7 +258,7 @@ const Checkout = () => {
         <main className="container-kanva py-24">
           <div className="max-w-lg mx-auto text-center">
             <CheckCircle className="h-20 w-20 mx-auto mb-6 text-green-500" />
-            <h1 className="text-3xl font-heading mb-4" data-testid="text-order-success">Order Confirmed!</h1>
+            <h1 className="text-3xl font-heading mb-4" data-testid="text-order-success">Payment Successful!</h1>
             <p className="text-muted-foreground mb-2">Thank you for your order.</p>
             <p className="font-medium mb-6" data-testid="text-order-number">Order Number: {orderNumber}</p>
             <p className="text-sm text-muted-foreground mb-8">
@@ -215,7 +266,7 @@ const Checkout = () => {
             </p>
             <div className="flex gap-4 justify-center">
               <Button asChild variant="outline" data-testid="button-view-orders">
-                <Link to="/account">View Orders</Link>
+                <Link to="/account?view=orders">View Orders</Link>
               </Button>
               <Button asChild data-testid="button-continue-shopping-success">
                 <Link to="/shop">Continue Shopping</Link>
@@ -232,23 +283,36 @@ const Checkout = () => {
     <div>
       <Header />
       <main className="container-kanva py-24">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-8">
-            <Button variant="ghost" asChild className="mb-4" data-testid="button-back">
-              <Link to="/shop">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Continue Shopping
-              </Link>
-            </Button>
-            <h1 className="text-3xl font-heading" data-testid="text-checkout-title">Checkout</h1>
+        <div className="max-w-5xl mx-auto">
+          <Button 
+            variant="ghost" 
+            className="mb-6" 
+            onClick={() => navigate(-1)}
+            data-testid="button-back"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+          
+          <h1 className="text-3xl font-heading mb-8" data-testid="text-checkout-title">Checkout</h1>
+          
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className={`flex items-center gap-2 ${step >= 1 ? "text-foreground" : "text-muted-foreground"}`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step >= 1 ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>
+                1
+              </div>
+              <span className="hidden sm:inline">Shipping</span>
+            </div>
+            <div className={`w-12 h-0.5 ${step >= 2 ? "bg-primary" : "bg-secondary"}`} />
+            <div className={`flex items-center gap-2 ${step >= 2 ? "text-foreground" : "text-muted-foreground"}`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step >= 2 ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>
+                2
+              </div>
+              <span className="hidden sm:inline">Payment</span>
+            </div>
           </div>
 
-          <div className="flex gap-2 mb-8">
-            <div className={`flex-1 h-2 rounded ${step >= 1 ? 'bg-primary' : 'bg-muted'}`} />
-            <div className={`flex-1 h-2 rounded ${step >= 2 ? 'bg-primary' : 'bg-muted'}`} />
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
               {step === 1 && (
                 <Card>
@@ -265,28 +329,29 @@ const Checkout = () => {
                           <Label>First Name *</Label>
                           <Input
                             value={shippingInfo.firstName}
-                            onChange={(e) => setShippingInfo({...shippingInfo, firstName: e.target.value})}
+                            onChange={(e) => handleShippingChange("firstName", e.target.value)}
                             required
-                            data-testid="input-first-name"
+                            data-testid="input-checkout-firstname"
                           />
                         </div>
                         <div className="space-y-2">
                           <Label>Last Name *</Label>
                           <Input
                             value={shippingInfo.lastName}
-                            onChange={(e) => setShippingInfo({...shippingInfo, lastName: e.target.value})}
+                            onChange={(e) => handleShippingChange("lastName", e.target.value)}
                             required
-                            data-testid="input-last-name"
+                            data-testid="input-checkout-lastname"
                           />
                         </div>
                       </div>
+                      
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label>Email *</Label>
                           <Input
                             type="email"
                             value={shippingInfo.email}
-                            onChange={(e) => setShippingInfo({...shippingInfo, email: e.target.value})}
+                            onChange={(e) => handleShippingChange("email", e.target.value)}
                             required
                             data-testid="input-checkout-email"
                           />
@@ -294,17 +359,19 @@ const Checkout = () => {
                         <div className="space-y-2">
                           <Label>Phone</Label>
                           <Input
+                            type="tel"
                             value={shippingInfo.phone}
-                            onChange={(e) => setShippingInfo({...shippingInfo, phone: e.target.value})}
+                            onChange={(e) => handleShippingChange("phone", e.target.value)}
                             data-testid="input-checkout-phone"
                           />
                         </div>
                       </div>
+                      
                       <div className="space-y-2">
                         <Label>Address *</Label>
                         <Input
                           value={shippingInfo.address}
-                          onChange={(e) => setShippingInfo({...shippingInfo, address: e.target.value})}
+                          onChange={(e) => handleShippingChange("address", e.target.value)}
                           required
                           data-testid="input-checkout-address"
                         />
@@ -318,7 +385,6 @@ const Checkout = () => {
                             onChange={(e) => handleShippingChange("city", e.target.value)}
                             required
                             data-testid="input-checkout-city"
-                            placeholder="e.g., Chennai, Bangalore"
                           />
                         </div>
                         <div className="space-y-2">
@@ -376,83 +442,61 @@ const Checkout = () => {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <CreditCard className="h-5 w-5" />
-                      Payment Method
+                      Payment
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handlePaymentSubmit} className="space-y-6">
-                      <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
-                        <div className="flex items-center space-x-2 border rounded-md p-4">
-                          <RadioGroupItem value="card" id="card" data-testid="radio-card" />
-                          <Label htmlFor="card" className="flex-1 cursor-pointer">Credit/Debit Card</Label>
-                        </div>
-                        <div className="flex items-center space-x-2 border rounded-md p-4">
-                          <RadioGroupItem value="paypal" id="paypal" data-testid="radio-paypal" />
-                          <Label htmlFor="paypal" className="flex-1 cursor-pointer">PayPal</Label>
-                        </div>
-                        <div className="flex items-center space-x-2 border rounded-md p-4">
-                          <RadioGroupItem value="cod" id="cod" data-testid="radio-cod" />
-                          <Label htmlFor="cod" className="flex-1 cursor-pointer">Cash on Delivery</Label>
-                        </div>
-                      </RadioGroup>
+                  <CardContent className="space-y-6">
+                    <div className="p-4 bg-secondary/50 rounded-lg">
+                      <h3 className="font-medium mb-2">Shipping to:</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {shippingInfo.firstName} {shippingInfo.lastName}<br />
+                        {shippingInfo.address}<br />
+                        {shippingInfo.city}, {shippingInfo.state} {shippingInfo.zipCode}<br />
+                        {shippingInfo.country}
+                      </p>
+                    </div>
 
-                      {paymentMethod === "card" && (
-                        <div className="space-y-4 pt-4 border-t">
-                          <div className="space-y-2">
-                            <Label>Name on Card</Label>
-                            <Input
-                              value={cardInfo.name}
-                              onChange={(e) => setCardInfo({...cardInfo, name: e.target.value})}
-                              placeholder="John Doe"
-                              data-testid="input-card-name"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label>Card Number</Label>
-                            <Input
-                              value={cardInfo.cardNumber}
-                              onChange={(e) => setCardInfo({...cardInfo, cardNumber: e.target.value.replace(/\D/g, '').slice(0, 16)})}
-                              placeholder="1234 5678 9012 3456"
-                              data-testid="input-card-number"
-                            />
-                          </div>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                              <Label>Expiry Date</Label>
-                              <Input
-                                value={cardInfo.expiry}
-                                onChange={(e) => setCardInfo({...cardInfo, expiry: e.target.value})}
-                                placeholder="MM/YY"
-                                data-testid="input-card-expiry"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label>CVV</Label>
-                              <Input
-                                type="password"
-                                value={cardInfo.cvv}
-                                onChange={(e) => setCardInfo({...cardInfo, cvv: e.target.value.replace(/\D/g, '').slice(0, 4)})}
-                                placeholder="123"
-                                data-testid="input-card-cvv"
-                              />
-                            </div>
-                          </div>
+                    <div className="p-4 border rounded-lg">
+                      <div className="flex items-center gap-3 mb-4">
+                        <img 
+                          src="https://razorpay.com/assets/razorpay-glyph.svg" 
+                          alt="Razorpay" 
+                          className="h-8 w-8"
+                        />
+                        <div>
+                          <h3 className="font-medium">Pay with Razorpay</h3>
+                          <p className="text-sm text-muted-foreground">Secure payment via UPI, Cards, Netbanking & more</p>
                         </div>
-                      )}
-
-                      <div className="flex gap-4">
-                        <Button type="button" variant="outline" onClick={() => setStep(1)} data-testid="button-back-shipping">
-                          Back to Shipping
-                        </Button>
-                        <Button type="submit" className="flex-1" disabled={isProcessing} data-testid="button-place-order">
-                          {isProcessing ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            `Place Order - ₹${total.toFixed(2)}`
-                          )}
-                        </Button>
                       </div>
-                    </form>
+                      <p className="text-xs text-muted-foreground mb-4">
+                        You will be redirected to Razorpay's secure payment gateway to complete your purchase.
+                      </p>
+                    </div>
+
+                    <div className="flex gap-4">
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={() => setStep(1)} 
+                        data-testid="button-back-shipping"
+                      >
+                        Back to Shipping
+                      </Button>
+                      <Button 
+                        type="button"
+                        className="flex-1" 
+                        disabled={isProcessing} 
+                        onClick={handleRazorpayPayment}
+                        data-testid="button-pay-now"
+                      >
+                        {isProcessing ? (
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        ) : (
+                          <CreditCard className="h-4 w-4 mr-2" />
+                        )}
+                        {isProcessing ? "Processing..." : `Pay ₹${total.toFixed(2)}`}
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               )}
