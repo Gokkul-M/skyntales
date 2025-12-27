@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 interface InstagramPost {
@@ -19,17 +19,27 @@ declare global {
 }
 
 const InstagramSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
   const [posts, setPosts] = useState<InstagramPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const q = query(collection(db, "instagramPosts"), orderBy("order", "asc"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const postsRef = collection(db, "instagramPosts");
+    const unsubscribe = onSnapshot(postsRef, (snapshot) => {
       const postsData: InstagramPost[] = [];
       snapshot.forEach((doc) => {
-        postsData.push({ id: doc.id, ...doc.data() } as InstagramPost);
+        const data = doc.data();
+        postsData.push({ 
+          id: doc.id, 
+          embedCode: data.embedCode || "",
+          order: data.order || 0
+        });
       });
+      postsData.sort((a, b) => a.order - b.order);
       setPosts(postsData);
+      setIsLoading(false);
+    }, (error) => {
+      console.error("Error fetching Instagram posts:", error);
+      setIsLoading(false);
     });
 
     return () => unsubscribe();
@@ -57,34 +67,18 @@ const InstagramSection = () => {
     }
   }, [posts]);
 
-  useEffect(() => {
-    const el = sectionRef.current;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && el) {
-          el.classList.add("animate-instagram-reveal");
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    if (el) observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  if (isLoading) {
+    return null;
+  }
 
   if (posts.length === 0) {
     return null;
   }
 
   return (
-    <section
-      ref={sectionRef}
-      className="section-padding-sm bg-background overflow-hidden opacity-0"
-    >
+    <section className="section-padding-sm bg-background overflow-hidden py-12 md:py-16">
       <div className="text-center mb-8 sm:mb-12 px-4">
-        <h2 className="text-2xl sm:text-3xl md:text-h1 font-heading inline-flex items-center gap-3 sm:gap-4 flex-wrap justify-center">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading inline-flex items-center gap-3 sm:gap-4 flex-wrap justify-center">
           Follow On
           <span className="italic">Instagram</span>
         </h2>
