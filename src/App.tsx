@@ -30,6 +30,8 @@ import AdminProducts from "./pages/admin/AdminProducts";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminContact from "./pages/admin/AdminContact";
+import AdminAds from "./pages/admin/AdminAds";
+import AdminBlogs from "./pages/admin/AdminBlogs";
 import AdminCollections from "./pages/admin/AdminCollections";
 import AdminFeaturedProducts from "./pages/admin/AdminFeaturedProducts";
 import CustomCursor from "./components/ui/CustomCursor";
@@ -74,6 +76,8 @@ const App = () => (
                 <Route path="/admin/contact" element={<AdminContact />} />
                 <Route path="/admin/collections" element={<AdminCollections />} />
                 <Route path="/admin/featured" element={<AdminFeaturedProducts />} />
+                <Route path="/admin/ads" element={<AdminAds />} />
+                <Route path="/admin/blogs" element={<AdminBlogs />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

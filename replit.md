@@ -99,6 +99,8 @@ Google Sign-In requires additional configuration in Firebase Console:
 - **Order Management**: View and update order status
 - **Contact Messages**: View and respond to contact form submissions
 - **User Management**: View registered users
+- **Advertisement Management**: Create popup ads that display on website load
+- **Blog Management**: Create and publish blog articles
 
 ## Routes
 - `/` - Home page
@@ -115,6 +117,8 @@ Google Sign-In requires additional configuration in Firebase Console:
 - `/admin/orders` - Order management
 - `/admin/users` - User management
 - `/admin/contact` - Contact messages management
+- `/admin/ads` - Advertisement popup management
+- `/admin/blogs` - Blog post management
 
 ## Running the Application
 The application runs both the frontend (port 5000) and payment API server (port 3001):

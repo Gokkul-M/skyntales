@@ -11,7 +11,9 @@ import {
   ChevronRight,
   Settings,
   FolderOpen,
-  Sparkles
+  Sparkles,
+  Megaphone,
+  FileText
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -29,6 +31,8 @@ const menuItems = [
   { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
   { icon: Users, label: "Users", href: "/admin/users" },
   { icon: Mail, label: "Contact", href: "/admin/contact" },
+  { icon: Megaphone, label: "Ads", href: "/admin/ads" },
+  { icon: FileText, label: "Blogs", href: "/admin/blogs" },
 ];
 
 const AdminSidebar = () => {

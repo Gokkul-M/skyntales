@@ -9,10 +9,12 @@ import SocialProofSection from "@/components/home/SocialProofSection";
 import TestimonialSection from "@/components/home/TestimonialSection";
 import NewsletterSection from "@/components/home/NewsletterSection";
 import InstagramSection from "@/components/home/InstagramSection";
+import AdvertisementPopup from "@/components/popups/AdvertisementPopup";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      <AdvertisementPopup />
       <Header />
       <main>
         <HeroSection />
