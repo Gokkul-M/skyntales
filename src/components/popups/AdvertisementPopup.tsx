@@ -45,10 +45,7 @@ const AdvertisementPopup = () => {
             isActive: data.isActive || false,
           });
           
-          const hasSeenAd = sessionStorage.getItem(`ad_seen_${doc.id}`);
-          if (!hasSeenAd) {
-            setTimeout(() => setOpen(true), 1000);
-          }
+          setTimeout(() => setOpen(true), 1000);
         }
       } catch (error) {
         console.error("Error fetching advertisement:", error);
@@ -59,23 +56,13 @@ const AdvertisementPopup = () => {
   }, []);
 
   const handleClose = () => {
-    if (ad) {
-      sessionStorage.setItem(`ad_seen_${ad.id}`, "true");
-    }
     setOpen(false);
-  };
-
-  const handleOpenChange = (isOpen: boolean) => {
-    if (!isOpen && ad) {
-      sessionStorage.setItem(`ad_seen_${ad.id}`, "true");
-    }
-    setOpen(isOpen);
   };
 
   if (!ad) return null;
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-0">
         <Button
           variant="ghost"
