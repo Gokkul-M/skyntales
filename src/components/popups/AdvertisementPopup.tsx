@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Button } from "@/components/ui/button";
 import { collection, query, getDocs, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -66,6 +67,9 @@ const AdvertisementPopup = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-0">
+        <VisuallyHidden>
+          <DialogTitle>{ad.title}</DialogTitle>
+        </VisuallyHidden>
         <Button
           variant="ghost"
           size="icon"
