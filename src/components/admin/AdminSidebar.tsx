@@ -13,7 +13,8 @@ import {
   FolderOpen,
   Sparkles,
   Megaphone,
-  FileText
+  FileText,
+  Instagram
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,7 @@ const menuItems = [
   { icon: Mail, label: "Contact", href: "/admin/contact" },
   { icon: Megaphone, label: "Ads", href: "/admin/ads" },
   { icon: FileText, label: "Blogs", href: "/admin/blogs" },
+  { icon: Instagram, label: "Instagram", href: "/admin/instagram" },
 ];
 
 const AdminSidebar = () => {

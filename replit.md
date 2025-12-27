@@ -101,6 +101,7 @@ Google Sign-In requires additional configuration in Firebase Console:
 - **User Management**: View registered users
 - **Advertisement Management**: Create popup ads that display on website load
 - **Blog Management**: Create and publish blog articles
+- **Instagram Posts**: Manage Instagram posts displayed on homepage with links to actual posts
 
 ## Routes
 - `/` - Home page
@@ -119,6 +120,7 @@ Google Sign-In requires additional configuration in Firebase Console:
 - `/admin/contact` - Contact messages management
 - `/admin/ads` - Advertisement popup management
 - `/admin/blogs` - Blog post management
+- `/admin/instagram` - Instagram posts management
 
 ## Running the Application
 The application runs both the frontend (port 5000) and payment API server (port 3001):
