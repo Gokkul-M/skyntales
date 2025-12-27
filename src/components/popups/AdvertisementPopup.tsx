@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { collection, query, where, getDocs, orderBy, limit } from "firebase/firestore";
+import { collection, query, getDocs, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Link } from "react-router-dom";
 
@@ -24,27 +24,29 @@ const AdvertisementPopup = () => {
     const fetchActiveAd = async () => {
       try {
         const adsRef = collection(db, "advertisements");
-        const q = query(
-          adsRef,
-          where("isActive", "==", true),
-          orderBy("createdAt", "desc"),
-          limit(1)
-        );
+        const q = query(adsRef, orderBy("createdAt", "desc"));
         const snapshot = await getDocs(q);
         
-        if (!snapshot.empty) {
-          const doc = snapshot.docs[0];
-          const data = doc.data();
-          setAd({
-            id: doc.id,
-            title: data.title || "",
-            description: data.description || "",
-            image: data.image || "",
-            buttonText: data.buttonText || "Shop Now",
-            buttonLink: data.buttonLink || "/shop",
-            isActive: data.isActive || false,
-          });
-          
+        let activeAd: Advertisement | null = null;
+        snapshot.forEach((doc) => {
+          if (!activeAd) {
+            const data = doc.data();
+            if (data.isActive === true) {
+              activeAd = {
+                id: doc.id,
+                title: data.title || "",
+                description: data.description || "",
+                image: data.image || "",
+                buttonText: data.buttonText || "Shop Now",
+                buttonLink: data.buttonLink || "/shop",
+                isActive: true,
+              };
+            }
+          }
+        });
+        
+        if (activeAd) {
+          setAd(activeAd);
           setTimeout(() => setOpen(true), 1000);
         }
       } catch (error) {
