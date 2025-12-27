@@ -28,9 +28,8 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminOrders from "./pages/admin/AdminOrders";
-import AdminFeedback from "./pages/admin/AdminFeedback";
 import AdminUsers from "./pages/admin/AdminUsers";
-import AdminSupport from "./pages/admin/AdminSupport";
+import AdminContact from "./pages/admin/AdminContact";
 import AdminCollections from "./pages/admin/AdminCollections";
 import AdminFeaturedProducts from "./pages/admin/AdminFeaturedProducts";
 import CustomCursor from "./components/ui/CustomCursor";
@@ -71,9 +70,8 @@ const App = () => (
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/products" element={<AdminProducts />} />
                 <Route path="/admin/orders" element={<AdminOrders />} />
-                <Route path="/admin/feedback" element={<AdminFeedback />} />
                 <Route path="/admin/users" element={<AdminUsers />} />
-                <Route path="/admin/support" element={<AdminSupport />} />
+                <Route path="/admin/contact" element={<AdminContact />} />
                 <Route path="/admin/collections" element={<AdminCollections />} />
                 <Route path="/admin/featured" element={<AdminFeaturedProducts />} />
                 <Route path="*" element={<NotFound />} />

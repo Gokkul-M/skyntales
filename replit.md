@@ -97,8 +97,7 @@ Google Sign-In requires additional configuration in Firebase Console:
 - Dashboard with statistics overview
 - **Product Management**: Add, edit, delete products (synced with Firebase)
 - **Order Management**: View and update order status
-- **Customer Reviews**: Moderate and manage product reviews
-- **Support Tickets**: View and respond to contact form submissions
+- **Contact Messages**: View and respond to contact form submissions
 - **User Management**: View registered users
 
 ## Routes
@@ -114,9 +113,8 @@ Google Sign-In requires additional configuration in Firebase Console:
 - `/admin/dashboard` - Admin dashboard
 - `/admin/products` - Product management
 - `/admin/orders` - Order management
-- `/admin/feedback` - Review management
-- `/admin/support` - Support ticket management
 - `/admin/users` - User management
+- `/admin/contact` - Contact messages management
 
 ## Running the Application
 The application runs both the frontend (port 5000) and payment API server (port 3001):

@@ -25,7 +25,7 @@ interface Ticket {
   response?: string;
 }
 
-const AdminSupport = () => {
+const AdminContact = () => {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -155,8 +155,8 @@ const AdminSupport = () => {
     <AdminLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="font-heading text-2xl md:text-3xl font-semibold text-foreground" data-testid="text-support-title">Customer Support</h1>
-          <p className="text-muted-foreground text-sm">Manage support tickets and inquiries</p>
+          <h1 className="font-heading text-2xl md:text-3xl font-semibold text-foreground" data-testid="text-contact-title">Contact Messages</h1>
+          <p className="text-muted-foreground text-sm">View and respond to customer inquiries</p>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -238,7 +238,7 @@ const AdminSupport = () => {
             {filteredTickets.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground" data-testid="text-no-tickets">
                 <MessageSquare className="h-16 w-16 mx-auto mb-4 opacity-30" />
-                <h3 className="text-lg font-semibold mb-2">No support tickets found</h3>
+                <h3 className="text-lg font-semibold mb-2">No contact messages found</h3>
                 <p>Tickets will appear here when customers submit inquiries.</p>
               </div>
             ) : (
@@ -365,4 +365,4 @@ const AdminSupport = () => {
   );
 };
 
-export default AdminSupport;
+export default AdminContact;

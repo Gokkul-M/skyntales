@@ -3,9 +3,8 @@ import {
   LayoutDashboard, 
   Package, 
   ShoppingCart, 
-  Star, 
   Users, 
-  MessageSquare, 
+  Mail, 
   LogOut,
   Menu,
   X,
@@ -28,9 +27,8 @@ const menuItems = [
   { icon: FolderOpen, label: "Collections", href: "/admin/collections" },
   { icon: Sparkles, label: "Featured", href: "/admin/featured" },
   { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
-  { icon: Star, label: "Feedback", href: "/admin/feedback" },
   { icon: Users, label: "Users", href: "/admin/users" },
-  { icon: MessageSquare, label: "Support", href: "/admin/support" },
+  { icon: Mail, label: "Contact", href: "/admin/contact" },
 ];
 
 const AdminSidebar = () => {
