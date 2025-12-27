@@ -273,11 +273,85 @@ const OrderDetailsPopup = ({ order, isOpen, onClose }: OrderDetailsPopupProps) =
                 Shipment Tracking
               </h3>
 
+              {/* Order Status Timeline */}
+              {(() => {
+                const normalizedStatus = order.status?.toLowerCase().trim() || "pending";
+                const statusOrder = ["pending", "processing", "shipped", "delivered"];
+                const currentIdx = statusOrder.indexOf(normalizedStatus);
+                const isKnownStatus = currentIdx !== -1;
+                const isCancelled = normalizedStatus === "cancelled";
+                
+                return (
+                  <div className="mb-6">
+                    <div className="bg-secondary/30 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <div>
+                          <p className="text-sm text-muted-foreground">Current Status</p>
+                          <p className="font-semibold text-lg flex items-center gap-2">
+                            {getStatusIcon(order.status)}
+                            {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {/* Status Progress Bar */}
+                      {!isCancelled ? (
+                        <div className="relative">
+                          <div className="flex justify-between mb-2">
+                            {statusOrder.map((step, idx) => {
+                              const isCompleted = isKnownStatus && idx <= currentIdx;
+                              const isCurrent = isKnownStatus && idx === currentIdx;
+                              
+                              return (
+                                <div key={step} className="flex flex-col items-center flex-1">
+                                  <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-1 transition-colors ${
+                                    isCompleted 
+                                      ? "bg-primary text-primary-foreground" 
+                                      : "bg-muted text-muted-foreground"
+                                  } ${isCurrent ? "ring-2 ring-primary ring-offset-2" : ""}`}>
+                                    {step === "pending" && <Clock className="h-4 w-4" />}
+                                    {step === "processing" && <Package className="h-4 w-4" />}
+                                    {step === "shipped" && <Truck className="h-4 w-4" />}
+                                    {step === "delivered" && <CheckCircle2 className="h-4 w-4" />}
+                                  </div>
+                                  <span className={`text-xs text-center ${isCompleted ? "font-medium" : "text-muted-foreground"}`}>
+                                    {step.charAt(0).toUpperCase() + step.slice(1)}
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          {/* Progress Line */}
+                          <div className="absolute top-4 left-[calc(12.5%)] right-[calc(12.5%)] h-0.5 bg-muted -z-10">
+                            <div 
+                              className="h-full bg-primary transition-all"
+                              style={{
+                                width: isKnownStatus && currentIdx > 0 
+                                  ? `${(currentIdx / (statusOrder.length - 1)) * 100}%` 
+                                  : "0%"
+                              }}
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2 text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg p-3">
+                          <XCircle className="h-5 w-5" />
+                          <span className="font-medium">This order has been cancelled</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Courier Tracking Details (if AWB available) */}
               {!order.awbCode ? (
                 <div className="bg-secondary/30 rounded-lg p-4 text-center">
                   <Package className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
-                    Tracking information will be available once your order is shipped.
+                    {order.status === "shipped" || order.status === "delivered" 
+                      ? "Detailed courier tracking will be updated soon."
+                      : "Courier tracking details will be available once your order is shipped."}
                   </p>
                 </div>
               ) : loadingTracking ? (
