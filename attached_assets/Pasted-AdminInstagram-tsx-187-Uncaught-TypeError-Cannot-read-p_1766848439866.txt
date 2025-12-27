@@ -1,0 +1,31 @@
+AdminInstagram.tsx:187 Uncaught TypeError: Cannot read properties of undefined (reading 'length')
+    at AdminInstagram.tsx:187:39
+    at Array.map (<anonymous>)
+    at AdminInstagram (AdminInstagram.tsx:170:24)
+
+AdminInstagram.tsx:187 Uncaught TypeError: Cannot read properties of undefined (reading 'length')
+    at AdminInstagram.tsx:187:39
+    at Array.map (<anonymous>)
+    at AdminInstagram (AdminInstagram.tsx:170:24)
+chunk-T2SWDQEL.js?v=aac59d00:14032 The above error occurred in the <AdminInstagram> component:
+
+    at AdminInstagram (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/pages/admin/AdminInstagram.tsx:35:31)
+    at RenderedRoute (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=aac59d00:4088:5)
+    at Routes (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=aac59d00:4558:5)
+    at Router (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=aac59d00:4501:15)
+    at BrowserRouter (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=aac59d00:5247:5)
+    at Provider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/chunk-U27FYV5Z.js?v=aac59d00:38:15)
+    at TooltipProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=aac59d00:64:5)
+    at WishlistProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/contexts/WishlistContext.tsx:28:36)
+    at CartProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/contexts/CartContext.tsx:28:32)
+    at CollectionsProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/contexts/CollectionsContext.tsx:35:39)
+    at AuthProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/contexts/AuthContext.tsx:97:32)
+    at QueryClientProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/@tanstack_react-query.js?v=aac59d00:2934:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+chunk-T2SWDQEL.js?v=aac59d00:19413 Uncaught TypeError: Cannot read properties of undefined (reading 'length')
+    at AdminInstagram.tsx:187:39
+    at Array.map (<anonymous>)
+    at AdminInstagram (AdminInstagram.tsx:170:24)

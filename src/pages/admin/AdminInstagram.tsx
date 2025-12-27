@@ -179,14 +179,14 @@ const AdminInstagram = () => {
                     </TableCell>
                     <TableCell>
                       <a
-                        href={post.postUrl}
+                        href={post.postUrl || "#"}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm text-blue-600 hover:underline flex items-center gap-1"
                       >
-                        {post.postUrl.length > 50
+                        {(post.postUrl || "").length > 50
                           ? post.postUrl.substring(0, 50) + "..."
-                          : post.postUrl}
+                          : post.postUrl || "No URL"}
                         <ExternalLink className="h-3 w-3" />
                       </a>
                     </TableCell>
