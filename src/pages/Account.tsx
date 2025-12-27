@@ -450,9 +450,9 @@ const Account = () => {
   return (
     <div>
       <Header />
-      <main className="container-kanva py-24">
+      <main className="container-kanva py-20 sm:py-24 px-4 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             <aside className="lg:w-72 flex-shrink-0">
               <Card className="sticky top-28">
                 <CardContent className="p-6">

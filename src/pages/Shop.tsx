@@ -333,11 +333,11 @@ const Shop = () => {
     <div className="min-h-screen bg-warm-gray">
       <Header />
       <main>
-        <section className="pt-24 pb-12 text-center">
-          <h1 className="font-heading text-[80px] md:text-[120px] font-normal text-foreground">Shop</h1>
+        <section className="pt-20 sm:pt-24 pb-8 sm:pb-12 text-center px-4">
+          <h1 className="font-heading text-[50px] sm:text-[80px] md:text-[120px] font-normal text-foreground">Shop</h1>
         </section>
 
-        <section className="container-kanva pb-16 lg:mx-40">
+        <section className="container-kanva pb-12 sm:pb-16 px-4 lg:px-8 xl:mx-40">
           {collectionsLoading ? (
             <div className="flex justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -373,8 +373,8 @@ const Shop = () => {
           )}
         </section>
 
-        <section className="container-kanva pb-24">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+        <section className="container-kanva pb-16 sm:pb-24 px-4 lg:px-8">
+          <div className="flex flex-wrap items-start sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
             <h2 className="font-heading text-2xl italic text-foreground hidden lg:block">Filters</h2>
             
             <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>

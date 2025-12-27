@@ -86,60 +86,58 @@ const Footer = () => {
       className="bg-primary text-primary-foreground overflow-hidden
       opacity-0 translate-y-20 transition-all duration-700"
     >
-      <div className="container-kanva py-16 px-5">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-12">
-          <div className="lg:col-span-4">
+      <div className="container-kanva py-10 sm:py-16 px-4 sm:px-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12">
+          <div className="col-span-2 sm:col-span-2 lg:col-span-4">
             <Link
               to="/"
-              className="inline-block text-2xl font-heading mb-6 hover:opacity-80 transition"
+              className="inline-block text-xl sm:text-2xl font-heading mb-4 sm:mb-6 hover:opacity-80 transition"
             >
               Skyntales
             </Link>
 
-            <p className="text-primary-foreground/60 mb-8 max-w-sm leading-relaxed text-sm">
+            <p className="text-primary-foreground/60 mb-6 sm:mb-8 max-w-sm leading-relaxed text-xs sm:text-sm">
               Combining nature and science, we create skincare that nurtures
               your skin and respects the planet. Healthy, radiant skin starts
               here.
             </p>
 
-            <div className="flex items-center gap-3 mb-8">
+            <div className="flex items-center gap-3 mb-6 sm:mb-8">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
-                  className="p-3 bg-primary-foreground/10 hover:bg-primary-foreground/20 
+                  className="p-2.5 sm:p-3 bg-primary-foreground/10 hover:bg-primary-foreground/20 
                   rounded-full transition-all duration-300 hover:scale-110"
                   aria-label={social.label}
                 >
-                  <social.icon className="h-5 w-5" />
+                  <social.icon className="h-4 w-4 sm:h-5 sm:w-5" />
                 </a>
               ))}
             </div>
-
-            
           </div>
 
-          <div className="lg:col-span-2">
+          <div className="col-span-1 lg:col-span-2">
             <FooterColumn title="Pages" links={footerLinks.pages} />
           </div>
 
-          <div className="lg:col-span-2">
+          <div className="col-span-1 lg:col-span-2">
             <FooterColumn title="Categories" links={footerLinks.categories} />
-            <div className="mt-8">
+            <div className="mt-6 sm:mt-8">
               <FooterColumn title="Account" links={footerLinks.account} />
             </div>
           </div>
 
-          <div className="lg:col-span-2">
+          <div className="col-span-1 lg:col-span-2">
             <FooterColumn title="Support" links={footerLinks.support} />
           </div>
 
-          <div className="lg:col-span-2">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-primary-foreground/40 mb-5">
+          <div className="col-span-1 lg:col-span-2">
+            <h4 className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-primary-foreground/40 mb-3 sm:mb-5">
               Get in Touch
             </h4>
 
-            <div className="space-y-4 text-sm">
+            <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
               <InfoBlock label="Email" value="care@skyntales.com" />
               <InfoBlock label="Phone" value="+1 (555) 123-4567" />
               <InfoBlock

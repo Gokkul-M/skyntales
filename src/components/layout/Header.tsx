@@ -138,19 +138,19 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed left-3 right-3 z-50 px-8 transition-all duration-500 ${
-        scrolled ? "top-2" : "top-8"
+      className={`fixed left-2 right-2 sm:left-3 sm:right-3 z-50 px-2 sm:px-4 lg:px-8 transition-all duration-500 ${
+        scrolled ? "top-2" : "top-4 sm:top-8"
       }`}
     >
       <div
-        className={`h-18 rounded-[14px] flex items-center border transition-all duration-500
+        className={`h-14 sm:h-16 lg:h-18 rounded-xl sm:rounded-[14px] flex items-center border transition-all duration-500
         ${
           scrolled
             ? "bg-background/80 backdrop-blur-xl shadow-xl border-border/30"
             : "bg-background/95 backdrop-blur-md shadow-sm border-border/20"
         }`}
       >
-        <div className="px-6 lg:px-8 w-full">
+        <div className="px-3 sm:px-6 lg:px-8 w-full">
           <div className="flex items-center justify-between relative">
             <nav className="hidden lg:flex items-center justify-center gap-8">
               {navItems.map((item) => (
@@ -178,12 +178,12 @@ const Header = () => {
 
             <Link
               to="/"
-              className="absolute left-1/2 -translate-x-1/2 text-xl font-heading tracking-tight hover:opacity-70 transition"
+              className="absolute left-1/2 -translate-x-1/2 text-lg sm:text-xl font-heading tracking-tight hover:opacity-70 transition"
             >
               <span className="text-foreground font-medium">Skyntales</span>
             </Link>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1 sm:gap-3">
               <button
                 onClick={() => setProfileOpen(true)}
                 className="hidden sm:flex p-2 hover:opacity-60 transition"
@@ -193,10 +193,10 @@ const Header = () => {
               </button>
               <button
                 onClick={() => setSearchOpen(true)}
-                className="hidden sm:flex p-2 hover:opacity-60 transition"
+                className="p-2 hover:opacity-60 transition"
                 data-testid="button-search"
               >
-                <Search className="h-[18px] w-[18px]" />
+                <Search className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
               </button>
               <button
                 onClick={() => setWishlistOpen(true)}
@@ -218,7 +218,7 @@ const Header = () => {
                 className="p-2 hover:opacity-60 transition relative"
                 data-testid="button-cart"
               >
-                <ShoppingBag className="h-[18px] w-[18px]" />
+                <ShoppingBag className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
                 {cartCount > 0 && (
                   <span
                     className="absolute -top-0.5 -right-0.5 h-4 w-4 bg-primary text-primary-foreground text-[10px] font-semibold rounded-full flex items-center justify-center"
@@ -371,8 +371,31 @@ const Header = () => {
 
       {isMenuOpen && (
         <div className="lg:hidden mt-2 animate-mobile-menu">
-          <div className="bg-background rounded-2xl border border-border/20 shadow-lg">
+          <div className="bg-background rounded-2xl border border-border/20 shadow-lg max-h-[70vh] overflow-y-auto">
             <nav className="py-4 px-4 flex flex-col gap-1">
+              {/* Mobile action buttons */}
+              <div className="flex items-center gap-2 pb-3 mb-2 border-b border-border/20">
+                <button
+                  onClick={() => { setProfileOpen(true); setIsMenuOpen(false); }}
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg bg-secondary/50 hover:bg-secondary transition text-sm"
+                >
+                  <User className="h-4 w-4" />
+                  Account
+                </button>
+                <button
+                  onClick={() => { setWishlistOpen(true); setIsMenuOpen(false); }}
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg bg-secondary/50 hover:bg-secondary transition text-sm relative"
+                >
+                  <Heart className="h-4 w-4" />
+                  Wishlist
+                  {wishlistCount > 0 && (
+                    <span className="absolute top-1 right-1 h-4 w-4 bg-primary text-primary-foreground text-[10px] font-semibold rounded-full flex items-center justify-center">
+                      {wishlistCount > 9 ? "9+" : wishlistCount}
+                    </span>
+                  )}
+                </button>
+              </div>
+              
               {navItems.map((item) => (
                 <Link
                   key={item.label}

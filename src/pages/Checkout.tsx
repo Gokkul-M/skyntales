@@ -343,7 +343,7 @@ const Checkout = () => {
   return (
     <div>
       <Header />
-      <main className="container-kanva py-24">
+      <main className="container-kanva py-20 sm:py-24 px-4 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <Button 
             variant="ghost" 
@@ -385,7 +385,7 @@ const Checkout = () => {
                   </CardHeader>
                   <CardContent>
                     <form onSubmit={handleShippingSubmit} className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label>First Name *</Label>
                           <Input
@@ -406,7 +406,7 @@ const Checkout = () => {
                         </div>
                       </div>
                       
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label>Email *</Label>
                           <Input
@@ -438,7 +438,7 @@ const Checkout = () => {
                         />
                       </div>
                       
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label>City *</Label>
                           <Input
@@ -460,7 +460,7 @@ const Checkout = () => {
                         </div>
                       </div>
                       
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label>ZIP/Postal Code *</Label>
                           <Input
