@@ -3,6 +3,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Table,
   TableBody,
@@ -17,7 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, ExternalLink, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   collection,
@@ -34,8 +35,7 @@ import { db } from "@/lib/firebase";
 
 interface InstagramPost {
   id: string;
-  imageUrl: string;
-  postUrl: string;
+  embedCode: string;
   order: number;
   createdAt: any;
 }
@@ -46,8 +46,7 @@ const AdminInstagram = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<InstagramPost | null>(null);
   const [formData, setFormData] = useState({
-    imageUrl: "",
-    postUrl: "",
+    embedCode: "",
     order: 0,
   });
   const [saving, setSaving] = useState(false);
@@ -70,15 +69,13 @@ const AdminInstagram = () => {
     if (post) {
       setEditingPost(post);
       setFormData({
-        imageUrl: post.imageUrl,
-        postUrl: post.postUrl,
+        embedCode: post.embedCode,
         order: post.order,
       });
     } else {
       setEditingPost(null);
       setFormData({
-        imageUrl: "",
-        postUrl: "",
+        embedCode: "",
         order: posts.length,
       });
     }
@@ -86,8 +83,8 @@ const AdminInstagram = () => {
   };
 
   const handleSave = async () => {
-    if (!formData.imageUrl || !formData.postUrl) {
-      toast.error("Please fill in all required fields");
+    if (!formData.embedCode) {
+      toast.error("Please enter the Instagram embed code");
       return;
     }
 
@@ -95,15 +92,13 @@ const AdminInstagram = () => {
     try {
       if (editingPost) {
         await updateDoc(doc(db, "instagramPosts", editingPost.id), {
-          imageUrl: formData.imageUrl,
-          postUrl: formData.postUrl,
+          embedCode: formData.embedCode,
           order: formData.order,
         });
         toast.success("Instagram post updated");
       } else {
         await addDoc(collection(db, "instagramPosts"), {
-          imageUrl: formData.imageUrl,
-          postUrl: formData.postUrl,
+          embedCode: formData.embedCode,
           order: formData.order,
           createdAt: serverTimestamp(),
         });
@@ -130,6 +125,11 @@ const AdminInstagram = () => {
     }
   };
 
+  const extractPostUrl = (embedCode: string) => {
+    const match = embedCode.match(/data-instgrm-permalink="([^"]+)"/);
+    return match ? match[1].split("?")[0] : "Instagram Post";
+  };
+
   return (
     <AdminLayout>
       <div className="space-y-6">
@@ -137,13 +137,23 @@ const AdminInstagram = () => {
           <div>
             <h1 className="text-2xl font-bold">Instagram Posts</h1>
             <p className="text-muted-foreground">
-              Manage Instagram posts displayed on the homepage
+              Manage Instagram posts displayed on the homepage using embed codes
             </p>
           </div>
           <Button onClick={() => handleOpenDialog()}>
             <Plus className="h-4 w-4 mr-2" />
             Add Post
           </Button>
+        </div>
+
+        <div className="bg-muted/50 rounded-lg p-4 text-sm">
+          <p className="font-medium mb-2">How to get Instagram embed code:</p>
+          <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
+            <li>Open the Instagram post you want to embed</li>
+            <li>Click the three dots (...) menu</li>
+            <li>Select "Embed"</li>
+            <li>Copy the embed code and paste it here</li>
+          </ol>
         </div>
 
         {loading ? (
@@ -161,7 +171,6 @@ const AdminInstagram = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-20">Order</TableHead>
-                  <TableHead className="w-24">Preview</TableHead>
                   <TableHead>Post URL</TableHead>
                   <TableHead className="w-32 text-right">Actions</TableHead>
                 </TableRow>
@@ -171,24 +180,9 @@ const AdminInstagram = () => {
                   <TableRow key={post.id}>
                     <TableCell>{post.order}</TableCell>
                     <TableCell>
-                      <img
-                        src={post.imageUrl}
-                        alt="Instagram post"
-                        className="w-16 h-16 object-cover rounded"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <a
-                        href={post.postUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-blue-600 hover:underline flex items-center gap-1"
-                      >
-                        {post.postUrl.length > 50
-                          ? post.postUrl.substring(0, 50) + "..."
-                          : post.postUrl}
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
+                      <span className="text-sm text-muted-foreground">
+                        {extractPostUrl(post.embedCode)}
+                      </span>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
@@ -216,7 +210,7 @@ const AdminInstagram = () => {
         )}
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-lg">
             <DialogHeader>
               <DialogTitle>
                 {editingPost ? "Edit Instagram Post" : "Add Instagram Post"}
@@ -224,25 +218,15 @@ const AdminInstagram = () => {
             </DialogHeader>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="imageUrl">Image URL *</Label>
-                <Input
-                  id="imageUrl"
-                  value={formData.imageUrl}
+                <Label htmlFor="embedCode">Instagram Embed Code *</Label>
+                <Textarea
+                  id="embedCode"
+                  value={formData.embedCode}
                   onChange={(e) =>
-                    setFormData({ ...formData, imageUrl: e.target.value })
+                    setFormData({ ...formData, embedCode: e.target.value })
                   }
-                  placeholder="https://example.com/image.jpg"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="postUrl">Instagram Post URL *</Label>
-                <Input
-                  id="postUrl"
-                  value={formData.postUrl}
-                  onChange={(e) =>
-                    setFormData({ ...formData, postUrl: e.target.value })
-                  }
-                  placeholder="https://instagram.com/p/..."
+                  placeholder='<blockquote class="instagram-media" ...'
+                  rows={6}
                 />
               </div>
               <div className="space-y-2">
@@ -257,19 +241,6 @@ const AdminInstagram = () => {
                   min={0}
                 />
               </div>
-              {formData.imageUrl && (
-                <div className="space-y-2">
-                  <Label>Preview</Label>
-                  <img
-                    src={formData.imageUrl}
-                    alt="Preview"
-                    className="w-full h-48 object-cover rounded"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = "none";
-                    }}
-                  />
-                </div>
-              )}
               <div className="flex justify-end gap-2 pt-4">
                 <Button variant="outline" onClick={() => setDialogOpen(false)}>
                   Cancel
