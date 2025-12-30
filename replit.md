@@ -137,14 +137,15 @@ The Vite config proxies `/api/*` requests to the Express server.
 ## Product Data Model
 Products in Firestore include the following fields:
 - `name` - Product name (required)
-- `price` - Price in INR (required)
+- `price` - Base price in INR (first size's price)
 - `category` - Product category (required)
 - `stock` - Inventory count
 - `status` - "Active", "Draft", or "Out of Stock"
 - `images` - Array of up to 4 image URLs
 - `image` - Main image URL (first from images array)
 - `description` - Brief product description
-- `size` - Product size (e.g., "50ml", "100g")
+- `size` - Default size (first size from sizes array)
+- `sizes` - Array of size variants, each with `{ size: string, price: number }`
 - `details` - Detailed product information
 - `howToUse` - Usage instructions
 - `ingredients` - Full ingredient list

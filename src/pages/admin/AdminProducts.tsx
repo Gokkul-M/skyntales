@@ -17,6 +17,11 @@ import { collection, query, orderBy, onSnapshot, doc, addDoc, updateDoc, deleteD
 import { db } from "@/lib/firebase";
 import { useCollections } from "@/contexts/CollectionsContext";
 
+interface SizeVariant {
+  size: string;
+  price: number;
+}
+
 interface Product {
   id: string;
   name: string;
@@ -27,6 +32,7 @@ interface Product {
   images: string[];
   description: string;
   size: string;
+  sizes: SizeVariant[];
   details: string;
   howToUse: string;
   ingredients: string;
@@ -43,6 +49,7 @@ const emptyFormData = {
   description: "",
   images: ["", "", "", ""],
   size: "",
+  sizes: [{ size: "", price: "" }] as { size: string; price: string }[],
   details: "",
   howToUse: "",
   ingredients: "",
@@ -80,6 +87,7 @@ const AdminProducts = () => {
           images: data.images || [data.image || "/placeholder.svg"],
           description: data.description || "",
           size: data.size || "",
+          sizes: data.sizes || [],
           details: data.details || "",
           howToUse: data.howToUse || "",
           ingredients: data.ingredients || "",
@@ -115,24 +123,31 @@ const AdminProducts = () => {
   };
 
   const handleAdd = async () => {
-    if (!formData.name || !formData.price || !formData.category) {
-      toast({ title: "Please fill in all required fields", variant: "destructive" });
+    const hasValidSize = formData.sizes.some(s => s.size.trim() !== "" && s.price !== "");
+    if (!formData.name || !formData.category || !hasValidSize) {
+      toast({ title: "Please fill in all required fields including at least one size variant", variant: "destructive" });
       return;
     }
     
     setIsSubmitting(true);
     try {
       const validImages = formData.images.filter(img => img.trim() !== "");
+      const validSizes = formData.sizes
+        .filter(s => s.size.trim() !== "" && s.price !== "")
+        .map(s => ({ size: s.size, price: parseFloat(s.price) || 0 }));
+      const basePrice = validSizes.length > 0 ? validSizes[0].price : parseFloat(formData.price) || 0;
+      
       await addDoc(collection(db, "products"), {
         name: formData.name,
-        price: parseFloat(formData.price),
+        price: basePrice,
         category: formData.category,
         stock: parseInt(formData.stock) || 0,
         status: formData.status,
         images: validImages.length > 0 ? validImages : ["/placeholder.svg"],
         image: validImages[0] || "/placeholder.svg",
         description: formData.description,
-        size: formData.size,
+        size: validSizes.length > 0 ? validSizes[0].size : formData.size,
+        sizes: validSizes,
         details: formData.details,
         howToUse: formData.howToUse,
         ingredients: formData.ingredients,
@@ -156,17 +171,23 @@ const AdminProducts = () => {
     setIsSubmitting(true);
     try {
       const validImages = formData.images.filter(img => img.trim() !== "");
+      const validSizes = formData.sizes
+        .filter(s => s.size.trim() !== "" && s.price !== "")
+        .map(s => ({ size: s.size, price: parseFloat(s.price) || 0 }));
+      const basePrice = validSizes.length > 0 ? validSizes[0].price : parseFloat(formData.price) || 0;
+      
       const productRef = doc(db, "products", selectedProduct.id);
       await updateDoc(productRef, {
         name: formData.name,
-        price: parseFloat(formData.price),
+        price: basePrice,
         category: formData.category,
         stock: parseInt(formData.stock) || 0,
         status: formData.status,
         images: validImages.length > 0 ? validImages : selectedProduct.images,
         image: validImages[0] || selectedProduct.images[0] || "/placeholder.svg",
         description: formData.description,
-        size: formData.size,
+        size: validSizes.length > 0 ? validSizes[0].size : formData.size,
+        sizes: validSizes,
         details: formData.details,
         howToUse: formData.howToUse,
         ingredients: formData.ingredients,
@@ -202,6 +223,10 @@ const AdminProducts = () => {
       ? product.images.slice(0, 4) 
       : [...product.images, ...Array(4 - product.images.length).fill("")];
     
+    const sizesData = product.sizes && product.sizes.length > 0
+      ? product.sizes.map(s => ({ size: s.size, price: s.price.toString() }))
+      : [{ size: product.size || "", price: product.price.toString() }];
+    
     setFormData({
       name: product.name,
       price: product.price.toString(),
@@ -211,6 +236,7 @@ const AdminProducts = () => {
       description: product.description,
       images: images,
       size: product.size || "",
+      sizes: sizesData,
       details: product.details || "",
       howToUse: product.howToUse || "",
       ingredients: product.ingredients || "",
@@ -247,28 +273,15 @@ const AdminProducts = () => {
               data-testid="input-product-name"
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Price (₹) *</Label>
-              <Input
-                type="number"
-                step="0.01"
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                placeholder="0.00"
-                data-testid="input-product-price"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Stock</Label>
-              <Input
-                type="number"
-                value={formData.stock}
-                onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                placeholder="0"
-                data-testid="input-product-stock"
-              />
-            </div>
+          <div className="space-y-2">
+            <Label>Stock</Label>
+            <Input
+              type="number"
+              value={formData.stock}
+              onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+              placeholder="0"
+              data-testid="input-product-stock"
+            />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -307,14 +320,66 @@ const AdminProducts = () => {
               </Select>
             </div>
           </div>
-          <div className="space-y-2">
-            <Label>Size</Label>
-            <Input
-              value={formData.size}
-              onChange={(e) => setFormData({ ...formData, size: e.target.value })}
-              placeholder="e.g., 50ml, 100g"
-              data-testid="input-product-size"
-            />
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label>Size Variants *</Label>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setFormData({
+                  ...formData,
+                  sizes: [...formData.sizes, { size: "", price: "" }]
+                })}
+              >
+                <Plus className="h-3 w-3 mr-1" />
+                Add Size
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Add different sizes with their respective prices. The first size will be the default.
+            </p>
+            <div className="space-y-2">
+              {formData.sizes.map((sizeItem, index) => (
+                <div key={index} className="flex gap-2 items-center">
+                  <Input
+                    value={sizeItem.size}
+                    onChange={(e) => {
+                      const newSizes = [...formData.sizes];
+                      newSizes[index] = { ...newSizes[index], size: e.target.value };
+                      setFormData({ ...formData, sizes: newSizes });
+                    }}
+                    placeholder="Size (e.g., 50ml)"
+                    className="flex-1"
+                  />
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={sizeItem.price}
+                    onChange={(e) => {
+                      const newSizes = [...formData.sizes];
+                      newSizes[index] = { ...newSizes[index], price: e.target.value };
+                      setFormData({ ...formData, sizes: newSizes });
+                    }}
+                    placeholder="Price (₹)"
+                    className="w-28"
+                  />
+                  {formData.sizes.length > 1 && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        const newSizes = formData.sizes.filter((_, i) => i !== index);
+                        setFormData({ ...formData, sizes: newSizes });
+                      }}
+                    >
+                      <X className="h-4 w-4 text-red-500" />
+                    </Button>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
           <div className="space-y-2">
             <Label>Description</Label>

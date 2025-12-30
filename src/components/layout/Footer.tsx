@@ -159,7 +159,7 @@ const Footer = () => {
         <div className="container-kanva py-6 px-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center">
             <p className="text-primary-foreground/40 text-xs">
-              © 2024 Skyntales. All rights reserved.
+              © 2025 Skyntales. All rights reserved.
             </p>
 
             <div className="flex flex-wrap justify-center gap-6 text-xs">

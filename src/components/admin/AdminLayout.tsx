@@ -27,7 +27,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
       <div className="min-h-screen flex items-center justify-center bg-muted/30">
         <div className="flex flex-col items-center gap-4">
           <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center animate-pulse">
-            <span className="text-primary-foreground font-bold text-xl">K</span>
+            <span className="text-primary-foreground font-bold text-xl">S</span>
           </div>
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>

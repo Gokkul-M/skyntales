@@ -10,6 +10,11 @@ import { useToast } from "@/hooks/use-toast";
 import { doc, getDoc, collection, query, where, limit, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
+interface SizeVariant {
+  size: string;
+  price: number;
+}
+
 interface Product {
   id: string;
   name: string;
@@ -21,6 +26,7 @@ interface Product {
   image: string;
   description: string;
   size: string;
+  sizes: SizeVariant[];
   details: string;
   howToUse: string;
   ingredients: string;
@@ -85,6 +91,7 @@ const ProductDetail = () => {
             image: data.image || data.images?.[0] || "",
             description: data.description || "",
             size: data.size || "",
+            sizes: data.sizes || [],
             details: data.details || "",
             howToUse: data.howToUse || "",
             ingredients: data.ingredients || "",
@@ -115,6 +122,7 @@ const ProductDetail = () => {
                   image: d.image || d.images?.[0] || "",
                   description: d.description || "",
                   size: d.size || "",
+                  sizes: d.sizes || [],
                   details: d.details || "",
                   howToUse: d.howToUse || "",
                   ingredients: d.ingredients || "",
@@ -166,7 +174,15 @@ const ProductDetail = () => {
 
   const isFavorite = isInWishlist(product.id);
   const productImages = product.images?.length > 0 ? product.images : [product.image];
-  const availableSizes = product.size ? [product.size] : ["50ml", "100ml", "150ml"];
+  
+  const availableSizes: SizeVariant[] = product.sizes && product.sizes.length > 0
+    ? product.sizes
+    : product.size 
+      ? [{ size: product.size, price: product.price }]
+      : [{ size: "Standard", price: product.price }];
+  
+  const selectedSizeData = availableSizes.find(s => s.size === selectedSize);
+  const displayPrice = selectedSizeData ? selectedSizeData.price : availableSizes[0]?.price || product.price;
 
   const handleAddToCart = async () => {
     if (!selectedSize) {
@@ -175,10 +191,11 @@ const ProductDetail = () => {
     }
     
     try {
+      const sizePrice = selectedSizeData?.price || product.price;
       await addToCart({
         productId: product.id,
         name: `${product.name} (${selectedSize})`,
-        price: product.price,
+        price: sizePrice,
         image: product.image,
         discount: product.discount,
       }, quantity);
@@ -267,25 +284,28 @@ const ProductDetail = () => {
             </div>
 
             <div className="space-y-6">
-              <div className="text-2xl text-foreground" data-testid="text-price">₹{product.price.toFixed(2)}</div>
+              <div className="text-2xl text-foreground" data-testid="text-price">₹{displayPrice.toFixed(2)}</div>
               <h1 className="font-heading text-4xl md:text-5xl text-foreground" data-testid="text-product-name">{product.name}</h1>
               <p className="text-muted-foreground text-lg" data-testid="text-description">{product.description}</p>
 
               <div className="space-y-3">
                 <span className="text-foreground font-medium">Size</span>
                 <div className="flex gap-3 flex-wrap">
-                  {availableSizes.map((size) => (
+                  {availableSizes.map((sizeOption) => (
                     <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
+                      key={sizeOption.size}
+                      onClick={() => setSelectedSize(sizeOption.size)}
                       className={`px-5 py-2 rounded-lg border transition-colors ${
-                        selectedSize === size
+                        selectedSize === sizeOption.size
                           ? 'bg-primary text-primary-foreground border-primary'
                           : 'bg-background border-border text-foreground hover:border-primary/50'
                       }`}
-                      data-testid={`button-size-${size}`}
+                      data-testid={`button-size-${sizeOption.size}`}
                     >
-                      {size}
+                      <span>{sizeOption.size}</span>
+                      {availableSizes.length > 1 && (
+                        <span className="ml-2 text-sm opacity-80">₹{sizeOption.price}</span>
+                      )}
                     </button>
                   ))}
                 </div>

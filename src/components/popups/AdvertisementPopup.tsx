@@ -73,7 +73,7 @@ const AdvertisementPopup = () => {
         <Button
           variant="ghost"
           size="icon"
-          className="absolute right-2 top-2 z-10 bg-white/80 hover:bg-white rounded-full"
+          className="absolute right-2 top-2 z-10 bg-white/80 hover:bg-primary rounded-full"
           onClick={handleClose}
         >
           <X className="h-4 w-4" />

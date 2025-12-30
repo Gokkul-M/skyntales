@@ -53,7 +53,7 @@ const InstagramSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="section-padding-sm bg-background overflow-hidden opacity-0"
+      className="section-padding-sm bg-background overflow-hidden opacity-1"
     >
       <div className="text-center mb-8 sm:mb-12 px-4">
         <h2 className="text-2xl sm:text-3xl md:text-h1 font-heading 

@@ -62,11 +62,11 @@ const AdminSidebar = () => {
     <div className="flex flex-col h-full bg-card">
       <div className="p-5 flex items-center gap-3">
         <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center">
-          <span className="text-primary-foreground font-bold text-lg">K</span>
+          <span className="text-primary-foreground font-bold text-lg">S</span>
         </div>
         <div>
           <Link to="/" className="font-heading text-xl font-semibold text-foreground" data-testid="link-home">
-            Kanva
+            Skyntales
           </Link>
           <p className="text-xs text-muted-foreground">Admin Panel</p>
         </div>
