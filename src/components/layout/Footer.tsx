@@ -9,6 +9,7 @@ import {
   Cookie,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useCollections } from "@/contexts/CollectionsContext";
 import {
   Dialog,
   DialogContent,
@@ -23,6 +24,7 @@ const Footer = () => {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [termsOpen, setTermsOpen] = useState(false);
   const [cookiesOpen, setCookiesOpen] = useState(false);
+  const { collections } = useCollections();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -39,6 +41,17 @@ const Footer = () => {
     return () => observer.disconnect();
   }, []);
 
+  const categoryLinks = [
+    { label: "All Products", href: "/shop" },
+    ...collections
+      .filter(col => col.isActive)
+      .slice(0, 4)
+      .map(col => ({
+        label: col.name,
+        href: `/shop/${col.slug}`,
+      })),
+  ];
+
   const footerLinks = {
     pages: [
       { label: "Home", href: "/" },
@@ -46,22 +59,12 @@ const Footer = () => {
       { label: "Shop", href: "/shop" },
       { label: "Blog", href: "/blog" },
     ],
-    categories: [
-      { label: "All Products", href: "/shop" },
-      { label: "Cleansers", href: "/shop/cleansers" },
-      { label: "Lotions", href: "/shop/lotions" },
-      { label: "Moisturizers", href: "/shop/moisturizers" },
-    ],
     support: [
       { label: "Contact", href: "/contact" },
       { label: "FAQs", href: "/faq" },
       { label: "Shipping & Delivery", href: "/shipping" },
       { label: "Return & Cancellation", href: "/returns" },
       { label: "Terms & Conditions", href: "/terms" },
-    ],
-    account: [
-      { label: "Favorites", href: "/favorites" },
-      { label: "My Account", href: "/account" },
     ],
   };
 
@@ -122,9 +125,31 @@ const Footer = () => {
           </div>
 
           <div className="col-span-1 lg:col-span-2">
-            <FooterColumn title="Categories" links={footerLinks.categories} />
+            <FooterColumn title="Categories" links={categoryLinks} />
             <div className="mt-6 sm:mt-8">
-              <FooterColumn title="Account" links={footerLinks.account} />
+              <h4 className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-primary-foreground/40 mb-3 sm:mb-5">
+                Account
+              </h4>
+              <ul className="space-y-2 sm:space-y-3">
+                <li>
+                  <Link
+                    to="/account"
+                    className="group flex items-center gap-1 text-primary-foreground/60 hover:text-primary-foreground transition-colors text-xs sm:text-sm"
+                  >
+                    <span>My Favorites</span>
+                    <ArrowUpRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/account"
+                    className="group flex items-center gap-1 text-primary-foreground/60 hover:text-primary-foreground transition-colors text-xs sm:text-sm"
+                  >
+                    <span>My Account</span>
+                    <ArrowUpRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </Link>
+                </li>
+              </ul>
             </div>
           </div>
 

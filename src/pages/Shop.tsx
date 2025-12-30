@@ -177,7 +177,11 @@ const Shop = () => {
     return `₹${price.toLocaleString('en-IN')}`;
   };
 
-  const categoryCards = activeCollections.slice(0, 3).map((col, idx) => ({
+  const [showAllCollections, setShowAllCollections] = useState(false);
+  
+  const displayedCollections = showAllCollections ? activeCollections : activeCollections.slice(0, 3);
+  
+  const categoryCards = displayedCollections.map((col, idx) => ({
     name: col.name,
     slug: col.slug,
     image: col.image && col.image !== "/placeholder.svg" ? col.image : [product1, product2, product3][idx % 3],
@@ -343,29 +347,51 @@ const Shop = () => {
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
           ) : categoryCards.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {categoryCards.map((category) => (
-                <Link
-                  key={category.name}
-                  to={`/shop/${category.slug}`}
-                  className="group block"
-                >
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
-                    <img
-                      src={category.image}
-                      alt={category.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:blur"
-                    />
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between bg-white/80 px-5 rounded-lg py-3 backdrop-blur-sm ">
-                      <span className="text-foreground text-lg font-medium">
-                        {category.name}
-                      </span>
-                      <ArrowRight className="h-5 w-5 text-foreground transition-transform duration-300 group-hover:translate-x-1" />
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {categoryCards.map((category) => (
+                  <Link
+                    key={category.name}
+                    to={`/shop/${category.slug}`}
+                    className="group block"
+                  >
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
+                      <img
+                        src={category.image}
+                        alt={category.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:blur"
+                      />
+                      <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between bg-white/80 px-5 rounded-lg py-3 backdrop-blur-sm ">
+                        <span className="text-foreground text-lg font-medium">
+                          {category.name}
+                        </span>
+                        <ArrowRight className="h-5 w-5 text-foreground transition-transform duration-300 group-hover:translate-x-1" />
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+                  </Link>
+                ))}
+              </div>
+              {activeCollections.length > 3 && (
+                <div className="flex justify-center mt-6">
+                  <button
+                    onClick={() => setShowAllCollections(!showAllCollections)}
+                    className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full font-medium hover:bg-primary/90 transition-all duration-300 hover:scale-105 active:scale-95"
+                  >
+                    {showAllCollections ? (
+                      <>
+                        Show Less
+                        <ChevronDown className="h-4 w-4 rotate-180" />
+                      </>
+                    ) : (
+                      <>
+                        View More ({activeCollections.length - 3} more)
+                        <ChevronDown className="h-4 w-4" />
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <div className="text-center py-12 text-muted-foreground">
               <p>No collections available. Add collections in the admin panel.</p>
