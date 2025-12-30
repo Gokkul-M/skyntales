@@ -246,7 +246,7 @@ const Header = () => {
       </div>
 
       <div
-        className={`absolute top-full left-9 right-50 pt-2 transition-all duration-300 ${
+        className={`absolute top-full left-4 z-50 pt-2 transition-all duration-300 ${
           activeDropdown === "Shop"
             ? "opacity-100 visible"
             : "opacity-0 invisible pointer-events-none"
@@ -318,7 +318,7 @@ const Header = () => {
       </div>
 
       <div
-        className={`absolute top-full left-9 right-50 pt-2 transition-all duration-300 ${
+        className={`absolute top-full left-4 z-50 pt-2 transition-all duration-300 ${
           activeDropdown === "Collections"
             ? "opacity-100 visible"
             : "opacity-0 invisible pointer-events-none"
