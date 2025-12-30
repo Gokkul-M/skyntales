@@ -28,7 +28,6 @@ interface Product {
   tags?: string[];
 }
 
-const filterTags = ["After Sun", "All Skin", "Body", "Daily", "Detox", "Dry", "Evening", "Face", "Gentle", "Hydrating"];
 const filterSizes = ["50ml", "100ml", "150ml", "250ml"];
 const filterPrices = ["Under 500", "500 - 1000", "Over 1000"];
 const filterDiscounts = ["10% - 20%", "20% - 50%"];
@@ -42,7 +41,6 @@ const Shop = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedPrices, setSelectedPrices] = useState<string[]>([]);
   const [selectedDiscounts, setSelectedDiscounts] = useState<string[]>([]);
@@ -111,7 +109,6 @@ const Shop = () => {
   const filteredProducts = useMemo(() => {
     let filtered = products.filter(p => {
       if (selectedCategories.length > 0 && !selectedCategories.includes(p.category)) return false;
-      if (selectedTags.length > 0 && p.tags && !selectedTags.some(tag => p.tags?.includes(tag))) return false;
       if (selectedSizes.length > 0 && p.size && !selectedSizes.includes(p.size)) return false;
       
       if (selectedPrices.length > 0) {
@@ -153,13 +150,12 @@ const Shop = () => {
     }
     
     return filtered;
-  }, [products, selectedCategories, selectedTags, selectedSizes, selectedPrices, selectedDiscounts, sortBy]);
+  }, [products, selectedCategories, selectedSizes, selectedPrices, selectedDiscounts, sortBy]);
 
-  const hasActiveFilters = selectedCategories.length > 0 || selectedTags.length > 0 || selectedSizes.length > 0 || selectedPrices.length > 0 || selectedDiscounts.length > 0;
+  const hasActiveFilters = selectedCategories.length > 0 || selectedSizes.length > 0 || selectedPrices.length > 0 || selectedDiscounts.length > 0;
 
   const clearAllFilters = () => {
     setSelectedCategories([]);
-    setSelectedTags([]);
     setSelectedSizes([]);
     setSelectedPrices([]);
     setSelectedDiscounts([]);
@@ -232,32 +228,6 @@ const Shop = () => {
         ) : (
           <p className="text-sm text-muted-foreground">No categories available</p>
         )}
-      </div>
-
-      <div className="mb-8">
-        <h3 className="text-sm text-muted-foreground italic mb-4">Tags ({selectedTags.length})</h3>
-        <div className="max-h-48 overflow-y-auto pr-2 space-y-2 scrollbar-thin">
-          {filterTags.map((tag) => (
-            <button
-              key={tag}
-              onClick={() => toggleFilter(tag, selectedTags, setSelectedTags)}
-              className="flex items-center gap-3 cursor-pointer group w-full text-left"
-            >
-              <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-                selectedTags.includes(tag) 
-                  ? 'bg-primary border-primary' 
-                  : 'border-border group-hover:border-primary/50'
-              }`}>
-                {selectedTags.includes(tag) && (
-                  <svg className="w-3 h-3 text-primary-foreground" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                )}
-              </div>
-              <span className="text-foreground">{tag}</span>
-            </button>
-          ))}
-        </div>
       </div>
 
       <div className="mb-8">
