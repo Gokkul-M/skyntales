@@ -67,7 +67,7 @@ const AdvertisementPopup = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-[95vw] sm:max-w-md md:max-w-lg lg:max-w-xl p-0 overflow-hidden border-0 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-background via-background to-secondary/30 shadow-2xl">
+      <DialogContent className="max-w-[90vw] sm:max-w-sm md:max-w-md p-0 overflow-hidden border-0 rounded-xl sm:rounded-2xl bg-gradient-to-br from-background via-background to-secondary/30 shadow-2xl">
         <VisuallyHidden>
           <DialogTitle>{ad.title}</DialogTitle>
         </VisuallyHidden>
@@ -91,7 +91,7 @@ const AdvertisementPopup = () => {
               
               <div className="relative">
                 {ad.image && (
-                  <div className="relative aspect-[16/10] sm:aspect-[4/3] w-full overflow-hidden">
+                  <div className="relative aspect-[16/9] w-full overflow-hidden max-h-[30vh] sm:max-h-[35vh]">
                     <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10" />
                     <motion.img
                       initial={{ scale: 1.1 }}
@@ -119,19 +119,19 @@ const AdvertisementPopup = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2, duration: 0.4 }}
-                  className="p-4 sm:p-6 md:p-8 text-center space-y-3 sm:space-y-4"
+                  className="p-4 sm:p-5 text-center space-y-2 sm:space-y-3"
                 >
-                  <h2 className="text-xl sm:text-2xl md:text-3xl font-heading font-semibold text-foreground leading-tight">
+                  <h2 className="text-lg sm:text-xl font-heading font-semibold text-foreground leading-tight">
                     {ad.title}
                   </h2>
-                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-md mx-auto">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed line-clamp-2">
                     {ad.description}
                   </p>
-                  <div className="pt-2 sm:pt-4">
+                  <div className="pt-1 sm:pt-2">
                     <Button 
                       asChild 
-                      size="lg"
-                      className="w-full sm:w-auto min-w-[200px] rounded-full text-sm sm:text-base font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95"
+                      size="default"
+                      className="w-full rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-95"
                       onClick={handleClose}
                     >
                       <Link to={ad.buttonLink}>
@@ -139,9 +139,6 @@ const AdvertisementPopup = () => {
                       </Link>
                     </Button>
                   </div>
-                  <p className="text-xs text-muted-foreground/60 pt-2">
-                    Click anywhere outside to close
-                  </p>
                 </motion.div>
               </div>
             </motion.div>
