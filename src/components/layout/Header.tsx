@@ -92,7 +92,7 @@ const Header = () => {
 
   const shopCategories = [
     { label: "All Products", href: "/shop" },
-    ...activeCollections.slice(0, 5).map((col) => ({
+    ...activeCollections.slice(0, 3).map((col) => ({
       label: col.name,
       href: `/shop/${col.slug}`,
     })),
@@ -413,7 +413,7 @@ const Header = () => {
                   <span className="text-xs text-muted-foreground px-3 py-1">
                     Collections
                   </span>
-                  {activeCollections.slice(0, 4).map((col) => (
+                  {activeCollections.slice(0, 3).map((col) => (
                     <Link
                       key={col.id}
                       to={`/shop/${col.slug}`}
