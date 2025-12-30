@@ -246,15 +246,15 @@ const Header = () => {
       </div>
 
       <div
-        className={`absolute top-full left-9 right-50 transition-all duration-300 ${
+        className={`absolute top-full left-9 right-50 pt-2 transition-all duration-300 ${
           activeDropdown === "Shop"
-            ? "opacity-100 visible translate-y-1"
-            : "opacity-0 invisible -translate-y-3 pointer-events-none"
+            ? "opacity-100 visible"
+            : "opacity-0 invisible pointer-events-none"
         }`}
         onMouseEnter={() => setActiveDropdown("Shop")}
         onMouseLeave={() => setActiveDropdown(null)}
       >
-        <div className="mt-3 bg-background/90 backdrop-blur-xl rounded-2xl border border-border/30 shadow-2xl">
+        <div className="bg-background/90 backdrop-blur-xl rounded-2xl border border-border/30 shadow-2xl">
           <div className="px-10 py-10">
             <div className="flex gap-20">
               <div>
@@ -318,15 +318,15 @@ const Header = () => {
       </div>
 
       <div
-        className={`absolute top-full left-9 right-50 transition-all duration-300 ${
+        className={`absolute top-full left-9 right-50 pt-2 transition-all duration-300 ${
           activeDropdown === "Collections"
-            ? "opacity-100 visible translate-y-1"
-            : "opacity-0 invisible -translate-y-3 pointer-events-none"
+            ? "opacity-100 visible"
+            : "opacity-0 invisible pointer-events-none"
         }`}
         onMouseEnter={() => setActiveDropdown("Collections")}
         onMouseLeave={() => setActiveDropdown(null)}
       >
-        <div className="mt-3 bg-background/90 backdrop-blur-xl rounded-2xl border border-border/30 shadow-2xl">
+        <div className="bg-background/90 backdrop-blur-xl rounded-2xl border border-border/30 shadow-2xl">
           <div className="px-10 py-10">
             {collectionsLoading ? (
               <div className="flex items-center justify-center gap-2 text-muted-foreground py-8">
