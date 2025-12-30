@@ -284,46 +284,46 @@ const ProductDetail = () => {
             </div>
 
             <div className="space-y-6">
-              <div className="text-2xl text-foreground" data-testid="text-price">₹{displayPrice.toFixed(2)}</div>
-              <h1 className="font-heading text-4xl md:text-5xl text-foreground" data-testid="text-product-name">{product.name}</h1>
-              <p className="text-muted-foreground text-lg" data-testid="text-description">{product.description}</p>
+              <div className="text-xl sm:text-2xl text-foreground font-semibold" data-testid="text-price">₹{displayPrice.toFixed(2)}</div>
+              <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-foreground leading-tight" data-testid="text-product-name">{product.name}</h1>
+              <p className="text-muted-foreground text-sm sm:text-base lg:text-lg leading-relaxed" data-testid="text-description">{product.description}</p>
 
               <div className="space-y-3">
-                <span className="text-foreground font-medium">Size</span>
-                <div className="flex gap-3 flex-wrap">
+                <span className="text-foreground font-medium text-sm sm:text-base">Size</span>
+                <div className="flex gap-2 sm:gap-3 flex-wrap">
                   {availableSizes.map((sizeOption) => (
                     <button
                       key={sizeOption.size}
                       onClick={() => setSelectedSize(sizeOption.size)}
-                      className={`px-5 py-2 rounded-lg border transition-colors ${
+                      className={`px-3 sm:px-5 py-2 rounded-lg border text-sm sm:text-base transition-all duration-200 active:scale-95 ${
                         selectedSize === sizeOption.size
-                          ? 'bg-primary text-primary-foreground border-primary'
-                          : 'bg-background border-border text-foreground hover:border-primary/50'
+                          ? 'bg-primary text-primary-foreground border-primary shadow-md'
+                          : 'bg-background border-border text-foreground hover:border-primary/50 hover:shadow-sm'
                       }`}
                       data-testid={`button-size-${sizeOption.size}`}
                     >
                       <span>{sizeOption.size}</span>
                       {availableSizes.length > 1 && (
-                        <span className="ml-2 text-sm opacity-80">₹{sizeOption.price}</span>
+                        <span className="ml-1 sm:ml-2 text-xs sm:text-sm opacity-80">₹{sizeOption.price}</span>
                       )}
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="flex items-center gap-4">
-                <div className="flex items-center border border-border rounded-lg overflow-hidden">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+                <div className="flex items-center justify-center border border-border rounded-lg overflow-hidden">
                   <button 
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="p-3 bg-secondary hover:bg-secondary/80 transition-colors"
+                    className="p-2.5 sm:p-3 bg-secondary hover:bg-secondary/80 transition-all duration-200 active:scale-95"
                     data-testid="button-decrease-qty"
                   >
                     <Minus className="h-4 w-4" />
                   </button>
-                  <span className="w-14 text-center text-foreground font-medium" data-testid="text-quantity">{quantity}</span>
+                  <span className="w-12 sm:w-14 text-center text-foreground font-medium" data-testid="text-quantity">{quantity}</span>
                   <button 
                     onClick={() => setQuantity(quantity + 1)}
-                    className="p-3 bg-secondary hover:bg-secondary/80 transition-colors"
+                    className="p-2.5 sm:p-3 bg-secondary hover:bg-secondary/80 transition-all duration-200 active:scale-95"
                     data-testid="button-increase-qty"
                   >
                     <Plus className="h-4 w-4" />
@@ -331,9 +331,9 @@ const ProductDetail = () => {
                 </div>
                 <button 
                   onClick={handleAddToCart}
-                  className={`flex-1 py-3 px-8 rounded-full font-medium transition-colors ${
+                  className={`flex-1 py-3 px-6 sm:px-8 rounded-full font-medium text-sm sm:text-base transition-all duration-300 active:scale-95 ${
                     selectedSize 
-                      ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
+                      ? 'bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg' 
                       : 'bg-secondary text-foreground hover:bg-secondary/80'
                   }`}
                   data-testid="button-add-to-cart"
@@ -342,22 +342,22 @@ const ProductDetail = () => {
                 </button>
               </div>
 
-              <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
-                  <Truck className="h-4 w-4" />
-                  <span>Free Shipping over 50</span>
+                  <Truck className="h-4 w-4 flex-shrink-0" />
+                  <span>Free Shipping over ₹500</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <RefreshCw className="h-4 w-4" />
+                  <RefreshCw className="h-4 w-4 flex-shrink-0" />
                   <span>14 Days Returns</span>
                 </div>
               </div>
 
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
                 {badges.map((badge, idx) => (
-                  <div key={idx} className="flex flex-col items-center justify-center p-4 bg-background rounded-xl border border-border text-center">
-                    <badge.icon className="h-5 w-5 mb-2 text-foreground" />
-                    <span className="text-xs text-foreground whitespace-pre-line">{badge.label}</span>
+                  <div key={idx} className="flex flex-col items-center justify-center p-3 sm:p-4 bg-background rounded-xl border border-border text-center hover:border-primary/30 hover:shadow-sm transition-all duration-200">
+                    <badge.icon className="h-4 w-4 sm:h-5 sm:w-5 mb-1.5 sm:mb-2 text-foreground" />
+                    <span className="text-[10px] sm:text-xs text-foreground whitespace-pre-line leading-tight">{badge.label}</span>
                   </div>
                 ))}
               </div>
@@ -389,13 +389,13 @@ const ProductDetail = () => {
                 </AccordionItem>
               </Accordion>
 
-              <div className="flex items-center gap-6 text-sm">
-                <Link to="/faq" className="flex items-center gap-2 text-foreground hover:underline">
-                  <HelpCircle className="h-4 w-4" />
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 text-xs sm:text-sm">
+                <Link to="/faq" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
+                  <HelpCircle className="h-4 w-4 flex-shrink-0" />
                   Frequently Asked Questions
                 </Link>
-                <Link to="/contact" className="flex items-center gap-2 text-foreground hover:underline">
-                  <MessageCircle className="h-4 w-4" />
+                <Link to="/contact" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
+                  <MessageCircle className="h-4 w-4 flex-shrink-0" />
                   Contact Support
                 </Link>
               </div>
