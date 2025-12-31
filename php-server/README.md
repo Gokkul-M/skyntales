@@ -15,17 +15,25 @@ Copy these to your Hostinger `public_html` folder:
 - The `api/` folder from `php-server/`
 - The `.htaccess` file from `php-server/`
 
-### 3. Configure API Keys
+### 3. Configure API Keys (Using .env file)
 
-Edit `api/config.php` and replace with your actual keys:
-```php
-$keyId = 'rzp_live_XXXXXXXXXX';      // Your Razorpay Key ID
-$keySecret = 'XXXXXXXXXXXXXXXX';      // Your Razorpay Key Secret
+Create a `.env` file in the `public_html` folder (same level as index.html):
+
+```
+RAZORPAY_KEY_ID=rzp_live_XXXXXXXXXX
+RAZORPAY_KEY_SECRET=XXXXXXXXXXXXXXXX
 ```
 
-**Security Note:** For better security, use Hostinger's environment variables:
-1. Go to hPanel → Advanced → PHP Configuration
-2. Add environment variables for RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET
+**Important Security Notes:**
+- NEVER commit the `.env` file to version control
+- The `.env` file should NOT be publicly accessible
+- Add this to your `.htaccess` to block access to .env:
+  ```
+  <Files .env>
+      Order allow,deny
+      Deny from all
+  </Files>
+  ```
 
 ### 4. Final Structure in public_html
 
