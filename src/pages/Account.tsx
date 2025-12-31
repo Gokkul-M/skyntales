@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { User, Package, Heart, MapPin, Settings, Shield, Loader2, Trash2, ChevronRight, LogOut, ShoppingBag, Lock } from "lucide-react";
-import { collection, query, where, orderBy, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import OrderDetailsPopup from "@/components/popups/OrderDetailsPopup";
 
@@ -103,7 +103,7 @@ const Account = () => {
     
     try {
       const ordersRef = collection(db, "orders");
-      const q = query(ordersRef, where("userId", "==", user.uid), orderBy("createdAt", "desc"));
+      const q = query(ordersRef, where("userId", "==", user.uid));
       
       // Use onSnapshot for real-time updates
       const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -111,6 +111,12 @@ const Account = () => {
           id: doc.id,
           ...doc.data()
         })) as Order[];
+        // Sort client-side to avoid composite index requirement
+        fetchedOrders.sort((a, b) => {
+          const dateA = a.createdAt?.toDate?.() || new Date(0);
+          const dateB = b.createdAt?.toDate?.() || new Date(0);
+          return dateB.getTime() - dateA.getTime();
+        });
         setOrders(fetchedOrders);
         setLoadingOrders(false);
       }, (error) => {

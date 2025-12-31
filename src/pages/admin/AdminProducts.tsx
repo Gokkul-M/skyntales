@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Pencil, Trash2, Search, Loader2, Package, ImagePlus, X, MoreVertical } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { toast } from "@/hooks/use-toast";
-import { collection, query, orderBy, onSnapshot, doc, addDoc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
+import { collection, onSnapshot, doc, addDoc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useCollections } from "@/contexts/CollectionsContext";
 
@@ -37,7 +37,7 @@ interface Product {
   howToUse: string;
   ingredients: string;
   deliveryReturn: string;
-  createdAt?: any;
+  createdAt?: Date;
 }
 
 const emptyFormData = {
@@ -71,9 +71,8 @@ const AdminProducts = () => {
 
   useEffect(() => {
     const productsRef = collection(db, "products");
-    const q = query(productsRef, orderBy("createdAt", "desc"));
     
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = onSnapshot(productsRef, (snapshot) => {
       const productsData: Product[] = [];
       snapshot.forEach((doc) => {
         const data = doc.data();
@@ -92,8 +91,14 @@ const AdminProducts = () => {
           howToUse: data.howToUse || "",
           ingredients: data.ingredients || "",
           deliveryReturn: data.deliveryReturn || "",
-          createdAt: data.createdAt,
+          createdAt: data.createdAt?.toDate?.() || new Date(0),
         });
+      });
+      // Sort client-side to avoid potential index issues
+      productsData.sort((a, b) => {
+        const dateA = a.createdAt instanceof Date ? a.createdAt.getTime() : 0;
+        const dateB = b.createdAt instanceof Date ? b.createdAt.getTime() : 0;
+        return dateB - dateA;
       });
       setProducts(productsData);
       setLoading(false);

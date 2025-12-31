@@ -14,7 +14,7 @@ import { db } from "@/lib/firebase";
 import type { CartItem } from "@/contexts/CartContext";
 
 export interface OrderItem {
-  productId: number;
+  productId: string | number;
   name: string;
   price: number;
   quantity: number;
@@ -100,14 +100,20 @@ export const orderService = {
   async getOrdersByUser(userId: string): Promise<Order[]> {
     const q = query(
       ordersRef,
-      where("userId", "==", userId),
-      orderBy("createdAt", "desc")
+      where("userId", "==", userId)
     );
     const snapshot = await getDocs(q);
-    return snapshot.docs.map((doc) => ({
+    const orders = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     })) as Order[];
+    // Sort client-side to avoid composite index requirement
+    orders.sort((a, b) => {
+      const dateA = a.createdAt?.toDate?.() || new Date(0);
+      const dateB = b.createdAt?.toDate?.() || new Date(0);
+      return dateB.getTime() - dateA.getTime();
+    });
+    return orders;
   },
 
   async getOrderById(orderId: string): Promise<Order | null> {
