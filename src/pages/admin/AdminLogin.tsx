@@ -155,18 +155,6 @@ const AdminLogin = () => {
                 )}
               </Button>
             </form>
-
-            <div className="mt-6 p-4 bg-muted rounded-lg">
-              <div className="flex items-start gap-3">
-                <ShieldCheck className="h-5 w-5 text-muted-foreground mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-foreground mb-1">Demo Admin Access</p>
-                  <p className="text-xs text-muted-foreground">
-                    Use <span className="font-mono">admin@kanva.com</span> with password <span className="font-mono">admin123</span>
-                  </p>
-                </div>
-              </div>
-            </div>
           </CardContent>
         </Card>
 

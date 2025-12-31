@@ -301,16 +301,11 @@ const Account = () => {
                 </CardTitle>
                 <CardDescription className="text-base">
                   {isSignUp 
-                    ? "Join Kanva for exclusive offers and easy checkout" 
+                    ? "Join Skyntales for exclusive offers and easy checkout" 
                     : "Sign in to access your account"}
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-4">
-                <div className="mb-6 p-4 bg-secondary/50 rounded-xl text-sm">
-                  <p className="font-medium text-foreground mb-1">Demo Admin Account:</p>
-                  <p className="text-muted-foreground">Email: admin@kanva.com</p>
-                  <p className="text-muted-foreground">Password: admin123</p>
-                </div>
                 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {isSignUp && (

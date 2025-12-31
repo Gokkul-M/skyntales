@@ -8,7 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useToast } from "@/hooks/use-toast";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCollections } from "@/contexts/CollectionsContext";
-import { collection, query, where, orderBy, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import product1 from "@/assets/product-1.jpg";
 import product2 from "@/assets/product-2.jpg";
@@ -26,6 +26,7 @@ interface Product {
   discount?: number;
   size?: string;
   tags?: string[];
+  createdAt?: Date;
 }
 
 const filterSizes = ["50ml", "100ml", "150ml", "250ml"];
@@ -52,7 +53,7 @@ const Shop = () => {
 
   useEffect(() => {
     const productsRef = collection(db, "products");
-    const q = query(productsRef, where("status", "==", "Active"), orderBy("createdAt", "desc"));
+    const q = query(productsRef, where("status", "==", "Active"));
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const productsData: Product[] = [];
@@ -70,7 +71,14 @@ const Shop = () => {
           discount: data.discount,
           size: data.size,
           tags: data.tags || [],
+          createdAt: data.createdAt?.toDate?.() || new Date(0),
         });
+      });
+      // Sort client-side to avoid requiring composite index
+      productsData.sort((a, b) => {
+        const dateA = a.createdAt instanceof Date ? a.createdAt.getTime() : 0;
+        const dateB = b.createdAt instanceof Date ? b.createdAt.getTime() : 0;
+        return dateB - dateA;
       });
       setProducts(productsData);
       setLoading(false);

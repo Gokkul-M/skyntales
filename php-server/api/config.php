@@ -25,7 +25,7 @@ if (file_exists($envFile)) {
     }
 }
 
-$keyId = getenv('RAZORPAY_KEY_ID');
+$keyId = getenv('VITE_RAZORPAY_KEY_ID');
 $keySecret = getenv('RAZORPAY_KEY_SECRET');
 
 if (empty($keyId) || empty($keySecret)) {
