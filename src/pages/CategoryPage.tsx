@@ -15,6 +15,11 @@ import product1 from "@/assets/product-1.jpg";
 import product2 from "@/assets/product-2.jpg";
 import product3 from "@/assets/product-3.jpg";
 
+interface SizeVariant {
+  size: string;
+  price: number;
+}
+
 interface Product {
   id: string;
   name: string;
@@ -26,7 +31,7 @@ interface Product {
   stock: number;
   discount?: number;
   size?: string;
-  sizes?: string[];
+  sizes?: SizeVariant[];
   tags?: string[];
 }
 
@@ -106,7 +111,7 @@ const CategoryPage = () => {
           stock: data.stock || 0,
           discount: data.discount,
           size: data.size,
-          sizes: data.sizes || (data.size ? [data.size] : ["50ml", "100ml"]),
+          sizes: data.sizes || (data.size ? [{ size: data.size, price: data.price }] : []),
           tags: data.tags || [],
         });
       });
@@ -534,17 +539,17 @@ const CategoryPage = () => {
 
                           {product.sizes && product.sizes.length > 0 && (
                             <div className="flex justify-center gap-2 flex-wrap">
-                              {product.sizes.map((size) => (
+                              {product.sizes.map((sizeVariant) => (
                                 <button
-                                  key={size}
-                                  onClick={() => setProductSize(product.id, size)}
+                                  key={sizeVariant.size}
+                                  onClick={() => setProductSize(product.id, sizeVariant.size)}
                                   className={`px-3 py-1 text-xs rounded-full border transition-colors ${
-                                    selection.size === size
+                                    selection.size === sizeVariant.size
                                       ? 'bg-primary text-primary-foreground border-primary'
                                       : 'bg-background border-border text-foreground hover:border-primary/50'
                                   }`}
                                 >
-                                  {size}
+                                  {sizeVariant.size}
                                 </button>
                               ))}
                             </div>

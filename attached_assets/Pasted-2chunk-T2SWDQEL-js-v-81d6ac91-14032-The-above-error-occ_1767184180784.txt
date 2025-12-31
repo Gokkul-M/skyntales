@@ -1,0 +1,44 @@
+2chunk-T2SWDQEL.js?v=81d6ac91:14032 The above error occurred in the <button> component:
+
+    at button
+    at div
+    at div
+    at div
+    at div
+    at div
+    at div
+    at section
+    at main
+    at div
+    at CategoryPage (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/pages/CategoryPage.tsx:72:23)
+    at RenderedRoute (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=81d6ac91:4088:5)
+    at Routes (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=81d6ac91:4558:5)
+    at Router (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=81d6ac91:4501:15)
+    at BrowserRouter (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=81d6ac91:5247:5)
+    at Provider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/chunk-U27FYV5Z.js?v=81d6ac91:38:15)
+    at TooltipProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=81d6ac91:64:5)
+    at WishlistProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/contexts/WishlistContext.tsx:28:36)
+    at CartProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/contexts/CartContext.tsx:28:32)
+    at CollectionsProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/contexts/CollectionsContext.tsx:35:39)
+    at AuthProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/contexts/AuthContext.tsx:97:32)
+    at QueryClientProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/@tanstack_react-query.js?v=81d6ac91:2934:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-T2SWDQEL.js?v=81d6ac91:14032
+update.callback @ chunk-T2SWDQEL.js?v=81d6ac91:14052
+callCallback @ chunk-T2SWDQEL.js?v=81d6ac91:11248
+commitUpdateQueue @ chunk-T2SWDQEL.js?v=81d6ac91:11265
+commitLayoutEffectOnFiber @ chunk-T2SWDQEL.js?v=81d6ac91:17093
+commitLayoutMountEffects_complete @ chunk-T2SWDQEL.js?v=81d6ac91:17980
+commitLayoutEffects_begin @ chunk-T2SWDQEL.js?v=81d6ac91:17969
+commitLayoutEffects @ chunk-T2SWDQEL.js?v=81d6ac91:17920
+commitRootImpl @ chunk-T2SWDQEL.js?v=81d6ac91:19353
+commitRoot @ chunk-T2SWDQEL.js?v=81d6ac91:19277
+finishConcurrentRender @ chunk-T2SWDQEL.js?v=81d6ac91:18760
+performConcurrentWorkOnRoot @ chunk-T2SWDQEL.js?v=81d6ac91:18718
+workLoop @ chunk-T2SWDQEL.js?v=81d6ac91:197
+flushWork @ chunk-T2SWDQEL.js?v=81d6ac91:176
+performWorkUntilDeadline @ chunk-T2SWDQEL.js?v=81d6ac91:384Understand this error
+chunk-T2SWDQEL.js?v=81d6ac91:9934 Uncaught Error: Objects are not valid as a React child (found: object with keys {size, price}). If you meant to render a collection of children, use an array instead.
