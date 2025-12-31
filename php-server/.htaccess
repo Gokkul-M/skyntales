@@ -1,0 +1,23 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # Handle API routes
+  RewriteRule ^api/create-order$ api/create-order.php [L,QSA]
+  RewriteRule ^api/verify-payment$ api/verify-payment.php [L,QSA]
+  RewriteRule ^api/health$ api/health.php [L,QSA]
+  
+  # Handle React Router (for all other routes)
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !^/api/
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# Security headers
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-XSS-Protection "1; mode=block"
+</IfModule>
