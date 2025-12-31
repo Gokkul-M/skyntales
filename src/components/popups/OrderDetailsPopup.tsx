@@ -6,10 +6,25 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader2, Package, Truck, CheckCircle2, Clock, MapPin, Phone, Mail, XCircle } from "lucide-react";
+import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { useToast } from "@/hooks/use-toast";
 
 interface OrderItem {
   productId: string;
@@ -52,7 +67,6 @@ interface Order {
   total: number;
   subtotal: number;
   shippingCost: number;
-  tax: number;
   createdAt: any;
   items: OrderItem[];
   shipping: ShippingInfo;
@@ -104,9 +118,51 @@ const getStatusColor = (status: string) => {
 };
 
 const OrderDetailsPopup = ({ order, isOpen, onClose }: OrderDetailsPopupProps) => {
+  const { toast } = useToast();
   const [tracking, setTracking] = useState<TrackingData | null>(null);
   const [loadingTracking, setLoadingTracking] = useState(false);
   const [trackingError, setTrackingError] = useState<string | null>(null);
+  const [isCancelling, setIsCancelling] = useState(false);
+
+  const canCancelOrder = (orderData: Order | null): boolean => {
+    if (!orderData) return false;
+    const status = orderData.status?.toLowerCase();
+    if (status === "cancelled" || status === "delivered" || status === "shipped") return false;
+    
+    if (!orderData.createdAt) return false;
+    const orderDate = orderData.createdAt?.toDate?.() || new Date(orderData.createdAt);
+    const hoursSinceOrder = (Date.now() - orderDate.getTime()) / (1000 * 60 * 60);
+    return hoursSinceOrder <= 12;
+  };
+
+  const getTimeRemaining = (orderData: Order | null): string => {
+    if (!orderData?.createdAt) return "";
+    const orderDate = orderData.createdAt?.toDate?.() || new Date(orderData.createdAt);
+    const hoursRemaining = 12 - ((Date.now() - orderDate.getTime()) / (1000 * 60 * 60));
+    if (hoursRemaining <= 0) return "";
+    const hours = Math.floor(hoursRemaining);
+    const minutes = Math.floor((hoursRemaining - hours) * 60);
+    return `${hours}h ${minutes}m remaining to cancel`;
+  };
+
+  const handleCancelOrder = async () => {
+    if (!order) return;
+    setIsCancelling(true);
+    try {
+      const orderRef = doc(db, "orders", order.id);
+      await updateDoc(orderRef, {
+        status: "cancelled",
+        cancelledAt: serverTimestamp(),
+      });
+      toast({ title: "Order cancelled successfully" });
+      onClose();
+    } catch (error) {
+      console.error("Error cancelling order:", error);
+      toast({ title: "Failed to cancel order", variant: "destructive" });
+    } finally {
+      setIsCancelling(false);
+    }
+  };
 
   useEffect(() => {
     if (isOpen && order?.awbCode) {
@@ -176,6 +232,39 @@ const OrderDetailsPopup = ({ order, isOpen, onClose }: OrderDetailsPopupProps) =
           <DialogDescription className="text-sm text-muted-foreground">
             Placed on {formatDate(order.createdAt)}
           </DialogDescription>
+          {canCancelOrder(order) && (
+            <div className="mt-3 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-medium text-orange-800 dark:text-orange-200">
+                    {getTimeRemaining(order)}
+                  </p>
+                </div>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="destructive" size="sm" disabled={isCancelling}>
+                      {isCancelling ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <XCircle className="h-4 w-4 mr-1" />}
+                      Cancel Order
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Cancel Order #{order.orderNumber}?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. Your order will be cancelled and you will need to place a new order if you change your mind.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Keep Order</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleCancelOrder} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                        Yes, Cancel Order
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            </div>
+          )}
         </DialogHeader>
 
         <ScrollArea className="max-h-[calc(90vh-100px)]">
@@ -251,10 +340,6 @@ const OrderDetailsPopup = ({ order, isOpen, onClose }: OrderDetailsPopupProps) =
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Shipping</span>
                     <span>{formatPrice(order.shippingCost || 0)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Tax</span>
-                    <span>{formatPrice(order.tax || 0)}</span>
                   </div>
                   <Separator className="my-2" />
                   <div className="flex justify-between font-semibold text-base">
