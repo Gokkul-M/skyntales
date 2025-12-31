@@ -254,7 +254,7 @@ const AdminProducts = () => {
     }
   };
 
-  const ProductForm = ({ isEdit = false }: { isEdit?: boolean }) => (
+  const renderProductForm = (isEdit: boolean = false) => (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
       <TabsList className="grid w-full grid-cols-3 mb-4">
         <TabsTrigger value="basic">Basic Info</TabsTrigger>
@@ -730,7 +730,7 @@ const AdminProducts = () => {
             <DialogHeader>
               <DialogTitle className="font-heading text-xl">Add New Product</DialogTitle>
             </DialogHeader>
-            <ProductForm />
+            {renderProductForm(false)}
           </DialogContent>
         </Dialog>
 
@@ -739,7 +739,7 @@ const AdminProducts = () => {
             <DialogHeader>
               <DialogTitle className="font-heading text-xl">Edit Product</DialogTitle>
             </DialogHeader>
-            <ProductForm isEdit />
+            {renderProductForm(true)}
           </DialogContent>
         </Dialog>
       </div>

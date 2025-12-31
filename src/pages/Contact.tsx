@@ -207,7 +207,7 @@ const Contact = () => {
                 <div>
                   <p className="font-medium mb-1">Email Us</p>
                   <a href="mailto:hello@kanva.com" className="text-muted-foreground hover:text-foreground">
-                    hello@kanva.com
+                    care@skyntales.com
                   </a>
                 </div>
                 <div>

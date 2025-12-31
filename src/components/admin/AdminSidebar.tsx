@@ -164,9 +164,9 @@ const AdminSidebar = () => {
         </Button>
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">K</span>
+            <span className="text-primary-foreground font-bold text-sm">S</span>
           </div>
-          <span className="font-heading text-lg font-semibold">Kanva Admin</span>
+          <span className="font-heading text-lg font-semibold">Skyntales Admin</span>
         </div>
         <div className="w-10" />
       </div>
