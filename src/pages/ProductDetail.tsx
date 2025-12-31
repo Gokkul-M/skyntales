@@ -45,7 +45,7 @@ const featureBadges = [
   { icon: Leaf, title: "Natural Formula", description: "Crafted with pure, skin-loving ingredients for ultimate care." },
   { icon: Rabbit, title: "Cruelty-Free", description: "Our products are never tested on animals, guaranteed ethical." },
   { icon: CheckCircle, title: "Expert Approved", description: "Carefully tested to ensure safety and visible results." },
-  { icon: Truck, title: "Free Shipping", description: "Delivered to your doorstep with no extra costs worldwide." },
+  { icon: Truck, title: "Paid Shipping", description: "Delivered to your doorstep with extra costs worldwide." },
 ];
 
 const faqs = [
@@ -340,17 +340,6 @@ const ProductDetail = () => {
                 >
                   {selectedSize ? 'Add to Cart' : 'Select Size'}
                 </button>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Truck className="h-4 w-4 flex-shrink-0" />
-                  <span>Free Shipping over ₹500</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <RefreshCw className="h-4 w-4 flex-shrink-0" />
-                  <span>14 Days Returns</span>
-                </div>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">

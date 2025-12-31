@@ -86,8 +86,7 @@ const Checkout = () => {
   const shipping = isLocationValid ? calculateShippingCost(shippingInfo.state) : 0;
   const shippingCost = shipping;
   
-  const tax = subtotal * 0.1;
-  const total = subtotal + shippingCost + tax;
+  const total = subtotal + shippingCost;
 
   const handleShippingChange = (field: string, value: string) => {
     const updatedInfo = { ...shippingInfo, [field]: value };
@@ -162,7 +161,6 @@ const Checkout = () => {
       },
       subtotal,
       shippingCost: shippingCost,
-      tax,
       total,
       createdAt: serverTimestamp(),
     };
@@ -603,10 +601,6 @@ const Checkout = () => {
                           </p>
                         )}
                       </div>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Tax</span>
-                      <span>₹{tax.toFixed(2)}</span>
                     </div>
                   </div>
                   
