@@ -54,7 +54,7 @@ const About = () => {
                 <span className="italic">Skincare</span>
               </h1>
               <p className="text-lg text-primary-foreground/80 leading-relaxed mb-6">
-                At Kanva, we blend nature and science to create skincare that transforms, empowers, and respects the planet.
+                At Skyntales, we blend nature and science to create skincare that transforms, empowers, and respects the planet.
               </p>
               <Link to="/about" className="text-primary-foreground flex items-center gap-2 hover:gap-3 transition-all">
                 Our Story <span>→</span>
@@ -124,7 +124,7 @@ const About = () => {
                   <span className="italic">Powerful Results</span>
                 </h3>
                 <p className="text-muted-foreground leading-relaxed mb-6">
-                  Kanva is built on the belief that skincare should enhance your natural beauty, not mask it. By combining the best of science with natural ingredients, we bring effective and beautiful products to your skincare journey.
+                  Skyntales is built on the belief that skincare should enhance your natural beauty, not mask it. By combining the best of science with natural ingredients, we bring effective and beautiful products to your skincare journey.
                 </p>
                 <div className="space-y-3">
                   {simpleRitualsBenefits.map((benefit) => (
@@ -149,7 +149,7 @@ const About = () => {
                   <span className="italic">Deserves the Best</span>
                 </h3>
                 <p className="text-muted-foreground leading-relaxed mb-6">
-                  Kanva embodies a simple goal: skincare that works in harmony with your skin and the planet. From handpicked ingredients to beautiful blends, every product tells a story of clean beauty, natural efficiency, and sustainable skincare solutions.
+                  Skyntales embodies a simple goal: skincare that works in harmony with your skin and the planet. From handpicked ingredients to beautiful blends, every product tells a story of clean beauty, natural efficiency, and sustainable skincare solutions.
                 </p>
                 <div className="space-y-3">
                   {skinDeservesBenefits.map((benefit) => (
@@ -250,7 +250,7 @@ const About = () => {
                   <span className="italic">Packaging</span>
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
-                  At Kanva, sustainability drives every decision we make. Our packaging is designed to reduce waste and protect the planet while maintaining the quality and freshness of our products.
+                  At Skyntales, sustainability drives every decision we make. Our packaging is designed to reduce waste and protect the planet while maintaining the quality and freshness of our products.
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   {packagingFeatures.map((feature) => (

@@ -33,6 +33,7 @@ import AdminContact from "./pages/admin/AdminContact";
 import AdminAds from "./pages/admin/AdminAds";
 import AdminBlogs from "./pages/admin/AdminBlogs";
 import AdminInstagram from "./pages/admin/AdminInstagram";
+import AdminNewsletter from "./pages/admin/AdminNewsletter";
 import AdminCollections from "./pages/admin/AdminCollections";
 import AdminFeaturedProducts from "./pages/admin/AdminFeaturedProducts";
 import CustomCursor from "./components/ui/CustomCursor";
@@ -77,6 +78,7 @@ const App = () => (
                 <Route path="/admin/contact" element={<AdminContact />} />
                 <Route path="/admin/collections" element={<AdminCollections />} />
                 <Route path="/admin/featured" element={<AdminFeaturedProducts />} />
+                <Route path="/admin/newsletter" element={<AdminNewsletter />} />
                 <Route path="/admin/ads" element={<AdminAds />} />
                 <Route path="/admin/blogs" element={<AdminBlogs />} />
                 <Route path="/admin/instagram" element={<AdminInstagram />} />

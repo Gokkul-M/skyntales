@@ -91,9 +91,9 @@ const AdminLogin = () => {
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
             <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">K</span>
+              <span className="text-primary-foreground font-bold text-lg">S</span>
             </div>
-            <span className="font-heading text-xl font-semibold">Kanva</span>
+            <span className="font-heading text-xl font-semibold">Skyntales</span>
           </Link>
           <h1 className="font-heading text-3xl font-semibold text-foreground mb-2" data-testid="text-admin-title">
             Admin Portal

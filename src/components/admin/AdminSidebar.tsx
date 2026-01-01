@@ -14,7 +14,8 @@ import {
   Sparkles,
   Megaphone,
   FileText,
-  Instagram
+  Instagram,
+  Send
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ const menuItems = [
   { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
   { icon: Users, label: "Users", href: "/admin/users" },
   { icon: Mail, label: "Contact", href: "/admin/contact" },
+  { icon: Send, label: "Newsletter", href: "/admin/newsletter" },
   { icon: Megaphone, label: "Ads", href: "/admin/ads" },
   { icon: FileText, label: "Blogs", href: "/admin/blogs" },
   { icon: Instagram, label: "Instagram", href: "/admin/instagram" },

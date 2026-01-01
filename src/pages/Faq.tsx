@@ -101,7 +101,7 @@ const faqCategories = [
     questions: [
       {
         q: "Are your products cruelty-free?",
-        a: "Yes, all Kanva products are 100% cruelty-free and never tested on animals. We're certified by Leaping Bunny and PETA."
+        a: "Yes, all Skyntales products are 100% cruelty-free and never tested on animals. We're certified by Leaping Bunny and PETA."
       },
       {
         q: "Are your products suitable for sensitive skin?",
