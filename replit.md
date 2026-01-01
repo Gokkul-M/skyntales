@@ -1,7 +1,7 @@
-# Kanva Skincare E-Commerce Application
+# Skyntales Skincare E-Commerce Application
 
 ## Overview
-Kanva is a full-stack skincare e-commerce web application migrated from Lovable to Replit. The application uses React with TypeScript for the frontend and Firebase for backend services including authentication, database, and storage.
+Skyntales is a full-stack skincare e-commerce web application. The application uses React with TypeScript for the frontend and Firebase for backend services including authentication, database, and storage.
 
 ## Tech Stack
 - **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, Shadcn UI
@@ -102,6 +102,7 @@ Google Sign-In requires additional configuration in Firebase Console:
 - **Advertisement Management**: Create popup ads that display on website load
 - **Blog Management**: Create and publish blog articles
 - **Instagram Posts**: Manage Instagram posts displayed on homepage with links to actual posts
+- **Newsletter Management**: Collect subscriber emails and send newsletters via Resend
 
 ## Routes
 - `/` - Home page
@@ -118,6 +119,7 @@ Google Sign-In requires additional configuration in Firebase Console:
 - `/admin/orders` - Order management
 - `/admin/users` - User management
 - `/admin/contact` - Contact messages management
+- `/admin/newsletter` - Newsletter subscriber management and sending
 - `/admin/ads` - Advertisement popup management
 - `/admin/blogs` - Blog post management
 - `/admin/instagram` - Instagram posts management
@@ -183,6 +185,7 @@ Products in Firestore include the following fields:
 - `reviews` - Product reviews with ratings
 - `users` - User profiles
 - `carts` / `wishlists` - User cart and wishlist items (subcollections)
+- `newsletterSubscribers` - Email subscribers (email, subscribedAt, status)
 
 ## Recent Features (December 10, 2024 - Latest)
 - **Product-Collection Linking**: Products are linked to collections via the category dropdown in AdminProducts (fetches collections from Firebase)
@@ -219,6 +222,7 @@ Products in Firestore include the following fields:
 ### API Endpoints
 - `POST /api/create-order` - Creates RazorPay order with server-calculated total
 - `POST /api/verify-payment` - Verifies payment signature
+- `POST /api/send-newsletter` - Sends newsletters to subscribers (requires Firebase Auth token)
 - `GET /api/health` - Health check endpoint
 
 ### Test Cards (for testing)
@@ -259,4 +263,37 @@ match /featuredProducts/{document=**} {
   allow read: if true;
   allow write: if request.auth != null;
 }
+
+match /newsletterSubscribers/{document=**} {
+  allow read: if request.auth != null;
+  allow create: if true;
+  allow update, delete: if request.auth != null;
+}
 ```
+
+## Newsletter Integration (Resend)
+
+### Overview
+The newsletter system allows visitors to subscribe via the homepage form, and admins can send newsletters through the admin panel.
+
+### Components
+- **NewsletterSection** (`src/components/home/NewsletterSection.tsx`) - Frontend subscription form
+- **AdminNewsletter** (`src/pages/admin/AdminNewsletter.tsx`) - Admin panel for managing subscribers and sending emails
+- **API Endpoint** (`server/index.js`) - `/api/send-newsletter` for sending emails via Resend
+
+### Features
+- Email collection with duplicate prevention
+- Real-time subscriber list in admin panel
+- Search and filter subscribers
+- Bulk or individual email selection
+- Active/Unsubscribed status toggle
+- Send newsletters with custom subject and message
+- Beautiful HTML email template
+
+### Configuration
+Resend is configured via Replit's integration connector. The API key is automatically managed.
+
+### Security
+- Newsletter sending requires Firebase Authentication token
+- Only authenticated admins can access the newsletter admin page
+- API endpoint validates Bearer token before sending
