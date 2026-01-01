@@ -131,13 +131,41 @@ const AdminNewsletter = () => {
 
     setIsSending(true);
     
-    toast({
-      title: "Email Service Required",
-      description: `To send newsletters to ${recipientEmails.length} subscribers, please connect an email service like Resend or SendGrid.`,
-      variant: "destructive",
-    });
-    
-    setIsSending(false);
+    try {
+      const response = await fetch('/api/send-newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          recipients: recipientEmails,
+          subject: emailData.subject,
+          message: emailData.message,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send newsletter');
+      }
+
+      toast({
+        title: "Newsletter Sent!",
+        description: `Successfully sent to ${data.sent} subscriber${data.sent !== 1 ? 's' : ''}${data.failed > 0 ? `. ${data.failed} failed.` : ''}`,
+      });
+
+      setIsComposeOpen(false);
+      setEmailData({ subject: "", message: "" });
+      setSelectedEmails(new Set());
+    } catch (error) {
+      console.error("Error sending newsletter:", error);
+      toast({
+        title: "Failed to send",
+        description: error instanceof Error ? error.message : "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const formatDate = (timestamp: any) => {

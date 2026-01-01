@@ -2,8 +2,50 @@ import express from 'express';
 import cors from 'cors';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
+import { Resend } from 'resend';
 
 const app = express();
+
+let connectionSettings = null;
+
+async function getResendCredentials() {
+  const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
+  const xReplitToken = process.env.REPL_IDENTITY 
+    ? 'repl ' + process.env.REPL_IDENTITY 
+    : process.env.WEB_REPL_RENEWAL 
+    ? 'depl ' + process.env.WEB_REPL_RENEWAL 
+    : null;
+
+  if (!xReplitToken) {
+    throw new Error('X_REPLIT_TOKEN not found for repl/depl');
+  }
+
+  connectionSettings = await fetch(
+    'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=resend',
+    {
+      headers: {
+        'Accept': 'application/json',
+        'X_REPLIT_TOKEN': xReplitToken
+      }
+    }
+  ).then(res => res.json()).then(data => data.items?.[0]);
+
+  if (!connectionSettings || !connectionSettings.settings.api_key) {
+    throw new Error('Resend not connected');
+  }
+  return {
+    apiKey: connectionSettings.settings.api_key, 
+    fromEmail: connectionSettings.settings.from_email
+  };
+}
+
+async function getResendClient() {
+  const { apiKey, fromEmail } = await getResendCredentials();
+  return {
+    client: new Resend(apiKey),
+    fromEmail
+  };
+}
 app.use(cors());
 app.use(express.json());
 
@@ -187,6 +229,71 @@ app.get('/api/track-shipment/:awbCode', async (req, res) => {
   } catch (error) {
     console.error('Shiprocket tracking error:', error);
     res.status(500).json({ error: error.message || 'Failed to track shipment' });
+  }
+});
+
+app.post('/api/send-newsletter', async (req, res) => {
+  const { recipients, subject, message } = req.body;
+
+  if (!recipients || !Array.isArray(recipients) || recipients.length === 0) {
+    return res.status(400).json({ error: 'No recipients provided' });
+  }
+
+  if (!subject || !subject.trim()) {
+    return res.status(400).json({ error: 'Subject is required' });
+  }
+
+  if (!message || !message.trim()) {
+    return res.status(400).json({ error: 'Message is required' });
+  }
+
+  try {
+    const { client: resend, fromEmail } = await getResendClient();
+    
+    const results = [];
+    const errors = [];
+
+    for (const email of recipients) {
+      try {
+        const result = await resend.emails.send({
+          from: fromEmail || 'Skyntales <newsletter@skyntales.com>',
+          to: [email],
+          subject: subject,
+          html: `
+            <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+              <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="font-size: 28px; color: #1a1a1a; margin: 0;">Skyntales</h1>
+                <p style="color: #666; font-size: 14px; margin-top: 5px;">Natural Skincare</p>
+              </div>
+              <div style="background: #f8f8f8; border-radius: 12px; padding: 30px;">
+                <h2 style="color: #1a1a1a; font-size: 22px; margin-top: 0;">${subject}</h2>
+                <div style="color: #333; line-height: 1.6; white-space: pre-wrap;">${message}</div>
+              </div>
+              <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                <p style="color: #999; font-size: 12px;">
+                  You received this email because you subscribed to our newsletter.
+                </p>
+              </div>
+            </div>
+          `,
+        });
+        results.push({ email, success: true, id: result.data?.id });
+      } catch (emailError) {
+        console.error(`Failed to send to ${email}:`, emailError);
+        errors.push({ email, error: emailError.message });
+      }
+    }
+
+    res.json({
+      success: true,
+      sent: results.length,
+      failed: errors.length,
+      results,
+      errors
+    });
+  } catch (error) {
+    console.error('Newsletter send error:', error);
+    res.status(500).json({ error: error.message || 'Failed to send newsletter' });
   }
 });
 
