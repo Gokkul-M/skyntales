@@ -12,7 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, Trash2, Loader2, Users, Mail, Search, CheckCircle2, XCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { collection, query, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { db, auth } from "@/lib/firebase";
 import { format } from "date-fns";
 
 interface Subscriber {
@@ -132,9 +132,19 @@ const AdminNewsletter = () => {
     setIsSending(true);
     
     try {
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        throw new Error('You must be logged in to send newsletters');
+      }
+      
+      const token = await currentUser.getIdToken();
+      
       const response = await fetch('/api/send-newsletter', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
         body: JSON.stringify({
           recipients: recipientEmails,
           subject: emailData.subject,

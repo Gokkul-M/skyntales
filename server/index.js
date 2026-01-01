@@ -233,6 +233,17 @@ app.get('/api/track-shipment/:awbCode', async (req, res) => {
 });
 
 app.post('/api/send-newsletter', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized - No token provided' });
+  }
+  
+  const token = authHeader.split('Bearer ')[1];
+  if (!token) {
+    return res.status(401).json({ error: 'Unauthorized - Invalid token format' });
+  }
+
   const { recipients, subject, message } = req.body;
 
   if (!recipients || !Array.isArray(recipients) || recipients.length === 0) {
