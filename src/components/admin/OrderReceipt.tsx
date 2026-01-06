@@ -148,6 +148,7 @@ const OrderReceipt = forwardRef<HTMLDivElement, OrderReceiptProps>(({ order }, r
                 {order.shipping.city}, {order.shipping.state}, {order.shipping.zipCode}<br />
                 {order.shipping.country || 'IN'}
               </div>
+              {order.shipping.phone && <div style={{ marginTop: '4px' }}><strong>Phone:</strong> {order.shipping.phone}</div>}
               <div style={{ marginTop: '4px' }}><strong>State/UT Code:</strong> {stateCode}</div>
               
               <div style={{ fontWeight: 'bold', marginTop: '12px', marginBottom: '4px' }}>Shipping Address :</div>
@@ -157,6 +158,7 @@ const OrderReceipt = forwardRef<HTMLDivElement, OrderReceiptProps>(({ order }, r
                 {order.shipping.city}, {order.shipping.state}, {order.shipping.zipCode}<br />
                 {order.shipping.country || 'IN'}
               </div>
+              {order.shipping.phone && <div style={{ marginTop: '4px' }}><strong>Phone:</strong> {order.shipping.phone}</div>}
               <div style={{ marginTop: '4px' }}><strong>State/UT Code:</strong> {stateCode}</div>
               <div><strong>Place of supply:</strong> {order.shipping.state || 'MAHARASHTRA'}</div>
               <div><strong>Place of delivery:</strong> {order.shipping.state || 'MAHARASHTRA'}</div>
