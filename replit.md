@@ -103,6 +103,7 @@ Google Sign-In requires additional configuration in Firebase Console:
 - **Blog Management**: Create and publish blog articles
 - **Instagram Posts**: Manage Instagram posts displayed on homepage with links to actual posts
 - **Newsletter Management**: Collect subscriber emails and send newsletters via Resend
+- **Printable Receipts**: Generate and print professional tax invoices for orders
 
 ## Routes
 - `/` - Home page

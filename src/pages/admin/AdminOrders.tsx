@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,11 +8,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Search, Package, Truck, CheckCircle, Clock, Loader2, Eye, XCircle, MoreVertical } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Search, Package, Truck, CheckCircle, Clock, Loader2, Eye, XCircle, Printer } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import OrderReceipt from "@/components/admin/OrderReceipt";
 
 interface OrderItem {
   productId: number;
@@ -53,6 +53,44 @@ const AdminOrders = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [printOrder, setPrintOrder] = useState<Order | null>(null);
+  const receiptRef = useRef<HTMLDivElement>(null);
+
+  const handlePrintReceipt = (order: Order) => {
+    setPrintOrder(order);
+    setTimeout(() => {
+      if (receiptRef.current) {
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+          printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <title>Invoice - ${order.orderNumber}</title>
+                <style>
+                  * { margin: 0; padding: 0; box-sizing: border-box; }
+                  body { font-family: Arial, sans-serif; font-size: 12px; }
+                  @media print {
+                    @page { margin: 10mm; size: A4; }
+                  }
+                </style>
+              </head>
+              <body>
+                ${receiptRef.current.innerHTML}
+              </body>
+            </html>
+          `);
+          printWindow.document.close();
+          printWindow.focus();
+          setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+          }, 250);
+        }
+      }
+      setPrintOrder(null);
+    }, 100);
+  };
 
   useEffect(() => {
     const ordersRef = collection(db, "orders");
@@ -279,6 +317,14 @@ const AdminOrders = () => {
                               >
                                 <Eye className="h-4 w-4" />
                               </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handlePrintReceipt(order)}
+                                title="Print Receipt"
+                              >
+                                <Printer className="h-4 w-4" />
+                              </Button>
                               <Select 
                                 value={order.status} 
                                 onValueChange={(v) => updateStatus(order.id, v as Order["status"])}
@@ -342,6 +388,13 @@ const AdminOrders = () => {
                           >
                             <Eye className="h-4 w-4 mr-2" />
                             View
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handlePrintReceipt(order)}
+                          >
+                            <Printer className="h-4 w-4" />
                           </Button>
                           <Select 
                             value={order.status} 
@@ -455,7 +508,14 @@ const AdminOrders = () => {
                     </CardContent>
                   </Card>
 
-                  <div className="flex justify-end">
+                  <div className="flex justify-end gap-2">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => handlePrintReceipt(selectedOrder)}
+                    >
+                      <Printer className="h-4 w-4 mr-2" />
+                      Print Receipt
+                    </Button>
                     <Button onClick={() => setSelectedOrder(null)} data-testid="button-close-order-details">
                       Close
                     </Button>
@@ -465,6 +525,12 @@ const AdminOrders = () => {
             )}
           </DialogContent>
         </Dialog>
+
+        {printOrder && (
+          <div className="fixed left-[-9999px] top-0">
+            <OrderReceipt ref={receiptRef} order={printOrder} />
+          </div>
+        )}
       </div>
     </AdminLayout>
   );
