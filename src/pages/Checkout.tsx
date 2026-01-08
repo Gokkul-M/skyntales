@@ -52,8 +52,16 @@ const loadRazorpayScript = (): Promise<boolean> => {
   });
 };
 
-const getApiBaseUrl = (): string => {
-  return import.meta.env.VITE_API_BASE_URL || '';
+const getApiUrl = (endpoint: string): string => {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+  const isProduction = import.meta.env.PROD;
+  
+  if (isProduction && baseUrl) {
+    return `${baseUrl}/api/${endpoint}.php`;
+  } else if (isProduction) {
+    return `/api/${endpoint}.php`;
+  }
+  return `/api/${endpoint}`;
 };
 
 const Checkout = () => {
@@ -187,8 +195,7 @@ const Checkout = () => {
         throw new Error("Failed to load payment gateway");
       }
 
-      const apiBase = getApiBaseUrl();
-      const orderResponse = await fetch(`${apiBase}/api/create-order`, {
+      const orderResponse = await fetch(getApiUrl('create-order'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -224,7 +231,7 @@ const Checkout = () => {
           razorpay_signature: string;
         }) => {
           try {
-            const verifyResponse = await fetch(`${apiBase}/api/verify-payment`, {
+            const verifyResponse = await fetch(getApiUrl('verify-payment'), {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(response)
