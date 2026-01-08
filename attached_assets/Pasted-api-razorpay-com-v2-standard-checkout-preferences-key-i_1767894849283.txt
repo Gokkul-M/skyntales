@@ -1,0 +1,17 @@
+api.razorpay.com/v2/standard_checkout/preferences?key_id=rzp_test_UUTfVQ5yTx3HNC&session_token=45CBBB424E4E0F096417B198D54DC7B5AF7867EEB86A27CAADAD01AF02524ADD23F50A029D264927EA6BB8486C393FE85350CBB5C3B459A5F1C864178C8CB70A52F49645CE483DA0A220381E5694168D8775714BBA35F51427CAA1E0B79B26F69F155B1F2961360F:1  Failed to load resource: the server responded with a status of 400 (Bad Request)Understand this error
+v2-entry.modern.js:1  GET https://api.razorpay.com/v1/standard_checkout/preferences?key_id=rzp_test_UUTfVQ5yTx3HNC&session_token=45CBBB424E4E0F096417B198D54DC7B5AF7867EEB86A27CAADAD01AF02524ADD23F50A029D264927EA6BB8486C393FE85350CBB5C3B459A5F1C864178C8CB70A52F49645CE483DA0A220381E5694168D8775714BBA35F51427CAA1E0B79B26F69F155B1F2961360F&currency%5B0%5D=INR&qr_required=true&option_currency=INR&order_id=order_S1TQDR25apiiM4&amount=260000&personalisation=1&_%5Bpreference_source%5D=public_page&_%5Bbuild%5D=20778317215&_%5Blibrary%5D=checkoutjs&_%5Bplatform%5D=browser&_%5Bcheckout_id%5D=S1TQCvFtZIpejq&_%5Brequest_index%5D=0 400 (Bad Request)
+(anonymous) @ v2-entry.modern.js:1
+H @ v2-entry.modern.js:1
+(anonymous) @ v2-entry-654a7f50.modern.js:1
+31971 @ v2-entry-654a7f50.modern.js:1
+i @ v2-entry.modern.js:1
+Promise.then
+q @ v2-entry.modern.js:1
+(anonymous) @ v2-entry.modern.js:1
+Promise.finally
+m @ v2-entry.modern.js:1
+(anonymous) @ v2-entry.modern.js:1
+n @ v2-entry.modern.js:1
+(anonymous) @ v2-entry.modern.js:1Understand this error
+api.razorpay.com/v1/standard_checkout/preferences?key_id=rzp_test_UUTfVQ5yTx3HNC&session_token=45CBBB424E4E0F096417B198D54DC7B5AF7867EEB86A27CAADAD01AF02524ADD23F50A029D264927EA6BB8486C393FE85350CBB5C3B459A5F1C864178C8CB70A52F49645CE483DA0A220381E5694168D8775714BBA35F51427CAA1E0B79B26F69F155B1F2961360F&currency%5B0%5D=INR&qr_required=true&option_currency=INR&order_id=order_S1TQDR25apiiM4&amount=260000&personalisation=1&_%5Bpreference_source%5D=public_page&_%5Bbuild%5D=20778317215&_%5Blibrary%5D=checkoutjs&_%5Bplatform%5D=browser&_%5Bcheckout_id%5D=S1TQCvFtZIpejq&_%5Brequest_index%5D=0:1  Failed to load resource: the server responded with a status of 400 (Bad Request)Understand this error
+data:;base64,=:1  GET data:;base64,= net::ERR_INVALID_URL
