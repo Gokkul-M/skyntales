@@ -52,6 +52,10 @@ const loadRazorpayScript = (): Promise<boolean> => {
   });
 };
 
+const getApiBaseUrl = (): string => {
+  return import.meta.env.VITE_API_BASE_URL || '';
+};
+
 const Checkout = () => {
   const { user, userProfile } = useAuth();
   const { items: cartItems, clearCart } = useCart();
@@ -183,7 +187,8 @@ const Checkout = () => {
         throw new Error("Failed to load payment gateway");
       }
 
-      const orderResponse = await fetch('/api/create-order', {
+      const apiBase = getApiBaseUrl();
+      const orderResponse = await fetch(`${apiBase}/api/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -209,7 +214,7 @@ const Checkout = () => {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: orderData.amount,
         currency: orderData.currency,
-        order_id: orderData.order_id,
+        order_id: orderData.order_id || orderData.id,
         name: "Skyntales",
         description: `Order for ${cartProducts.length} item(s)`,
         image: "/logo.png",
@@ -219,7 +224,7 @@ const Checkout = () => {
           razorpay_signature: string;
         }) => {
           try {
-            const verifyResponse = await fetch('/api/verify-payment', {
+            const verifyResponse = await fetch(`${apiBase}/api/verify-payment`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(response)

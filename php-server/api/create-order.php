@@ -62,6 +62,7 @@ if ($httpCode !== 200) {
 $razorpayOrder = json_decode($response, true);
 
 echo json_encode([
+    'order_id' => $razorpayOrder['id'],
     'id' => $razorpayOrder['id'],
     'amount' => $razorpayOrder['amount'],
     'currency' => $razorpayOrder['currency']

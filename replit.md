@@ -46,6 +46,9 @@ The application uses the following environment variables (stored as Replit Secre
 - `VITE_RAZORPAY_KEY_ID` - RazorPay Key ID (used on frontend)
 - `RAZORPAY_KEY_SECRET` - RazorPay Key Secret (used on backend only)
 
+### Production API Configuration
+- `VITE_API_BASE_URL` - Base URL for API calls in production (e.g., `https://yourdomain.com` or leave empty for relative paths)
+
 ### Firestore Collections
 - `users` - User profiles and preferences
 - `carts` - Shopping cart items (subcollection keyed by userId)

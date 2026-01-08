@@ -27,12 +27,14 @@ $generatedSignature = hash_hmac(
 
 if (hash_equals($generatedSignature, $razorpaySignature)) {
     echo json_encode([
+        'status' => 'success',
         'success' => true,
         'message' => 'Payment verified successfully'
     ]);
 } else {
     http_response_code(400);
     echo json_encode([
+        'status' => 'failure',
         'success' => false,
         'error' => 'Invalid payment signature'
     ]);
