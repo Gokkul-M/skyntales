@@ -49,7 +49,7 @@ const Blog = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-secondary">
+    <div className="min-h-screen bg-white">
       <Header />
       <main>
         <section className="pt-32 pb-8">

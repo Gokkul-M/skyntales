@@ -83,7 +83,7 @@ const Contact = () => {
   };
 
   return (
-    <div ref={sectionRef} className="min-h-screen bg-secondary overflow-hidden">
+    <div ref={sectionRef} className="min-h-screen bg-white overflow-hidden">
       <Header />
 
       <main className="pt-28 pb-10 px-4 sm:px-6">
