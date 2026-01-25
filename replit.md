@@ -4,7 +4,7 @@
 Skyntales is a full-stack skincare e-commerce web application designed for a seamless shopping experience. It features product browsing, user authentication, a shopping cart, wishlists, and a secure checkout process. The project aims to provide a robust platform for selling skincare products online, with a comprehensive admin panel for managing products, orders, users, and marketing campaigns. Key capabilities include real-time inventory updates, dynamic content management, and integration with payment and shipping services.
 
 ## User Preferences
-No specific user preferences were provided.
+- **Festival Theme Colors**: Theme colors should only affect buttons, badges, and footer - not other UI elements like headers or page backgrounds. The header and general page backgrounds remain consistent regardless of active theme.
 
 ## System Architecture
 
@@ -17,7 +17,10 @@ No specific user preferences were provided.
 ### UI/UX Decisions
 -   **Styling**: Tailwind CSS with custom design tokens for a consistent and modern aesthetic.
 -   **Components**: Utilizes Shadcn UI for pre-built, accessible, and customizable UI components.
--   **Dynamic Theming**: An admin-controlled festival themes system dynamically alters homepage appearance (colors, animations, banners) based on events or seasons. Themes are managed via `/admin/themes` with date-based activation and priority rules.
+-   **Dynamic Theming**: An admin-controlled festival themes system dynamically alters specific UI elements based on events or seasons. Themes are managed via `/admin/themes` with date-based activation and priority rules.
+    - **Theme-affected elements**: Buttons, badges, footer, and hero section animations/overlays
+    - **Fixed elements**: Header, page backgrounds, and general text styling remain consistent
+    - **Color System**: Uses `--primary` and `--accent` CSS variables that update dynamically with themes, while `--brand-primary-fixed` stays constant for elements like headers
 
 ### Technical Implementations
 -   **Authentication**: Firebase Authentication with email/password and Google Sign-In. Admin roles are managed via a dedicated `adminUsers` Firestore collection.

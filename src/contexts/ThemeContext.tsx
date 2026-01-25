@@ -66,6 +66,35 @@ const isDateInRange = (startDate: string, endDate: string): boolean => {
   return now >= start && now <= end;
 };
 
+const hexToHSL = (hex: string): string => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!result) return "180 35% 17%";
+  
+  let r = parseInt(result[1], 16) / 255;
+  let g = parseInt(result[2], 16) / 255;
+  let b = parseInt(result[3], 16) / 255;
+  
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h = 0, s = 0;
+  const l = (max + min) / 2;
+  
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+      case g: h = ((b - r) / d + 2) / 6; break;
+      case b: h = ((r - g) / d + 4) / 6; break;
+    }
+  }
+  
+  return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
+};
+
+const DEFAULT_PRIMARY_HSL = "180 35% 17%";
+const DEFAULT_ACCENT_HSL = "28 45% 65%";
+
 const applyThemeColors = (theme: FestivalTheme | null) => {
   const root = document.documentElement;
   
@@ -74,12 +103,18 @@ const applyThemeColors = (theme: FestivalTheme | null) => {
     root.style.setProperty('--theme-hero-secondary', theme.colors.secondary);
     root.style.setProperty('--theme-hero-accent', theme.colors.accent);
     root.style.setProperty('--theme-hero-text', theme.colors.textColor);
+    
+    root.style.setProperty('--primary', hexToHSL(theme.colors.primary));
+    root.style.setProperty('--accent', hexToHSL(theme.colors.accent));
     root.setAttribute('data-theme-active', 'true');
   } else {
     root.style.setProperty('--theme-hero-primary', '#1a4d4d');
     root.style.setProperty('--theme-hero-secondary', '#8B7355');
     root.style.setProperty('--theme-hero-accent', '#C9A86C');
     root.style.setProperty('--theme-hero-text', '#FFFFFF');
+    
+    root.style.setProperty('--primary', DEFAULT_PRIMARY_HSL);
+    root.style.setProperty('--accent', DEFAULT_ACCENT_HSL);
     root.removeAttribute('data-theme-active');
   }
 };

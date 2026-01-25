@@ -21,13 +21,11 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 17%;
 
-    /* Fixed Brand Colors - Never change with themes */
-    --brand-primary: 180 35% 17%;
-    --brand-primary-foreground: 40 20% 96%;
-    --brand-accent: 28 45% 65%;
-    --brand-accent-foreground: 0 0% 100%;
+    /* Fixed Brand Colors - For header and elements that never change */
+    --brand-primary-fixed: 180 35% 17%;
+    --brand-primary-fixed-foreground: 40 20% 96%;
 
-    /* Teal/Dark Green - Header & Footer (Fixed) */
+    /* Dynamic Primary - Changes with festival themes (affects buttons, badges, footer) */
     --primary: 180 35% 17%;
     --primary-foreground: 40 20% 96%;
 
