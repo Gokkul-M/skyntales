@@ -1,0 +1,35 @@
+Uncaught IndexSizeError: Failed to execute 'arc' on 'CanvasRenderingContext2D': The radius provided (-0.542257) is negative.
+    at ThemeAnimations.tsx:436:17
+    at Array.forEach (<anonymous>)
+    at animate (ThemeAnimations.tsx:198:17)
+    at ThemeAnimations.tsx:465:5
+
+chunk-T2SWDQEL.js?v=4267d077:14032 The above error occurred in the <ThemeAnimations> component:
+
+    at ThemeAnimations (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/components/animations/ThemeAnimations.tsx:23:28)
+    at section
+    at HeroSection (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/components/home/HeroSection.tsx:90:34)
+    at main
+    at div
+    at Index
+    at RenderedRoute (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=4267d077:4088:5)
+    at Routes (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=4267d077:4558:5)
+    at Router (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=4267d077:4501:15)
+    at BrowserRouter (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=4267d077:5247:5)
+    at Provider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/chunk-U27FYV5Z.js?v=4267d077:38:15)
+    at TooltipProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=4267d077:64:5)
+    at WishlistProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/contexts/WishlistContext.tsx:28:36)
+    at CartProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/contexts/CartContext.tsx:28:32)
+    at CollectionsProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/contexts/CollectionsContext.tsx:35:39)
+    at ThemeProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/contexts/ThemeContext.tsx:110:33)
+    at AuthProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/src/contexts/AuthContext.tsx:97:32)
+    at QueryClientProvider (https://7bec76a9-bdfd-457e-b71e-ac634dd4123a-00-2j36i9sq0ne6z.riker.replit.dev/node_modules/.vite/deps/@tanstack_react-query.js?v=4267d077:2934:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+chunk-T2SWDQEL.js?v=4267d077:9129 Uncaught IndexSizeError: Failed to execute 'arc' on 'CanvasRenderingContext2D': The radius provided (-0.542257) is negative.
+    at ThemeAnimations.tsx:436:17
+    at Array.forEach (<anonymous>)
+    at animate (ThemeAnimations.tsx:198:17)
+    at ThemeAnimations.tsx:465:5

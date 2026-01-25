@@ -102,12 +102,16 @@ const applyThemeColors = (theme: FestivalTheme | null) => {
     root.style.setProperty('--primary', hexToHSL(theme.colors.primary));
     root.style.setProperty('--secondary', hexToHSL(theme.colors.secondary));
     root.style.setProperty('--accent', hexToHSL(theme.colors.accent));
+    root.style.setProperty('--foreground', hexToHSL(theme.colors.textColor));
+    root.style.setProperty('--primary-foreground', hexToHSL(theme.colors.textColor));
     root.setAttribute('data-theme-active', 'true');
   } else {
     root.style.removeProperty('--theme-primary');
     root.style.removeProperty('--theme-secondary');
     root.style.removeProperty('--theme-accent');
     root.style.removeProperty('--theme-text');
+    root.style.removeProperty('--foreground');
+    root.style.removeProperty('--primary-foreground');
     root.style.setProperty('--primary', DEFAULT_COLORS.primary);
     root.style.setProperty('--secondary', DEFAULT_COLORS.secondary);
     root.style.setProperty('--accent', DEFAULT_COLORS.accent);
