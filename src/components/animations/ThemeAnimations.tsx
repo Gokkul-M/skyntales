@@ -420,20 +420,22 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
             const dx = p.targetX - p.x;
             const dy = p.targetY - p.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 10) {
+            if (dist < 10 || isNaN(dist) || dist === 0) {
               p.targetX = Math.random() * canvas.width;
               p.targetY = Math.random() * canvas.height;
+            } else {
+              p.x += (dx / dist) * p.speed;
+              p.y += (dy / dist) * p.speed;
             }
-            p.x += (dx / dist) * p.speed;
-            p.y += (dy / dist) * p.speed;
-            const fireflyGlow = 0.3 + Math.sin(p.glowPhase) * 0.7;
+            const fireflyGlow = Math.max(0.1, 0.5 + Math.sin(p.glowPhase) * 0.4);
+            const fireflyRadius = Math.max(1, p.size * fireflyGlow);
             ctx.save();
             ctx.shadowBlur = 15;
             ctx.shadowColor = "#ffff66";
             ctx.globalAlpha = fireflyGlow;
             ctx.fillStyle = p.color;
             ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size * fireflyGlow, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, fireflyRadius, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
             break;

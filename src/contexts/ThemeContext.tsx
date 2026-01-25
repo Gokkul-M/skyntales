@@ -18,7 +18,7 @@ export interface FestivalTheme {
     overlayColor: string;
     overlayOpacity: number;
   };
-  animation: "none" | "confetti" | "hearts" | "snowfall" | "fireworks" | "leaves" | "petals" | "diyas" | "stars";
+  animation: "none" | "confetti" | "hearts" | "snowfall" | "fireworks" | "leaves" | "petals" | "diyas" | "stars" | "bubbles" | "rain" | "butterflies" | "sunrays" | "aurora" | "fireflies";
   heroOverlay?: string;
   heroGradient?: string;
   bannerText?: string;
@@ -70,6 +70,30 @@ const DEFAULT_COLORS = {
   primary: '180 35% 17%',
   secondary: '40 30% 94%',
   accent: '28 45% 65%',
+  text: '0 0% 100%',
+};
+
+const hexToHSL = (hex: string) => {
+  if (!hex || hex.length < 7) return '0 0% 100%';
+  try {
+    const r = parseInt(hex.slice(1, 3), 16) / 255;
+    const g = parseInt(hex.slice(3, 5), 16) / 255;
+    const b = parseInt(hex.slice(5, 7), 16) / 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h = 0, s = 0, l = (max + min) / 2;
+    if (max !== min) {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+        case g: h = ((b - r) / d + 2) / 6; break;
+        case b: h = ((r - g) / d + 4) / 6; break;
+      }
+    }
+    return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
+  } catch {
+    return '0 0% 100%';
+  }
 };
 
 const applyThemeColors = (theme: FestivalTheme | null) => {
@@ -81,36 +105,22 @@ const applyThemeColors = (theme: FestivalTheme | null) => {
     root.style.setProperty('--theme-accent', theme.colors.accent);
     root.style.setProperty('--theme-text', theme.colors.textColor);
     
-    const hexToHSL = (hex: string) => {
-      const r = parseInt(hex.slice(1, 3), 16) / 255;
-      const g = parseInt(hex.slice(3, 5), 16) / 255;
-      const b = parseInt(hex.slice(5, 7), 16) / 255;
-      const max = Math.max(r, g, b), min = Math.min(r, g, b);
-      let h = 0, s = 0, l = (max + min) / 2;
-      if (max !== min) {
-        const d = max - min;
-        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        switch (max) {
-          case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
-          case g: h = ((b - r) / d + 2) / 6; break;
-          case b: h = ((r - g) / d + 4) / 6; break;
-        }
-      }
-      return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
-    };
-    
     root.style.setProperty('--primary', hexToHSL(theme.colors.primary));
     root.style.setProperty('--secondary', hexToHSL(theme.colors.secondary));
     root.style.setProperty('--accent', hexToHSL(theme.colors.accent));
+    root.style.setProperty('--theme-text-hsl', hexToHSL(theme.colors.textColor));
+    root.style.setProperty('--primary-foreground', hexToHSL(theme.colors.textColor));
     root.setAttribute('data-theme-active', 'true');
   } else {
     root.style.removeProperty('--theme-primary');
     root.style.removeProperty('--theme-secondary');
     root.style.removeProperty('--theme-accent');
     root.style.removeProperty('--theme-text');
+    root.style.removeProperty('--theme-text-hsl');
     root.style.setProperty('--primary', DEFAULT_COLORS.primary);
     root.style.setProperty('--secondary', DEFAULT_COLORS.secondary);
     root.style.setProperty('--accent', DEFAULT_COLORS.accent);
+    root.style.setProperty('--primary-foreground', DEFAULT_COLORS.text);
     root.removeAttribute('data-theme-active');
   }
 };
