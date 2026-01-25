@@ -21,6 +21,9 @@ Skyntales is a full-stack skincare e-commerce web application designed for a sea
     - **Theme-affected elements**: Buttons, badges, footer, and hero section animations/overlays
     - **Fixed elements**: Header, page backgrounds, and general text styling remain consistent
     - **Color System**: Uses `--primary` and `--accent` CSS variables that update dynamically with themes, while `--brand-primary-fixed` stays constant for elements like headers
+    - **Animation Behavior**: Hero section animations loop continuously; other pages play animations once on entry
+    - **Monthly Animations**: snowfall/frost (Jan), hearts/valentine (Feb), spring (Mar), petals (Apr), sundust (May), clouds (Jun), rain (Jul), windyleaves (Aug), academicdust (Sep), festivesparks (Oct), diyas (Nov), snowsparkle/christmas (Dec)
+    - **Event Animations**: valentine, diwali, christmas, holi, newyear, pongal, independence, onam, navratri, eid, womensday, mothersday
 
 ### Technical Implementations
 -   **Authentication**: Firebase Authentication with email/password and Google Sign-In. Admin roles are managed via a dedicated `adminUsers` Firestore collection.

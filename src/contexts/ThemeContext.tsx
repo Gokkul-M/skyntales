@@ -18,7 +18,7 @@ export interface FestivalTheme {
     overlayColor: string;
     overlayOpacity: number;
   };
-  animation: "none" | "confetti" | "hearts" | "snowfall" | "fireworks" | "leaves" | "petals" | "diyas" | "stars" | "bubbles" | "rain" | "butterflies" | "sunrays" | "aurora" | "fireflies";
+  animation: "none" | "snowfall" | "frost" | "hearts" | "spring" | "petals" | "sundust" | "clouds" | "rain" | "windyleaves" | "academicdust" | "festivesparks" | "diyas" | "snowsparkle" | "valentine" | "diwali" | "christmas" | "holi" | "newyear" | "pongal" | "independence" | "onam" | "navratri" | "eid" | "womensday" | "mothersday" | "confetti" | "leaves" | "stars" | "sparkles" | "bubbles" | "butterflies" | "sunrays" | "aurora" | "fireflies" | "fireworks";
   heroOverlay?: string;
   heroGradient?: string;
   bannerText?: string;

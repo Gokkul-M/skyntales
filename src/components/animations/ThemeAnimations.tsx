@@ -1,7 +1,11 @@
 import { useEffect, useRef } from "react";
 
 interface AnimationProps {
-  type: "confetti" | "hearts" | "snowfall" | "fireworks" | "leaves" | "petals" | "diyas" | "stars" | "sparkles" | "bubbles" | "rain" | "butterflies" | "sunrays" | "aurora" | "fireflies" | "none";
+  type: 
+    | "none"
+    | "snowfall" | "frost" | "hearts" | "spring" | "petals" | "sundust" | "clouds" | "rain" | "windyleaves" | "academicdust" | "festivesparks" | "diyas" | "snowsparkle"
+    | "valentine" | "diwali" | "christmas" | "holi" | "newyear" | "pongal" | "independence" | "onam" | "navratri" | "eid" | "womensday" | "mothersday"
+    | "confetti" | "leaves" | "stars" | "sparkles" | "bubbles" | "butterflies" | "sunrays" | "aurora" | "fireflies" | "fireworks";
   color?: string;
   contained?: boolean;
   loop?: boolean;
@@ -38,21 +42,33 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
     
     const getParticleCount = () => {
       switch (type) {
-        case "snowfall": return 80;
-        case "hearts": return 18;
-        case "sparkles": return 80;
-        case "diyas": return 30;
-        case "bubbles": return 25;
+        case "snowfall": case "frost": return 80;
+        case "hearts": case "valentine": return 25;
+        case "spring": return 40;
+        case "petals": case "onam": return 45;
+        case "sundust": case "pongal": return 60;
+        case "clouds": return 15;
         case "rain": return 100;
-        case "butterflies": return 10;
+        case "windyleaves": case "leaves": return 35;
+        case "academicdust": return 30;
+        case "festivesparks": return 50;
+        case "diyas": return 35;
+        case "snowsparkle": case "christmas": return 90;
+        case "diwali": case "fireworks": return 10;
+        case "holi": return 60;
+        case "newyear": return 80;
+        case "independence": return 50;
+        case "navratri": return 40;
+        case "eid": return 45;
+        case "womensday": case "mothersday": return 40;
+        case "sparkles": return 80;
+        case "stars": return 50;
+        case "bubbles": return 25;
+        case "butterflies": return 12;
         case "sunrays": return 12;
         case "aurora": return 3;
         case "fireflies": return 35;
         case "confetti": return 70;
-        case "leaves": return 30;
-        case "petals": return 40;
-        case "stars": return 50;
-        case "fireworks": return 8;
         default: return 30;
       }
     };
@@ -72,73 +88,388 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
       };
 
       switch (type) {
-        case "hearts":
-          return { 
-            ...baseParticle, 
-            color: ["#e8a0b0", "#d4838f", "#c97a87", "#b86b7a"][Math.floor(Math.random() * 4)], 
-            size: Math.random() * 12 + 8,
-            speedY: Math.random() * 0.8 + 0.3,
-            opacity: Math.random() * 0.3 + 0.15,
-            swing: Math.random() * Math.PI * 2,
-            swingSpeed: Math.random() * 0.02 + 0.01
-          };
         case "snowfall":
+        case "frost":
           return { 
             ...baseParticle, 
             color: "#ffffff", 
             size: Math.random() * 4 + 1, 
-            speedY: Math.random() * 0.8 + 0.3,
-            opacity: Math.random() * 0.5 + 0.3,
+            speedY: Math.random() * 0.6 + 0.2,
+            opacity: Math.random() * 0.6 + 0.3,
+            drift: Math.random() * Math.PI * 2,
+            driftSpeed: Math.random() * 0.015 + 0.008,
+            blur: Math.random() > 0.5
+          };
+
+        case "hearts":
+        case "valentine":
+          return { 
+            ...baseParticle, 
+            color: ["#ff6b8a", "#ff8fa3", "#ffb3c1", "#e05780"][Math.floor(Math.random() * 4)], 
+            size: Math.random() * 14 + 8,
+            speedY: -(Math.random() * 0.5 + 0.2),
+            y: canvas.height + 20,
+            opacity: Math.random() * 0.4 + 0.2,
+            swing: Math.random() * Math.PI * 2,
+            swingSpeed: Math.random() * 0.015 + 0.008,
+            pulse: Math.random() * Math.PI * 2,
+            pulseSpeed: Math.random() * 0.03 + 0.02,
+            glow: type === "valentine"
+          };
+
+        case "spring":
+          return { 
+            ...baseParticle, 
+            color: ["#90be6d", "#b5e48c", "#d8f3dc", "#95d5b2"][Math.floor(Math.random() * 4)], 
+            size: Math.random() * 5 + 2,
+            speedY: -(Math.random() * 0.4 + 0.2),
+            y: canvas.height + 20,
+            opacity: Math.random() * 0.5 + 0.2,
             drift: Math.random() * Math.PI * 2,
             driftSpeed: Math.random() * 0.02 + 0.01
           };
-        case "confetti":
-          return { 
-            ...baseParticle, 
-            color: ["#ff69b4", "#9b59b6", "#f1c40f", "#2ecc71", "#3498db", "#e74c3c", "#ff6b6b", "#a29bfe"][Math.floor(Math.random() * 8)], 
-            size: Math.random() * 10 + 5,
-            speedY: Math.random() * 2 + 1,
-            speedX: Math.random() * 4 - 2,
-            opacity: Math.random() * 0.5 + 0.5,
-            wobble: Math.random() * Math.PI * 2,
-            wobbleSpeed: Math.random() * 0.15 + 0.05,
-            shape: Math.floor(Math.random() * 3)
-          };
-        case "leaves":
-          return { 
-            ...baseParticle, 
-            color: ["#6b5a4a", "#7c6b5b", "#8a7a6a", "#5a4a3a"][Math.floor(Math.random() * 4)], 
-            size: Math.random() * 10 + 6,
-            speedY: Math.random() * 0.6 + 0.3,
-            opacity: Math.random() * 0.4 + 0.2,
-            sway: Math.random() * Math.PI * 2,
-            swaySpeed: Math.random() * 0.03 + 0.01
-          };
+
         case "petals":
           return { 
             ...baseParticle, 
-            color: ["#e8d0d8", "#dcc0c8", "#d4b0b8", "#c8a0a8"][Math.floor(Math.random() * 4)], 
-            size: Math.random() * 8 + 4,
-            speedY: Math.random() * 0.5 + 0.2,
-            opacity: Math.random() * 0.35 + 0.15,
+            color: ["#ffb7c5", "#ffc8dd", "#ffafcc", "#f8bbd0"][Math.floor(Math.random() * 4)], 
+            size: Math.random() * 10 + 5,
+            speedY: Math.random() * 0.6 + 0.3,
+            opacity: Math.random() * 0.4 + 0.2,
             flutter: Math.random() * Math.PI * 2,
             flutterSpeed: Math.random() * 0.04 + 0.02
           };
+
+        case "sundust":
+          return { 
+            ...baseParticle, 
+            color: ["#ffd700", "#ffdf00", "#f9c74f", "#fee440"][Math.floor(Math.random() * 4)], 
+            size: Math.random() * 3 + 1,
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            speedY: Math.random() * 0.2 - 0.1,
+            speedX: Math.random() * 0.2 - 0.1,
+            opacity: Math.random() * 0.4 + 0.2,
+            shimmer: Math.random() * Math.PI * 2,
+            shimmerSpeed: Math.random() * 0.02 + 0.01
+          };
+
+        case "clouds":
+          return { 
+            ...baseParticle, 
+            color: "rgba(255,255,255,0.3)",
+            size: Math.random() * 40 + 25,
+            x: -100,
+            y: Math.random() * canvas.height * 0.5,
+            speedX: Math.random() * 0.3 + 0.1,
+            speedY: 0,
+            opacity: Math.random() * 0.15 + 0.08
+          };
+
+        case "rain":
+          return { 
+            ...baseParticle, 
+            color: "#a8c5d8",
+            size: Math.random() * 1.2 + 0.5,
+            length: Math.random() * 18 + 12,
+            speedY: Math.random() * 10 + 8,
+            speedX: Math.random() * 1 - 0.5,
+            opacity: Math.random() * 0.25 + 0.1
+          };
+
+        case "windyleaves":
+        case "leaves":
+          return { 
+            ...baseParticle, 
+            color: ["#6b705c", "#a68a64", "#b68d40", "#936639"][Math.floor(Math.random() * 4)], 
+            size: Math.random() * 12 + 6,
+            speedY: Math.random() * 1.2 + 0.8,
+            speedX: Math.random() * 2 + 1,
+            opacity: Math.random() * 0.5 + 0.3,
+            sway: Math.random() * Math.PI * 2,
+            swaySpeed: Math.random() * 0.04 + 0.02
+          };
+
+        case "academicdust":
+          return { 
+            ...baseParticle, 
+            color: ["#6c757d", "#adb5bd", "#dee2e6"][Math.floor(Math.random() * 3)], 
+            size: Math.random() * 2 + 1,
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            speedY: Math.random() * 0.15 - 0.075,
+            speedX: Math.random() * 0.15 - 0.075,
+            opacity: Math.random() * 0.3 + 0.1
+          };
+
+        case "festivesparks":
+          return { 
+            ...baseParticle, 
+            color: ["#ff6b35", "#f7c59f", "#ffd166", "#ef476f"][Math.floor(Math.random() * 4)], 
+            size: Math.random() * 4 + 2,
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            life: 1,
+            decay: Math.random() * 0.015 + 0.005,
+            burstX: (Math.random() - 0.5) * 4,
+            burstY: (Math.random() - 0.5) * 4,
+            opacity: Math.random() * 0.7 + 0.3
+          };
+
         case "diyas":
           return { 
             ...baseParticle, 
-            color: ["#d4a574", "#c9a86c", "#b89860", "#a08050"][Math.floor(Math.random() * 4)], 
+            color: ["#d4a574", "#c9a86c", "#e8b923", "#f4a460"][Math.floor(Math.random() * 4)], 
             size: Math.random() * 4 + 2, 
-            speedY: Math.random() * 0.4 + 0.2, 
+            speedY: Math.random() * 0.35 + 0.15, 
             y: canvas.height + 20, 
-            goingUp: true,
             pulse: Math.random() * Math.PI * 2,
-            pulseSpeed: Math.random() * 0.05 + 0.03
+            pulseSpeed: Math.random() * 0.04 + 0.02
           };
+
+        case "snowsparkle":
+          const isSnow = Math.random() > 0.3;
+          return isSnow ? { 
+            ...baseParticle, 
+            type: "snow",
+            color: "#ffffff", 
+            size: Math.random() * 4 + 1, 
+            speedY: Math.random() * 0.6 + 0.3,
+            opacity: Math.random() * 0.6 + 0.3,
+            drift: Math.random() * Math.PI * 2,
+            driftSpeed: Math.random() * 0.015 + 0.008
+          } : {
+            ...baseParticle,
+            type: "sparkle",
+            color: ["#ffffff", "#fffacd", "#f0f8ff"][Math.floor(Math.random() * 3)],
+            size: Math.random() * 3 + 1,
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            twinkle: Math.random() * Math.PI * 2,
+            twinkleSpeed: Math.random() * 0.08 + 0.04,
+            opacity: Math.random() * 0.5 + 0.3
+          };
+
+        case "diwali":
+        case "fireworks":
+          const explosionColors = [
+            ["#ff6b6b", "#ee5a5a", "#ff8585"],
+            ["#ffd700", "#ffcc00", "#ffe066"],
+            ["#ff9f43", "#ee8832", "#ffbe76"],
+            ["#a29bfe", "#8c7ae6", "#b8b0ff"],
+            ["#00d2d3", "#01a3a4", "#48dbfb"]
+          ];
+          const colorSet = explosionColors[Math.floor(Math.random() * explosionColors.length)];
+          return { 
+            ...baseParticle, 
+            colors: colorSet,
+            color: colorSet[0],
+            x: Math.random() * canvas.width * 0.8 + canvas.width * 0.1,
+            y: canvas.height + 20,
+            speedY: -(Math.random() * 5 + 6),
+            speedX: (Math.random() - 0.5) * 2,
+            exploded: false,
+            explosionParticles: [],
+            targetY: Math.random() * canvas.height * 0.4 + canvas.height * 0.1,
+            size: 3
+          };
+
+        case "christmas":
+          const isSnowflake = Math.random() > 0.2;
+          return isSnowflake ? { 
+            ...baseParticle, 
+            type: "snowflake",
+            color: "#ffffff", 
+            size: Math.random() * 5 + 2, 
+            speedY: Math.random() * 0.5 + 0.2,
+            opacity: Math.random() * 0.6 + 0.3,
+            drift: Math.random() * Math.PI * 2,
+            driftSpeed: Math.random() * 0.015 + 0.008,
+            tint: ["#ffffff", "#f0fff0", "#fff0f0"][Math.floor(Math.random() * 3)]
+          } : {
+            ...baseParticle,
+            type: "star",
+            color: ["#ffd700", "#ff6b6b", "#90ee90"][Math.floor(Math.random() * 3)],
+            size: Math.random() * 4 + 2,
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            twinkle: Math.random() * Math.PI * 2,
+            twinkleSpeed: Math.random() * 0.05 + 0.03
+          };
+
+        case "holi":
+          return { 
+            ...baseParticle, 
+            color: ["#ff6b6b", "#feca57", "#48dbfb", "#ff9ff3", "#1dd1a1", "#5f27cd"][Math.floor(Math.random() * 6)], 
+            size: Math.random() * 15 + 8,
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            life: 1,
+            decay: Math.random() * 0.008 + 0.003,
+            burstX: (Math.random() - 0.5) * 8,
+            burstY: (Math.random() - 0.5) * 8 - 2,
+            opacity: Math.random() * 0.6 + 0.3
+          };
+
+        case "newyear":
+          const isConfetti = Math.random() > 0.4;
+          return isConfetti ? { 
+            ...baseParticle, 
+            type: "confetti",
+            color: ["#ff69b4", "#ffd700", "#00ff7f", "#ff4500", "#1e90ff", "#ff1493"][Math.floor(Math.random() * 6)], 
+            size: Math.random() * 10 + 5,
+            speedY: Math.random() * 3 + 2,
+            speedX: Math.random() * 6 - 3,
+            opacity: Math.random() * 0.7 + 0.3,
+            wobble: Math.random() * Math.PI * 2,
+            wobbleSpeed: Math.random() * 0.15 + 0.08,
+            shape: Math.floor(Math.random() * 3)
+          } : {
+            ...baseParticle,
+            type: "firework",
+            colors: ["#ffd700", "#ff4500", "#ff69b4"],
+            color: "#ffd700",
+            x: Math.random() * canvas.width * 0.8 + canvas.width * 0.1,
+            y: canvas.height + 20,
+            speedY: -(Math.random() * 6 + 7),
+            speedX: (Math.random() - 0.5) * 3,
+            exploded: false,
+            explosionParticles: [],
+            targetY: Math.random() * canvas.height * 0.35 + canvas.height * 0.1,
+            size: 3
+          };
+
+        case "pongal":
+          return { 
+            ...baseParticle, 
+            color: ["#f4a460", "#daa520", "#ffd700", "#f5deb3"][Math.floor(Math.random() * 4)], 
+            size: Math.random() * 4 + 2,
+            speedY: -(Math.random() * 0.3 + 0.1),
+            y: canvas.height + 20,
+            opacity: Math.random() * 0.5 + 0.2,
+            drift: Math.random() * Math.PI * 2,
+            driftSpeed: Math.random() * 0.015 + 0.008
+          };
+
+        case "independence":
+          const flagColors = ["#ff9933", "#ffffff", "#138808"];
+          return { 
+            ...baseParticle, 
+            color: flagColors[Math.floor(Math.random() * 3)], 
+            size: Math.random() * 4 + 2,
+            speedY: -(Math.random() * 1.5 + 1),
+            y: canvas.height + 20,
+            x: Math.random() * canvas.width,
+            opacity: Math.random() * 0.6 + 0.3,
+            drift: Math.random() * Math.PI * 2,
+            driftSpeed: Math.random() * 0.02 + 0.01
+          };
+
+        case "onam":
+          return { 
+            ...baseParticle, 
+            color: ["#ff6b6b", "#ffd93d", "#ff9a3c", "#c7f464", "#4cd137", "#9c88ff"][Math.floor(Math.random() * 6)], 
+            size: Math.random() * 10 + 6,
+            x: canvas.width / 2 + (Math.random() - 0.5) * canvas.width * 0.8,
+            y: canvas.height / 2 + (Math.random() - 0.5) * canvas.height * 0.6,
+            angle: Math.random() * Math.PI * 2,
+            radius: Math.random() * 150 + 50,
+            angleSpeed: (Math.random() * 0.01 + 0.005) * (Math.random() > 0.5 ? 1 : -1),
+            opacity: Math.random() * 0.5 + 0.3,
+            flutter: Math.random() * Math.PI * 2,
+            flutterSpeed: Math.random() * 0.03 + 0.015
+          };
+
+        case "navratri":
+          return { 
+            ...baseParticle, 
+            color: ["#ff4757", "#ffa502", "#2ed573", "#1e90ff", "#ff6b81"][Math.floor(Math.random() * 5)], 
+            size: Math.random() * 5 + 3,
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            angle: Math.random() * Math.PI * 2,
+            orbitRadius: Math.random() * 30 + 15,
+            orbitSpeed: (Math.random() * 0.03 + 0.02) * (Math.random() > 0.5 ? 1 : -1),
+            pulse: Math.random() * Math.PI * 2,
+            pulseSpeed: Math.random() * 0.05 + 0.03,
+            opacity: Math.random() * 0.6 + 0.3
+          };
+
+        case "eid":
+          const isStar = Math.random() > 0.3;
+          return isStar ? { 
+            ...baseParticle, 
+            type: "star",
+            color: ["#ffd700", "#fffacd", "#f0e68c"][Math.floor(Math.random() * 3)], 
+            size: Math.random() * 4 + 2,
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height * 0.7,
+            twinkle: Math.random() * Math.PI * 2,
+            twinkleSpeed: Math.random() * 0.03 + 0.02,
+            opacity: Math.random() * 0.5 + 0.3
+          } : {
+            ...baseParticle,
+            type: "crescent",
+            color: "#ffd700",
+            size: Math.random() * 20 + 15,
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height * 0.5,
+            opacity: Math.random() * 0.3 + 0.15,
+            drift: Math.random() * Math.PI * 2,
+            driftSpeed: Math.random() * 0.008 + 0.004
+          };
+
+        case "womensday":
+          const isPetal = Math.random() > 0.4;
+          return isPetal ? { 
+            ...baseParticle, 
+            type: "petal",
+            color: ["#ff69b4", "#da70d6", "#ee82ee", "#dda0dd"][Math.floor(Math.random() * 4)], 
+            size: Math.random() * 10 + 5,
+            speedY: Math.random() * 0.5 + 0.2,
+            opacity: Math.random() * 0.4 + 0.2,
+            flutter: Math.random() * Math.PI * 2,
+            flutterSpeed: Math.random() * 0.03 + 0.015
+          } : {
+            ...baseParticle,
+            type: "sparkle",
+            color: ["#ffffff", "#fffacd", "#ffc0cb"][Math.floor(Math.random() * 3)],
+            size: Math.random() * 3 + 1,
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            twinkle: Math.random() * Math.PI * 2,
+            twinkleSpeed: Math.random() * 0.06 + 0.03,
+            opacity: Math.random() * 0.5 + 0.3
+          };
+
+        case "mothersday":
+          const isHeart = Math.random() > 0.5;
+          return isHeart ? { 
+            ...baseParticle, 
+            type: "heart",
+            color: ["#ff69b4", "#ff1493", "#db7093", "#ffb6c1"][Math.floor(Math.random() * 4)], 
+            size: Math.random() * 12 + 6,
+            speedY: -(Math.random() * 0.4 + 0.2),
+            y: canvas.height + 20,
+            opacity: Math.random() * 0.4 + 0.2,
+            swing: Math.random() * Math.PI * 2,
+            swingSpeed: Math.random() * 0.015 + 0.008
+          } : {
+            ...baseParticle,
+            type: "floral",
+            color: ["#ffb7c5", "#e6e6fa", "#f0fff0"][Math.floor(Math.random() * 3)],
+            size: Math.random() * 4 + 2,
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            opacity: Math.random() * 0.3 + 0.15,
+            drift: Math.random() * Math.PI * 2,
+            driftSpeed: Math.random() * 0.01 + 0.005
+          };
+
         case "sparkles":
           return { 
             ...baseParticle, 
-            color: ["#ffd700", "#ff6600", "#ffffff", "#ff4500", "#ffcc00", "#ff8c00", "#ffa500"][Math.floor(Math.random() * 7)], 
+            color: ["#ffd700", "#ff6600", "#ffffff", "#ff4500"][Math.floor(Math.random() * 4)], 
             size: Math.random() * 5 + 2, 
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
@@ -146,9 +477,9 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
             decay: Math.random() * 0.012 + 0.004,
             twinkle: Math.random() * Math.PI * 2,
             burstX: (Math.random() - 0.5) * 6,
-            burstY: (Math.random() - 0.5) * 6,
-            trail: []
+            burstY: (Math.random() - 0.5) * 6
           };
+
         case "stars":
           return { 
             ...baseParticle, 
@@ -159,35 +490,11 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
             twinkle: Math.random() * Math.PI * 2,
             twinkleSpeed: Math.random() * 0.03 + 0.01
           };
-        case "fireworks":
-          const explosionColors = [
-            ["#ff6b6b", "#ee5a5a", "#ff8585"],
-            ["#ffd700", "#ffcc00", "#ffe066"],
-            ["#4ecdc4", "#45b7aa", "#6fe0d8"],
-            ["#a29bfe", "#8c7ae6", "#b8b0ff"],
-            ["#fd79a8", "#e056fd", "#ff9ff3"],
-            ["#00d2d3", "#01a3a4", "#48dbfb"],
-            ["#ff9f43", "#ee8832", "#ffbe76"]
-          ];
-          const colorSet = explosionColors[Math.floor(Math.random() * explosionColors.length)];
-          return { 
-            ...baseParticle, 
-            colors: colorSet,
-            color: colorSet[0],
-            x: Math.random() * canvas.width * 0.8 + canvas.width * 0.1,
-            y: canvas.height + 20,
-            speedY: -(Math.random() * 4 + 5),
-            speedX: (Math.random() - 0.5) * 2,
-            exploded: false,
-            explosionParticles: [],
-            targetY: Math.random() * canvas.height * 0.4 + canvas.height * 0.1,
-            trailOpacity: 1,
-            size: 3
-          };
+
         case "bubbles":
           return { 
             ...baseParticle, 
-            color: ["#a8c5d8", "#b8d0e0", "#c8dae8", "#d8e4f0"][Math.floor(Math.random() * 4)],
+            color: ["#a8c5d8", "#b8d0e0", "#c8dae8"][Math.floor(Math.random() * 3)],
             size: Math.random() * 15 + 8,
             speedY: -(Math.random() * 0.6 + 0.3),
             y: canvas.height + 30,
@@ -195,16 +502,7 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
             wobbleSpeed: Math.random() * 0.03 + 0.01,
             opacity: Math.random() * 0.25 + 0.1
           };
-        case "rain":
-          return { 
-            ...baseParticle, 
-            color: "#a8c5d8",
-            size: Math.random() * 1.5 + 0.5,
-            length: Math.random() * 15 + 10,
-            speedY: Math.random() * 8 + 6,
-            speedX: Math.random() * 1.5 - 0.75,
-            opacity: Math.random() * 0.3 + 0.1
-          };
+
         case "butterflies":
           return { 
             ...baseParticle, 
@@ -219,6 +517,7 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
             speed: Math.random() * 0.8 + 0.4,
             opacity: Math.random() * 0.35 + 0.15
           };
+
         case "sunrays":
           return { 
             ...baseParticle, 
@@ -229,6 +528,7 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
             pulse: Math.random() * Math.PI * 2,
             pulseSpeed: Math.random() * 0.01 + 0.005
           };
+
         case "aurora":
           return { 
             ...baseParticle, 
@@ -240,6 +540,7 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
             phaseSpeed: Math.random() * 0.008 + 0.004,
             opacity: Math.random() * 0.15 + 0.05
           };
+
         case "fireflies":
           return { 
             ...baseParticle, 
@@ -254,24 +555,44 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
             speed: Math.random() * 0.4 + 0.2,
             opacity: Math.random() * 0.5 + 0.3
           };
+
+        case "confetti":
+          return { 
+            ...baseParticle, 
+            color: ["#ff69b4", "#9b59b6", "#f1c40f", "#2ecc71", "#3498db", "#e74c3c"][Math.floor(Math.random() * 6)], 
+            size: Math.random() * 10 + 5,
+            speedY: Math.random() * 2 + 1,
+            speedX: Math.random() * 4 - 2,
+            opacity: Math.random() * 0.5 + 0.5,
+            wobble: Math.random() * Math.PI * 2,
+            wobbleSpeed: Math.random() * 0.15 + 0.05,
+            shape: Math.floor(Math.random() * 3)
+          };
+
         default:
           return baseParticle;
       }
     };
 
     for (let i = 0; i < particleCount; i++) {
-      const p = createParticle();
-      if (type !== "bubbles" && type !== "diyas" && type !== "fireworks") {
-        p.y = Math.random() * canvas.height;
+      const p = createParticle() as any;
+      if (!["bubbles", "diyas", "diwali", "fireworks", "hearts", "valentine", "spring", "pongal", "independence", "mothersday"].includes(type)) {
+        if (!p.type || p.type !== "firework") {
+          p.y = Math.random() * canvas.height;
+        }
       }
       particles.push(p);
     }
 
-    const drawHeart = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string, opacity: number, rotation: number) => {
+    const drawHeart = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string, opacity: number, rotation: number = 0, glow: boolean = false) => {
       ctx.save();
       ctx.globalAlpha = opacity;
       ctx.translate(x, y);
       ctx.rotate(rotation);
+      if (glow) {
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = color;
+      }
       ctx.fillStyle = color;
       ctx.beginPath();
       ctx.moveTo(0, size / 4);
@@ -283,14 +604,36 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
       ctx.restore();
     };
 
-    const drawStar = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string, opacity: number) => {
+    const drawStar = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string, opacity: number, points: number = 4) => {
       ctx.save();
       ctx.globalAlpha = opacity;
       ctx.fillStyle = color;
-      ctx.shadowBlur = size * 2;
+      ctx.shadowBlur = size * 3;
+      ctx.shadowColor = color;
+      ctx.beginPath();
+      for (let i = 0; i < points * 2; i++) {
+        const radius = i % 2 === 0 ? size : size * 0.4;
+        const angle = (i * Math.PI) / points - Math.PI / 2;
+        if (i === 0) ctx.moveTo(x + Math.cos(angle) * radius, y + Math.sin(angle) * radius);
+        else ctx.lineTo(x + Math.cos(angle) * radius, y + Math.sin(angle) * radius);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    };
+
+    const drawCrescent = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string, opacity: number) => {
+      ctx.save();
+      ctx.globalAlpha = opacity;
+      ctx.fillStyle = color;
+      ctx.shadowBlur = 20;
       ctx.shadowColor = color;
       ctx.beginPath();
       ctx.arc(x, y, size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.beginPath();
+      ctx.arc(x + size * 0.35, y - size * 0.1, size * 0.75, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
     };
@@ -299,28 +642,21 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       particles.forEach((p, index) => {
-        switch (type) {
-          case "hearts":
-            p.y += p.speedY;
-            p.swing += p.swingSpeed;
-            p.x += Math.sin(p.swing) * 0.8;
-            p.rotation += p.rotationSpeed * 0.5;
-            drawHeart(ctx, p.x, p.y, p.size, p.color, p.opacity, p.rotation * Math.PI / 180);
-            if (p.y > canvas.height + 20) {
-              if (loop) particles[index] = createParticle();
-              else p.dead = true;
-            }
-            break;
+        if (p.dead) return;
 
+        switch (type) {
           case "snowfall":
+          case "frost":
             p.y += p.speedY;
             p.drift += p.driftSpeed;
-            p.x += Math.sin(p.drift) * 0.6;
+            p.x += Math.sin(p.drift) * 0.5;
             ctx.save();
             ctx.globalAlpha = p.opacity;
             ctx.fillStyle = p.color;
-            ctx.shadowBlur = p.size * 2;
-            ctx.shadowColor = "rgba(255,255,255,0.5)";
+            if (p.blur) {
+              ctx.shadowBlur = 6;
+              ctx.shadowColor = "rgba(255,255,255,0.5)";
+            }
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fill();
@@ -331,56 +667,32 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
             }
             break;
 
-          case "confetti":
+          case "hearts":
+          case "valentine":
             p.y += p.speedY;
-            p.x += p.speedX;
-            p.wobble += p.wobbleSpeed;
-            p.x += Math.sin(p.wobble) * 2;
-            p.rotation += p.rotationSpeed * 5;
-            p.speedY += 0.02;
-            ctx.save();
-            ctx.translate(p.x, p.y);
-            ctx.rotate((p.rotation * Math.PI) / 180);
-            ctx.fillStyle = p.color;
-            ctx.globalAlpha = p.opacity;
-            ctx.shadowBlur = 8;
-            ctx.shadowColor = p.color;
-            if (p.shape === 0) {
-              ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
-            } else if (p.shape === 1) {
-              ctx.beginPath();
-              ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
-              ctx.fill();
-            } else {
-              ctx.beginPath();
-              ctx.moveTo(0, -p.size / 2);
-              ctx.lineTo(p.size / 2, p.size / 2);
-              ctx.lineTo(-p.size / 2, p.size / 2);
-              ctx.closePath();
-              ctx.fill();
-            }
-            ctx.restore();
-            if (p.y > canvas.height + 20 || p.x < -50 || p.x > canvas.width + 50) {
+            p.swing += p.swingSpeed;
+            p.x += Math.sin(p.swing) * 0.6;
+            if (p.pulse) p.pulse += p.pulseSpeed;
+            const heartScale = p.pulse ? 1 + Math.sin(p.pulse) * 0.1 : 1;
+            drawHeart(ctx, p.x, p.y, p.size * heartScale, p.color, p.opacity, 0, p.glow);
+            if (p.y < -20) {
               if (loop) particles[index] = createParticle();
               else p.dead = true;
             }
             break;
 
-          case "leaves":
+          case "spring":
             p.y += p.speedY;
-            p.sway += p.swaySpeed;
-            p.x += Math.sin(p.sway) * 1.2;
-            p.rotation += p.rotationSpeed;
+            p.drift += p.driftSpeed;
+            p.x += Math.sin(p.drift) * 0.4;
             ctx.save();
-            ctx.translate(p.x, p.y);
-            ctx.rotate((p.rotation * Math.PI) / 180);
-            ctx.fillStyle = p.color;
             ctx.globalAlpha = p.opacity;
+            ctx.fillStyle = p.color;
             ctx.beginPath();
-            ctx.ellipse(0, 0, p.size, p.size / 2.5, 0, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
-            if (p.y > canvas.height + 20) {
+            if (p.y < -10) {
               if (loop) particles[index] = createParticle();
               else p.dead = true;
             }
@@ -406,11 +718,129 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
             }
             break;
 
+          case "sundust":
+            p.shimmer += p.shimmerSpeed;
+            p.x += p.speedX;
+            p.y += p.speedY;
+            const shimmerOpacity = p.opacity * (0.5 + Math.sin(p.shimmer) * 0.5);
+            ctx.save();
+            ctx.globalAlpha = shimmerOpacity;
+            ctx.fillStyle = p.color;
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+            if (p.x < 0) p.x = canvas.width;
+            if (p.x > canvas.width) p.x = 0;
+            if (p.y < 0) p.y = canvas.height;
+            if (p.y > canvas.height) p.y = 0;
+            break;
+
+          case "clouds":
+            p.x += p.speedX;
+            ctx.save();
+            ctx.globalAlpha = p.opacity;
+            ctx.fillStyle = p.color;
+            for (let i = 0; i < 5; i++) {
+              ctx.beginPath();
+              ctx.arc(p.x + i * p.size * 0.5, p.y + Math.sin(i) * 10, p.size * 0.6, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            ctx.restore();
+            if (p.x > canvas.width + 200) {
+              if (loop) {
+                p.x = -150;
+                p.y = Math.random() * canvas.height * 0.5;
+              } else p.dead = true;
+            }
+            break;
+
+          case "rain":
+            p.y += p.speedY;
+            p.x += p.speedX;
+            ctx.save();
+            ctx.globalAlpha = p.opacity;
+            ctx.strokeStyle = p.color;
+            ctx.lineWidth = p.size;
+            ctx.lineCap = "round";
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p.x + p.speedX, p.y + p.length);
+            ctx.stroke();
+            ctx.restore();
+            if (p.y > canvas.height) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
+            break;
+
+          case "windyleaves":
+          case "leaves":
+            p.y += p.speedY;
+            p.x += p.speedX;
+            p.sway += p.swaySpeed;
+            p.x += Math.sin(p.sway) * 1.5;
+            p.rotation += p.rotationSpeed * 2;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.opacity;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, p.size, p.size / 2.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+            if (p.y > canvas.height + 20 || p.x > canvas.width + 50) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
+            break;
+
+          case "academicdust":
+            p.x += p.speedX;
+            p.y += p.speedY;
+            ctx.save();
+            ctx.globalAlpha = p.opacity;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+            if (p.x < 0) p.x = canvas.width;
+            if (p.x > canvas.width) p.x = 0;
+            if (p.y < 0) p.y = canvas.height;
+            if (p.y > canvas.height) p.y = 0;
+            break;
+
+          case "festivesparks":
+            p.life -= p.decay;
+            p.x += p.burstX * p.life;
+            p.y += p.burstY * p.life;
+            p.burstY += 0.05;
+            if (p.life > 0) {
+              ctx.save();
+              ctx.globalAlpha = p.life * p.opacity;
+              ctx.fillStyle = p.color;
+              ctx.shadowBlur = 12;
+              ctx.shadowColor = p.color;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
+            if (p.life <= 0) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
+            break;
+
           case "diyas":
             p.y -= p.speedY;
-            p.x += Math.sin(p.y / 30) * 0.3;
+            p.x += Math.sin(p.y / 30) * 0.25;
             p.pulse += p.pulseSpeed;
-            const diyaGlow = 1 + Math.sin(p.pulse) * 0.2;
+            const diyaGlow = 1 + Math.sin(p.pulse) * 0.15;
             ctx.save();
             ctx.shadowBlur = 20;
             ctx.shadowColor = p.color;
@@ -431,6 +861,370 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
             }
             break;
 
+          case "snowsparkle":
+            if (p.type === "snow") {
+              p.y += p.speedY;
+              p.drift += p.driftSpeed;
+              p.x += Math.sin(p.drift) * 0.5;
+              ctx.save();
+              ctx.globalAlpha = p.opacity;
+              ctx.fillStyle = p.color;
+              ctx.shadowBlur = 4;
+              ctx.shadowColor = "rgba(255,255,255,0.5)";
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+              if (p.y > canvas.height + 10) {
+                if (loop) particles[index] = createParticle();
+                else p.dead = true;
+              }
+            } else {
+              p.twinkle += p.twinkleSpeed;
+              const sparkleOp = p.opacity * (0.3 + Math.sin(p.twinkle) * 0.7);
+              drawStar(ctx, p.x, p.y, p.size, p.color, sparkleOp);
+            }
+            break;
+
+          case "diwali":
+          case "fireworks":
+            if (!p.exploded) {
+              p.y += p.speedY;
+              p.x += p.speedX;
+              p.speedY += 0.08;
+              ctx.save();
+              ctx.globalAlpha = 0.8;
+              ctx.fillStyle = p.color;
+              ctx.shadowBlur = 10;
+              ctx.shadowColor = p.color;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+              if (p.y <= p.targetY || p.speedY >= 0) {
+                p.exploded = true;
+                const particleCount = 50 + Math.floor(Math.random() * 30);
+                for (let i = 0; i < particleCount; i++) {
+                  const angle = (Math.PI * 2 * i) / particleCount + Math.random() * 0.3;
+                  const speed = Math.random() * 4 + 2;
+                  p.explosionParticles.push({
+                    x: p.x,
+                    y: p.y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    life: 1,
+                    color: p.colors[Math.floor(Math.random() * p.colors.length)],
+                    size: Math.random() * 2 + 1
+                  });
+                }
+              }
+            } else {
+              let allDead = true;
+              p.explosionParticles.forEach((ep: any) => {
+                if (ep.life > 0) {
+                  allDead = false;
+                  ep.x += ep.vx;
+                  ep.y += ep.vy;
+                  ep.vy += 0.06;
+                  ep.vx *= 0.98;
+                  ep.life -= 0.015;
+                  ctx.save();
+                  ctx.globalAlpha = ep.life * 0.9;
+                  ctx.fillStyle = ep.color;
+                  ctx.shadowBlur = 8;
+                  ctx.shadowColor = ep.color;
+                  ctx.beginPath();
+                  ctx.arc(ep.x, ep.y, ep.size * ep.life, 0, Math.PI * 2);
+                  ctx.fill();
+                  ctx.restore();
+                }
+              });
+              if (allDead) {
+                if (loop) particles[index] = createParticle();
+                else p.dead = true;
+              }
+            }
+            break;
+
+          case "christmas":
+            if (p.type === "snowflake") {
+              p.y += p.speedY;
+              p.drift += p.driftSpeed;
+              p.x += Math.sin(p.drift) * 0.5;
+              ctx.save();
+              ctx.globalAlpha = p.opacity;
+              ctx.fillStyle = p.tint || p.color;
+              ctx.shadowBlur = 4;
+              ctx.shadowColor = "rgba(255,255,255,0.4)";
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+              if (p.y > canvas.height + 10) {
+                if (loop) particles[index] = createParticle();
+                else p.dead = true;
+              }
+            } else {
+              p.twinkle += p.twinkleSpeed;
+              const starOp = p.opacity * (0.4 + Math.sin(p.twinkle) * 0.6);
+              drawStar(ctx, p.x, p.y, p.size, p.color, starOp);
+            }
+            break;
+
+          case "holi":
+            p.life -= p.decay;
+            p.x += p.burstX * p.life;
+            p.y += p.burstY * p.life;
+            if (p.life > 0) {
+              ctx.save();
+              ctx.globalAlpha = p.life * p.opacity;
+              ctx.fillStyle = p.color;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
+            if (p.life <= 0) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
+            break;
+
+          case "newyear":
+            if (p.type === "confetti") {
+              p.y += p.speedY;
+              p.x += p.speedX;
+              p.wobble += p.wobbleSpeed;
+              p.x += Math.sin(p.wobble) * 2;
+              p.rotation += p.rotationSpeed * 5;
+              p.speedY += 0.03;
+              ctx.save();
+              ctx.translate(p.x, p.y);
+              ctx.rotate((p.rotation * Math.PI) / 180);
+              ctx.fillStyle = p.color;
+              ctx.globalAlpha = p.opacity;
+              ctx.shadowBlur = 6;
+              ctx.shadowColor = p.color;
+              if (p.shape === 0) ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+              else if (p.shape === 1) {
+                ctx.beginPath();
+                ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+                ctx.fill();
+              } else {
+                ctx.beginPath();
+                ctx.moveTo(0, -p.size / 2);
+                ctx.lineTo(p.size / 2, p.size / 2);
+                ctx.lineTo(-p.size / 2, p.size / 2);
+                ctx.closePath();
+                ctx.fill();
+              }
+              ctx.restore();
+              if (p.y > canvas.height + 20) {
+                if (loop) particles[index] = createParticle();
+                else p.dead = true;
+              }
+            } else {
+              if (!p.exploded) {
+                p.y += p.speedY;
+                p.x += p.speedX;
+                p.speedY += 0.1;
+                ctx.save();
+                ctx.globalAlpha = 0.9;
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+                if (p.y <= p.targetY || p.speedY >= 0) {
+                  p.exploded = true;
+                  for (let i = 0; i < 60; i++) {
+                    const angle = (Math.PI * 2 * i) / 60;
+                    const speed = Math.random() * 5 + 3;
+                    p.explosionParticles.push({
+                      x: p.x, y: p.y,
+                      vx: Math.cos(angle) * speed,
+                      vy: Math.sin(angle) * speed,
+                      life: 1,
+                      color: p.colors[Math.floor(Math.random() * p.colors.length)],
+                      size: Math.random() * 2.5 + 1
+                    });
+                  }
+                }
+              } else {
+                let allDead = true;
+                p.explosionParticles.forEach((ep: any) => {
+                  if (ep.life > 0) {
+                    allDead = false;
+                    ep.x += ep.vx;
+                    ep.y += ep.vy;
+                    ep.vy += 0.08;
+                    ep.life -= 0.018;
+                    ctx.save();
+                    ctx.globalAlpha = ep.life;
+                    ctx.fillStyle = ep.color;
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = ep.color;
+                    ctx.beginPath();
+                    ctx.arc(ep.x, ep.y, ep.size * ep.life, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                  }
+                });
+                if (allDead) {
+                  if (loop) particles[index] = createParticle();
+                  else p.dead = true;
+                }
+              }
+            }
+            break;
+
+          case "pongal":
+            p.y += p.speedY;
+            p.drift += p.driftSpeed;
+            p.x += Math.sin(p.drift) * 0.3;
+            ctx.save();
+            ctx.globalAlpha = p.opacity;
+            ctx.fillStyle = p.color;
+            ctx.shadowBlur = 6;
+            ctx.shadowColor = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+            if (p.y < -10) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
+            break;
+
+          case "independence":
+            p.y += p.speedY;
+            p.drift += p.driftSpeed;
+            p.x += Math.sin(p.drift) * 0.8;
+            ctx.save();
+            ctx.globalAlpha = p.opacity;
+            ctx.fillStyle = p.color;
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+            if (p.y < -10) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
+            break;
+
+          case "onam":
+            p.angle += p.angleSpeed;
+            p.flutter += p.flutterSpeed;
+            const onamX = canvas.width / 2 + Math.cos(p.angle) * p.radius;
+            const onamY = canvas.height / 2 + Math.sin(p.angle) * p.radius * 0.6;
+            p.x += (onamX - p.x) * 0.02;
+            p.y += (onamY - p.y) * 0.02;
+            p.rotation += p.rotationSpeed;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.opacity;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, p.size, p.size / 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+            break;
+
+          case "navratri":
+            p.angle += p.orbitSpeed;
+            p.pulse += p.pulseSpeed;
+            const navX = p.x + Math.cos(p.angle) * p.orbitRadius;
+            const navY = p.y + Math.sin(p.angle) * p.orbitRadius;
+            const navGlow = 0.5 + Math.sin(p.pulse) * 0.5;
+            ctx.save();
+            ctx.globalAlpha = p.opacity * navGlow;
+            ctx.fillStyle = p.color;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = p.color;
+            ctx.beginPath();
+            ctx.arc(navX, navY, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+            break;
+
+          case "eid":
+            if (p.type === "star") {
+              p.twinkle += p.twinkleSpeed;
+              const eidStarOp = p.opacity * (0.4 + Math.sin(p.twinkle) * 0.6);
+              drawStar(ctx, p.x, p.y, p.size, p.color, eidStarOp);
+            } else {
+              p.drift += p.driftSpeed;
+              p.x += Math.sin(p.drift) * 0.2;
+              p.y += Math.cos(p.drift) * 0.1;
+              drawCrescent(ctx, p.x, p.y, p.size, p.color, p.opacity);
+            }
+            break;
+
+          case "womensday":
+            if (p.type === "petal") {
+              p.y += p.speedY;
+              p.flutter += p.flutterSpeed;
+              p.x += Math.sin(p.flutter) * 0.8;
+              p.rotation += p.rotationSpeed;
+              ctx.save();
+              ctx.translate(p.x, p.y);
+              ctx.rotate((p.rotation * Math.PI) / 180);
+              ctx.fillStyle = p.color;
+              ctx.globalAlpha = p.opacity;
+              ctx.beginPath();
+              ctx.ellipse(0, 0, p.size, p.size / 2, 0, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+              if (p.y > canvas.height + 20) {
+                if (loop) particles[index] = createParticle();
+                else p.dead = true;
+              }
+            } else {
+              p.twinkle += p.twinkleSpeed;
+              const wdSparkle = p.opacity * (0.3 + Math.sin(p.twinkle) * 0.7);
+              ctx.save();
+              ctx.globalAlpha = wdSparkle;
+              ctx.fillStyle = p.color;
+              ctx.shadowBlur = 10;
+              ctx.shadowColor = p.color;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
+            break;
+
+          case "mothersday":
+            if (p.type === "heart") {
+              p.y += p.speedY;
+              p.swing += p.swingSpeed;
+              p.x += Math.sin(p.swing) * 0.5;
+              drawHeart(ctx, p.x, p.y, p.size, p.color, p.opacity);
+              if (p.y < -20) {
+                if (loop) particles[index] = createParticle();
+                else p.dead = true;
+              }
+            } else {
+              p.drift += p.driftSpeed;
+              p.x += Math.sin(p.drift) * 0.3;
+              p.y += Math.cos(p.drift) * 0.2;
+              ctx.save();
+              ctx.globalAlpha = p.opacity;
+              ctx.fillStyle = p.color;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
+            break;
+
           case "sparkles":
             p.twinkle += 0.12;
             p.life -= p.decay;
@@ -447,22 +1241,6 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
               ctx.beginPath();
               ctx.arc(p.x, p.y, Math.max(0.1, p.size * p.life * 1.5), 0, Math.PI * 2);
               ctx.fill();
-              ctx.globalAlpha = sparkleOpacity * 0.4;
-              ctx.beginPath();
-              ctx.arc(p.x, p.y, Math.max(0.1, p.size * p.life * 3), 0, Math.PI * 2);
-              ctx.fill();
-              const rays = 4;
-              ctx.strokeStyle = p.color;
-              ctx.lineWidth = 1.5;
-              ctx.globalAlpha = sparkleOpacity * 0.6;
-              for (let i = 0; i < rays; i++) {
-                const angle = (i / rays) * Math.PI * 2 + p.twinkle;
-                const rayLen = Math.max(0.1, p.size * p.life * 4);
-                ctx.beginPath();
-                ctx.moveTo(p.x, p.y);
-                ctx.lineTo(p.x + Math.cos(angle) * rayLen, p.y + Math.sin(angle) * rayLen);
-                ctx.stroke();
-              }
               ctx.restore();
             }
             if (p.life <= 0) {
@@ -495,25 +1273,6 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
             ctx.fill();
             ctx.restore();
             if (p.y < -p.size) {
-              if (loop) particles[index] = createParticle();
-              else p.dead = true;
-            }
-            break;
-
-          case "rain":
-            p.y += p.speedY;
-            p.x += p.speedX;
-            ctx.save();
-            ctx.globalAlpha = p.opacity;
-            ctx.strokeStyle = p.color;
-            ctx.lineWidth = p.size;
-            ctx.lineCap = "round";
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p.x + p.speedX, p.y + p.length);
-            ctx.stroke();
-            ctx.restore();
-            if (p.y > canvas.height) {
               if (loop) particles[index] = createParticle();
               else p.dead = true;
             }
@@ -554,24 +1313,14 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
             const rayAlpha = p.opacity * (0.6 + Math.sin(p.pulse) * 0.4);
             ctx.save();
             ctx.globalAlpha = rayAlpha;
-            const rayGrad = ctx.createLinearGradient(
-              0, 0,
-              Math.cos(p.angle) * p.length,
-              Math.sin(p.angle) * p.length
-            );
+            const rayGrad = ctx.createLinearGradient(0, 0, Math.cos(p.angle) * p.length, Math.sin(p.angle) * p.length);
             rayGrad.addColorStop(0, `rgba(212,165,116,${rayAlpha})`);
             rayGrad.addColorStop(1, "rgba(212,165,116,0)");
             ctx.fillStyle = rayGrad;
             ctx.beginPath();
             ctx.moveTo(0, 0);
-            ctx.lineTo(
-              Math.cos(p.angle - 0.08) * p.length,
-              Math.sin(p.angle - 0.08) * p.length
-            );
-            ctx.lineTo(
-              Math.cos(p.angle + 0.08) * p.length,
-              Math.sin(p.angle + 0.08) * p.length
-            );
+            ctx.lineTo(Math.cos(p.angle - 0.08) * p.length, Math.sin(p.angle - 0.08) * p.length);
+            ctx.lineTo(Math.cos(p.angle + 0.08) * p.length, Math.sin(p.angle + 0.08) * p.length);
             ctx.closePath();
             ctx.fill();
             ctx.restore();
@@ -612,118 +1361,58 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
               p.x += (fDx / fDist) * p.speed;
               p.y += (fDy / fDist) * p.speed;
             }
-            const ffGlow = Math.max(0.2, 0.5 + Math.sin(p.glowPhase) * 0.5);
-            const ffRadius = Math.max(1, p.size * ffGlow);
+            const fireflyGlow = 0.3 + Math.sin(p.glowPhase) * 0.7;
             ctx.save();
-            ctx.shadowBlur = 12;
-            ctx.shadowColor = p.color;
-            ctx.globalAlpha = p.opacity * ffGlow;
+            ctx.globalAlpha = p.opacity * fireflyGlow;
             ctx.fillStyle = p.color;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = p.color;
             ctx.beginPath();
-            ctx.arc(p.x, p.y, ffRadius, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
             break;
 
-          case "fireworks":
-            if (!p.exploded) {
-              p.y += p.speedY;
-              p.x += p.speedX;
-              p.speedY += 0.08;
-              p.trailOpacity *= 0.97;
-              ctx.save();
-              ctx.shadowBlur = 15;
-              ctx.shadowColor = p.color;
-              ctx.globalAlpha = 0.9;
-              ctx.fillStyle = p.color;
-              ctx.beginPath();
-              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-              ctx.fill();
-              ctx.globalAlpha = p.trailOpacity * 0.5;
-              for (let t = 1; t <= 5; t++) {
-                ctx.beginPath();
-                ctx.arc(p.x - p.speedX * t * 2, p.y - p.speedY * t * 2, p.size * (1 - t * 0.15), 0, Math.PI * 2);
-                ctx.fill();
-              }
-              ctx.restore();
-              if (p.y <= p.targetY || p.speedY >= 0) {
-                p.exploded = true;
-                const numExplosionParticles = 40 + Math.floor(Math.random() * 20);
-                for (let i = 0; i < numExplosionParticles; i++) {
-                  const angle = (i / numExplosionParticles) * Math.PI * 2 + Math.random() * 0.3;
-                  const speed = 2 + Math.random() * 4;
-                  const colorIdx = Math.floor(Math.random() * p.colors.length);
-                  p.explosionParticles.push({
-                    x: p.x,
-                    y: p.y,
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    life: 1,
-                    decay: 0.012 + Math.random() * 0.008,
-                    size: 2 + Math.random() * 2,
-                    color: p.colors[colorIdx],
-                    trail: []
-                  });
-                }
-              }
-            } else {
-              let allDead = true;
-              p.explosionParticles.forEach((ep: any) => {
-                if (ep.life > 0) {
-                  allDead = false;
-                  ep.trail.unshift({ x: ep.x, y: ep.y, life: ep.life });
-                  if (ep.trail.length > 6) ep.trail.pop();
-                  ep.x += ep.vx;
-                  ep.y += ep.vy;
-                  ep.vy += 0.06;
-                  ep.vx *= 0.98;
-                  ep.life -= ep.decay;
-                  ctx.save();
-                  ep.trail.forEach((t: any, ti: number) => {
-                    ctx.globalAlpha = t.life * 0.3 * (1 - ti / ep.trail.length);
-                    ctx.fillStyle = ep.color;
-                    ctx.beginPath();
-                    ctx.arc(t.x, t.y, Math.max(0.1, ep.size * (1 - ti * 0.1)), 0, Math.PI * 2);
-                    ctx.fill();
-                  });
-                  ctx.shadowBlur = 15;
-                  ctx.shadowColor = ep.color;
-                  ctx.globalAlpha = Math.max(0, ep.life) * 0.9;
-                  ctx.fillStyle = ep.color;
-                  ctx.beginPath();
-                  ctx.arc(ep.x, ep.y, Math.max(0.1, ep.size * ep.life), 0, Math.PI * 2);
-                  ctx.fill();
-                  ctx.restore();
-                }
-              });
-              if (allDead) {
-                if (loop) particles[index] = createParticle();
-                else p.dead = true;
-              }
-            }
-            break;
-
-          default:
+          case "confetti":
             p.y += p.speedY;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fillStyle = p.color || color;
+            p.x += p.speedX;
+            p.wobble += p.wobbleSpeed;
+            p.x += Math.sin(p.wobble) * 2;
+            p.rotation += p.rotationSpeed * 5;
+            p.speedY += 0.02;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.fillStyle = p.color;
             ctx.globalAlpha = p.opacity;
-            ctx.fill();
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = p.color;
+            if (p.shape === 0) ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+            else if (p.shape === 1) {
+              ctx.beginPath();
+              ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+              ctx.fill();
+            } else {
+              ctx.beginPath();
+              ctx.moveTo(0, -p.size / 2);
+              ctx.lineTo(p.size / 2, p.size / 2);
+              ctx.lineTo(-p.size / 2, p.size / 2);
+              ctx.closePath();
+              ctx.fill();
+            }
+            ctx.restore();
             if (p.y > canvas.height + 20) {
               if (loop) particles[index] = createParticle();
               else p.dead = true;
             }
+            break;
         }
       });
 
       const allDead = !loop && particles.every(p => p.dead);
-      if (allDead) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        return;
+      if (!allDead) {
+        animationRef.current = requestAnimationFrame(animate);
       }
-
-      animationRef.current = requestAnimationFrame(animate);
     };
 
     animate();
@@ -735,33 +1424,20 @@ const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = tr
     window.addEventListener("resize", handleResize);
 
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
       window.removeEventListener("resize", handleResize);
     };
   }, [type, color, contained, loop]);
 
   if (type === "none") return null;
 
-  if (contained) {
-    return (
-      <div ref={containerRef} className="absolute inset-0 overflow-hidden pointer-events-none z-10">
-        <canvas
-          ref={canvasRef}
-          className="pointer-events-none absolute inset-0"
-          style={{ opacity: 0.8 }}
-        />
-      </div>
-    );
-  }
-
   return (
-    <canvas
-      ref={canvasRef}
-      className="pointer-events-none fixed inset-0 z-10"
-      style={{ opacity: 0.8 }}
-    />
+    <div
+      ref={containerRef}
+      className={`${contained ? "absolute inset-0" : "fixed inset-0"} pointer-events-none z-50`}
+    >
+      <canvas ref={canvasRef} className="w-full h-full" />
+    </div>
   );
 };
 
