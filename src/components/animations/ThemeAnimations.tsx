@@ -37,6 +37,7 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
         case "leaves": return 30;
         case "petals": return 40;
         case "stars": return 50;
+        case "fireworks": return 8;
         default: return 30;
       }
     };
@@ -144,15 +145,29 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
             twinkleSpeed: Math.random() * 0.03 + 0.01
           };
         case "fireworks":
+          const explosionColors = [
+            ["#ff6b6b", "#ee5a5a", "#ff8585"],
+            ["#ffd700", "#ffcc00", "#ffe066"],
+            ["#4ecdc4", "#45b7aa", "#6fe0d8"],
+            ["#a29bfe", "#8c7ae6", "#b8b0ff"],
+            ["#fd79a8", "#e056fd", "#ff9ff3"],
+            ["#00d2d3", "#01a3a4", "#48dbfb"],
+            ["#ff9f43", "#ee8832", "#ffbe76"]
+          ];
+          const colorSet = explosionColors[Math.floor(Math.random() * explosionColors.length)];
           return { 
             ...baseParticle, 
-            color: ["#d4a574", "#8b7355", "#c9a86c", "#a08060"][Math.floor(Math.random() * 4)], 
-            x: Math.random() * canvas.width,
+            colors: colorSet,
+            color: colorSet[0],
+            x: Math.random() * canvas.width * 0.8 + canvas.width * 0.1,
             y: canvas.height + 20,
-            speedY: -(Math.random() * 3 + 2),
+            speedY: -(Math.random() * 4 + 5),
+            speedX: (Math.random() - 0.5) * 2,
             exploded: false,
             explosionParticles: [],
-            targetY: Math.random() * canvas.height * 0.5 + 50
+            targetY: Math.random() * canvas.height * 0.4 + canvas.height * 0.1,
+            trailOpacity: 1,
+            size: 3
           };
         case "bubbles":
           return { 
@@ -566,6 +581,83 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
             ctx.arc(p.x, p.y, ffRadius, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
+            break;
+
+          case "fireworks":
+            if (!p.exploded) {
+              p.y += p.speedY;
+              p.x += p.speedX;
+              p.speedY += 0.08;
+              p.trailOpacity *= 0.97;
+              ctx.save();
+              ctx.shadowBlur = 15;
+              ctx.shadowColor = p.color;
+              ctx.globalAlpha = 0.9;
+              ctx.fillStyle = p.color;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.globalAlpha = p.trailOpacity * 0.5;
+              for (let t = 1; t <= 5; t++) {
+                ctx.beginPath();
+                ctx.arc(p.x - p.speedX * t * 2, p.y - p.speedY * t * 2, p.size * (1 - t * 0.15), 0, Math.PI * 2);
+                ctx.fill();
+              }
+              ctx.restore();
+              if (p.y <= p.targetY || p.speedY >= 0) {
+                p.exploded = true;
+                const numExplosionParticles = 40 + Math.floor(Math.random() * 20);
+                for (let i = 0; i < numExplosionParticles; i++) {
+                  const angle = (i / numExplosionParticles) * Math.PI * 2 + Math.random() * 0.3;
+                  const speed = 2 + Math.random() * 4;
+                  const colorIdx = Math.floor(Math.random() * p.colors.length);
+                  p.explosionParticles.push({
+                    x: p.x,
+                    y: p.y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    life: 1,
+                    decay: 0.012 + Math.random() * 0.008,
+                    size: 2 + Math.random() * 2,
+                    color: p.colors[colorIdx],
+                    trail: []
+                  });
+                }
+              }
+            } else {
+              let allDead = true;
+              p.explosionParticles.forEach((ep: any) => {
+                if (ep.life > 0) {
+                  allDead = false;
+                  ep.trail.unshift({ x: ep.x, y: ep.y, life: ep.life });
+                  if (ep.trail.length > 6) ep.trail.pop();
+                  ep.x += ep.vx;
+                  ep.y += ep.vy;
+                  ep.vy += 0.06;
+                  ep.vx *= 0.98;
+                  ep.life -= ep.decay;
+                  ctx.save();
+                  ep.trail.forEach((t: any, ti: number) => {
+                    ctx.globalAlpha = t.life * 0.3 * (1 - ti / ep.trail.length);
+                    ctx.fillStyle = ep.color;
+                    ctx.beginPath();
+                    ctx.arc(t.x, t.y, ep.size * (1 - ti * 0.1), 0, Math.PI * 2);
+                    ctx.fill();
+                  });
+                  ctx.shadowBlur = 15;
+                  ctx.shadowColor = ep.color;
+                  ctx.globalAlpha = ep.life * 0.9;
+                  ctx.fillStyle = ep.color;
+                  ctx.beginPath();
+                  ctx.arc(ep.x, ep.y, ep.size * ep.life, 0, Math.PI * 2);
+                  ctx.fill();
+                  ctx.restore();
+                }
+              });
+              if (allDead) {
+                particles[index] = createParticle();
+              }
+            }
             break;
 
           default:
