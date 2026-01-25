@@ -3,11 +3,14 @@ import { useEffect, useRef } from "react";
 interface AnimationProps {
   type: "confetti" | "hearts" | "snowfall" | "fireworks" | "leaves" | "petals" | "diyas" | "stars" | "sparkles" | "bubbles" | "rain" | "butterflies" | "sunrays" | "aurora" | "fireflies" | "none";
   color?: string;
+  contained?: boolean;
+  loop?: boolean;
 }
 
-const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
+const ThemeAnimations = ({ type, color = "#ffffff", contained = false, loop = true }: AnimationProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (type === "none" || !canvasRef.current) return;
@@ -16,8 +19,20 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const updateCanvasSize = () => {
+      if (contained && containerRef.current) {
+        const parent = containerRef.current.parentElement;
+        if (parent) {
+          canvas.width = parent.offsetWidth;
+          canvas.height = parent.offsetHeight;
+        }
+      } else {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+    };
+    
+    updateCanvasSize();
 
     const particles: any[] = [];
     
@@ -291,7 +306,10 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
             p.x += Math.sin(p.swing) * 0.8;
             p.rotation += p.rotationSpeed * 0.5;
             drawHeart(ctx, p.x, p.y, p.size, p.color, p.opacity, p.rotation * Math.PI / 180);
-            if (p.y > canvas.height + 20) particles[index] = createParticle();
+            if (p.y > canvas.height + 20) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
             break;
 
           case "snowfall":
@@ -307,7 +325,10 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
-            if (p.y > canvas.height + 10) particles[index] = createParticle();
+            if (p.y > canvas.height + 10) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
             break;
 
           case "confetti":
@@ -339,7 +360,10 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
               ctx.fill();
             }
             ctx.restore();
-            if (p.y > canvas.height + 20 || p.x < -50 || p.x > canvas.width + 50) particles[index] = createParticle();
+            if (p.y > canvas.height + 20 || p.x < -50 || p.x > canvas.width + 50) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
             break;
 
           case "leaves":
@@ -356,7 +380,10 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
             ctx.ellipse(0, 0, p.size, p.size / 2.5, 0, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
-            if (p.y > canvas.height + 20) particles[index] = createParticle();
+            if (p.y > canvas.height + 20) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
             break;
 
           case "petals":
@@ -373,7 +400,10 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
             ctx.ellipse(0, 0, p.size, p.size / 2, 0, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
-            if (p.y > canvas.height + 20) particles[index] = createParticle();
+            if (p.y > canvas.height + 20) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
             break;
 
           case "diyas":
@@ -395,7 +425,10 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
             ctx.arc(p.x, p.y, p.size * 0.4, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
-            if (p.y < -20) particles[index] = createParticle();
+            if (p.y < -20) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
             break;
 
           case "sparkles":
@@ -412,11 +445,11 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
               ctx.globalAlpha = sparkleOpacity * 0.9;
               ctx.fillStyle = p.color;
               ctx.beginPath();
-              ctx.arc(p.x, p.y, p.size * p.life * 1.5, 0, Math.PI * 2);
+              ctx.arc(p.x, p.y, Math.max(0.1, p.size * p.life * 1.5), 0, Math.PI * 2);
               ctx.fill();
               ctx.globalAlpha = sparkleOpacity * 0.4;
               ctx.beginPath();
-              ctx.arc(p.x, p.y, p.size * p.life * 3, 0, Math.PI * 2);
+              ctx.arc(p.x, p.y, Math.max(0.1, p.size * p.life * 3), 0, Math.PI * 2);
               ctx.fill();
               const rays = 4;
               ctx.strokeStyle = p.color;
@@ -424,7 +457,7 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
               ctx.globalAlpha = sparkleOpacity * 0.6;
               for (let i = 0; i < rays; i++) {
                 const angle = (i / rays) * Math.PI * 2 + p.twinkle;
-                const rayLen = p.size * p.life * 4;
+                const rayLen = Math.max(0.1, p.size * p.life * 4);
                 ctx.beginPath();
                 ctx.moveTo(p.x, p.y);
                 ctx.lineTo(p.x + Math.cos(angle) * rayLen, p.y + Math.sin(angle) * rayLen);
@@ -432,7 +465,10 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
               }
               ctx.restore();
             }
-            if (p.life <= 0) particles[index] = createParticle();
+            if (p.life <= 0) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
             break;
 
           case "stars":
@@ -458,7 +494,10 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
             ctx.arc(p.x - p.size * 0.3, p.y - p.size * 0.3, p.size * 0.15, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
-            if (p.y < -p.size) particles[index] = createParticle();
+            if (p.y < -p.size) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
             break;
 
           case "rain":
@@ -474,7 +513,10 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
             ctx.lineTo(p.x + p.speedX, p.y + p.length);
             ctx.stroke();
             ctx.restore();
-            if (p.y > canvas.height) particles[index] = createParticle();
+            if (p.y > canvas.height) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
             break;
 
           case "butterflies":
@@ -641,21 +683,22 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
                     ctx.globalAlpha = t.life * 0.3 * (1 - ti / ep.trail.length);
                     ctx.fillStyle = ep.color;
                     ctx.beginPath();
-                    ctx.arc(t.x, t.y, ep.size * (1 - ti * 0.1), 0, Math.PI * 2);
+                    ctx.arc(t.x, t.y, Math.max(0.1, ep.size * (1 - ti * 0.1)), 0, Math.PI * 2);
                     ctx.fill();
                   });
                   ctx.shadowBlur = 15;
                   ctx.shadowColor = ep.color;
-                  ctx.globalAlpha = ep.life * 0.9;
+                  ctx.globalAlpha = Math.max(0, ep.life) * 0.9;
                   ctx.fillStyle = ep.color;
                   ctx.beginPath();
-                  ctx.arc(ep.x, ep.y, ep.size * ep.life, 0, Math.PI * 2);
+                  ctx.arc(ep.x, ep.y, Math.max(0.1, ep.size * ep.life), 0, Math.PI * 2);
                   ctx.fill();
                   ctx.restore();
                 }
               });
               if (allDead) {
-                particles[index] = createParticle();
+                if (loop) particles[index] = createParticle();
+                else p.dead = true;
               }
             }
             break;
@@ -667,9 +710,18 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
             ctx.fillStyle = p.color || color;
             ctx.globalAlpha = p.opacity;
             ctx.fill();
-            if (p.y > canvas.height + 20) particles[index] = createParticle();
+            if (p.y > canvas.height + 20) {
+              if (loop) particles[index] = createParticle();
+              else p.dead = true;
+            }
         }
       });
+
+      const allDead = !loop && particles.every(p => p.dead);
+      if (allDead) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+      }
 
       animationRef.current = requestAnimationFrame(animate);
     };
@@ -677,8 +729,7 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
     animate();
 
     const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      updateCanvasSize();
     };
 
     window.addEventListener("resize", handleResize);
@@ -689,9 +740,21 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
       }
       window.removeEventListener("resize", handleResize);
     };
-  }, [type, color]);
+  }, [type, color, contained, loop]);
 
   if (type === "none") return null;
+
+  if (contained) {
+    return (
+      <div ref={containerRef} className="absolute inset-0 overflow-hidden pointer-events-none z-10">
+        <canvas
+          ref={canvasRef}
+          className="pointer-events-none absolute inset-0"
+          style={{ opacity: 0.8 }}
+        />
+      </div>
+    );
+  }
 
   return (
     <canvas

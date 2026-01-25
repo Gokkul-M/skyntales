@@ -40,6 +40,7 @@ import CustomCursor from "./components/ui/CustomCursor";
 import { CollectionsProvider } from "@/contexts/CollectionsContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import AdminThemes from "./pages/admin/AdminThemes";
+import PageAnimations from "./components/animations/PageAnimations";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,7 @@ const App = () => (
             <Sonner />
             <CustomCursor />
             <BrowserRouter>
+              <PageAnimations />
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/shop" element={<Shop />} />

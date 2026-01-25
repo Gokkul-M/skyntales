@@ -210,7 +210,9 @@ const HeroSection = () => {
       {activeTheme && activeTheme.animation !== "none" && (
         <ThemeAnimations 
           type={activeTheme.animation as any} 
-          color={activeTheme.colors.primary} 
+          color={activeTheme.colors.primary}
+          contained={true}
+          loop={true}
         />
       )}
       
