@@ -64,7 +64,6 @@ const AdminDashboard = () => {
     const unsubscribeOrders = onSnapshot(ordersRef, (snapshot) => {
       const orders: Order[] = [];
       let totalRevenue = 0;
-      const customerEmails = new Set<string>();
       
       snapshot.forEach((doc) => {
         const data = doc.data();
@@ -77,9 +76,6 @@ const AdminDashboard = () => {
           createdAt: data.createdAt,
         });
         totalRevenue += data.total || 0;
-        if (data.customerEmail || data.email) {
-          customerEmails.add(data.customerEmail || data.email);
-        }
       });
       
       orders.sort((a, b) => {
@@ -93,11 +89,20 @@ const AdminDashboard = () => {
         ...prev,
         totalRevenue,
         orderCount: snapshot.size,
-        customerCount: customerEmails.size,
       }));
     }, (error) => {
       console.error("Error fetching orders:", error);
       setLoading(false);
+    });
+
+    const usersRef = collection(db, "users");
+    const unsubscribeUsers = onSnapshot(usersRef, (snapshot) => {
+      setStats(prev => ({
+        ...prev,
+        customerCount: snapshot.size,
+      }));
+    }, (error) => {
+      console.error("Error fetching users:", error);
     });
 
     const productsRef = collection(db, "products");
@@ -147,6 +152,7 @@ const AdminDashboard = () => {
 
     return () => {
       unsubscribeOrders();
+      unsubscribeUsers();
       unsubscribeProducts();
       unsubscribeAllProducts();
       unsubscribeReviews();
