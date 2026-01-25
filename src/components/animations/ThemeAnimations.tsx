@@ -276,7 +276,7 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
               ctx.globalAlpha = p.life;
               ctx.fillStyle = p.color;
               ctx.beginPath();
-              ctx.arc(p.x, p.y, Math.max(1, p.size * p.life), 0, Math.PI * 2);
+              ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
               ctx.fill();
               for (let i = 0; i < 4; i++) {
                 const angle = (i * Math.PI) / 2;
@@ -297,24 +297,23 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
 
           case "stars":
             p.twinkle += 0.05;
-            const starOpacity = Math.abs(0.3 + Math.sin(p.twinkle) * 0.7);
-            drawStar(ctx, p.x, p.y, Math.max(1, p.size), p.color, starOpacity);
+            const starOpacity = 0.3 + Math.sin(p.twinkle) * 0.7;
+            drawStar(ctx, p.x, p.y, p.size, p.color, starOpacity);
             break;
 
           case "bubbles":
             p.y += p.speedY;
             p.wobble += p.wobbleSpeed;
             p.x += Math.sin(p.wobble) * 0.5;
-            const bubbleSize = Math.max(1, p.size);
             ctx.save();
             ctx.globalAlpha = p.opacity * 0.6;
             ctx.beginPath();
-            ctx.arc(p.x, p.y, bubbleSize, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.strokeStyle = p.color;
             ctx.lineWidth = 2;
             ctx.stroke();
             ctx.beginPath();
-            ctx.arc(p.x - bubbleSize * 0.3, p.y - bubbleSize * 0.3, Math.max(1, bubbleSize * 0.2), 0, Math.PI * 2);
+            ctx.arc(p.x - p.size * 0.3, p.y - p.size * 0.3, p.size * 0.2, 0, Math.PI * 2);
             ctx.fillStyle = "rgba(255,255,255,0.6)";
             ctx.fill();
             ctx.restore();
@@ -427,15 +426,14 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
             }
             p.x += (dx / dist) * p.speed;
             p.y += (dy / dist) * p.speed;
-            const fireflyGlow = 0.5 + Math.abs(Math.sin(p.glowPhase)) * 0.5;
-            const fireflyRadius = Math.max(1, p.size * fireflyGlow);
+            const fireflyGlow = 0.3 + Math.sin(p.glowPhase) * 0.7;
             ctx.save();
             ctx.shadowBlur = 15;
             ctx.shadowColor = "#ffff66";
             ctx.globalAlpha = fireflyGlow;
             ctx.fillStyle = p.color;
             ctx.beginPath();
-            ctx.arc(p.x, p.y, fireflyRadius, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, p.size * fireflyGlow, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
             break;
@@ -443,9 +441,9 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
           default:
             p.y += p.speedY;
             ctx.beginPath();
-            ctx.arc(p.x, p.y, Math.max(1, p.size), 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fillStyle = p.color || color;
-            ctx.globalAlpha = Math.max(0, p.opacity);
+            ctx.globalAlpha = p.opacity;
             ctx.fill();
         }
 
