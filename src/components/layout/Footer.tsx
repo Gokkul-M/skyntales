@@ -44,9 +44,9 @@ const Footer = () => {
   const categoryLinks = [
     { label: "All Products", href: "/shop" },
     ...collections
-      .filter(col => col.isActive)
+      .filter((col) => col.isActive)
       .slice(0, 4)
-      .map(col => ({
+      .map((col) => ({
         label: col.name,
         href: `/shop/${col.slug}`,
       })),
@@ -164,7 +164,7 @@ const Footer = () => {
 
             <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
               <InfoBlock label="Email" value="care@skyntales.com" />
-              <InfoBlock label="Phone" value="+1 (555) 123-4567" />
+              <InfoBlock label="Phone" value="+91 95666 90504" />
               <InfoBlock
                 label="Address"
                 value={
