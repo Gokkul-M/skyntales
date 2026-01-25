@@ -116,7 +116,7 @@ const ProductsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="pt-36 sm:pt-56 md:pt-72 section-padding bg-background overflow-hidden opacity-0"
+      className="pt-36 sm:pt-56 md:pt-72 section-padding bg-white overflow-hidden opacity-0"
     >
       <div className="container-kanva">
         <div className="relative flex items-center justify-center min-h-[420px] sm:min-h-[580px] md:min-h-[720px]">
