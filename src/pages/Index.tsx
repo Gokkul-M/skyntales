@@ -13,7 +13,7 @@ import AdvertisementPopup from "@/components/popups/AdvertisementPopup";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-white">
       <AdvertisementPopup />
       <Header />
       <main>

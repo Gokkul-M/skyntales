@@ -351,9 +351,9 @@ const Checkout = () => {
   }
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-white">
       <Header />
-      <main className="container-kanva py-20 sm:py-24 px-4 lg:px-8">
+      <main className="flex-1 container-kanva py-20 sm:py-24 px-4 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <Button 
             variant="ghost" 

@@ -3,9 +3,9 @@ import Footer from "@/components/layout/Footer";
 
 const Cookies = () => {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-white">
       <Header />
-      <main className="container-kanva py-24">
+      <main className="flex-1 container-kanva py-24">
         <h1 className="text-4xl font-heading">Cookies</h1>
       </main>
       <Footer />

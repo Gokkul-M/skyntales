@@ -293,9 +293,9 @@ const Account = () => {
 
   if (!user) {
     return (
-      <div>
+      <div className="min-h-screen flex flex-col bg-white">
         <Header />
-        <main className="container-kanva py-24">
+        <main className="flex-1 container-kanva py-24">
           <div className="max-w-md mx-auto">
             <Card className="border-0 shadow-xl">
               <CardHeader className="text-center pb-2">
@@ -449,9 +449,9 @@ const Account = () => {
   ];
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-white">
       <Header />
-      <main className="container-kanva py-20 sm:py-24 px-4 lg:px-8">
+      <main className="flex-1 container-kanva py-20 sm:py-24 px-4 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             <aside className="lg:w-72 flex-shrink-0">

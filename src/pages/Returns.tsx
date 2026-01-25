@@ -30,7 +30,7 @@ const returnSteps = [
 
 const Returns = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white">
       <Header />
       <main className="flex-1">
         <section className="bg-muted/30 py-16 md:py-24">

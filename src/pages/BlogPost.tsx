@@ -3,7 +3,15 @@ import { useParams, Link } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Facebook, Instagram, ArrowLeft, Loader2 } from "lucide-react";
-import { doc, getDoc, collection, query, orderBy, limit, getDocs } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 interface BlogPost {
@@ -55,13 +63,17 @@ const BlogPostPage = () => {
           const relatedQuery = query(
             collection(db, "blogs"),
             orderBy("createdAt", "desc"),
-            limit(10)
+            limit(10),
           );
           const relatedSnap = await getDocs(relatedQuery);
           const related: RelatedPost[] = [];
           relatedSnap.forEach((doc) => {
             const data = doc.data();
-            if (doc.id !== id && data.status === "published" && data.category === blogPost.category) {
+            if (
+              doc.id !== id &&
+              data.status === "published" &&
+              data.category === blogPost.category
+            ) {
               related.push({
                 id: doc.id,
                 title: data.title || "",
@@ -94,7 +106,7 @@ const BlogPostPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-secondary">
+      <div className="min-h-screen bg-white">
         <Header />
         <main className="pt-32 pb-20">
           <div className="container-kanva flex justify-center">
@@ -108,7 +120,7 @@ const BlogPostPage = () => {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-secondary">
+      <div className="min-h-screen bg-white">
         <Header />
         <main className="pt-32 pb-20">
           <div className="container-kanva text-center">
@@ -124,7 +136,7 @@ const BlogPostPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-secondary">
+    <div className="min-h-screen bg-white">
       <Header />
       <main>
         <section className="pt-28 pb-8">
@@ -161,13 +173,17 @@ const BlogPostPage = () => {
             )}
 
             <article className="prose prose-lg max-w-none">
-              {post.content.split("\n").map((paragraph, index) => (
-                paragraph.trim() && (
-                  <p key={index} className="mb-4 text-foreground/90 leading-relaxed">
-                    {paragraph}
-                  </p>
-                )
-              ))}
+              {post.content.split("\n").map(
+                (paragraph, index) =>
+                  paragraph.trim() && (
+                    <p
+                      key={index}
+                      className="mb-4 text-foreground/90 leading-relaxed"
+                    >
+                      {paragraph}
+                    </p>
+                  ),
+              )}
             </article>
 
             <div className="flex items-center gap-4 mt-12 pt-8 border-t">
@@ -191,7 +207,9 @@ const BlogPostPage = () => {
         {relatedPosts.length > 0 && (
           <section className="py-16 px-4 md:px-8 lg:px-16">
             <div className="max-w-7xl mx-auto">
-              <h2 className="text-2xl font-heading italic mb-8">Related Articles</h2>
+              <h2 className="text-2xl font-heading italic mb-8">
+                Related Articles
+              </h2>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {relatedPosts.map((related) => (
                   <article key={related.id} className="group">
