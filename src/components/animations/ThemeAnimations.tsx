@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 interface AnimationProps {
-  type: "confetti" | "hearts" | "snowfall" | "fireworks" | "leaves" | "petals" | "diyas" | "stars" | "sparkles" | "none";
+  type: "confetti" | "hearts" | "snowfall" | "fireworks" | "leaves" | "petals" | "diyas" | "stars" | "sparkles" | "bubbles" | "rain" | "butterflies" | "sunrays" | "aurora" | "fireflies" | "none";
   color?: string;
 }
 
@@ -20,7 +20,7 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
     canvas.height = window.innerHeight;
 
     const particles: any[] = [];
-    const particleCount = type === "snowfall" ? 100 : type === "hearts" ? 30 : type === "sparkles" ? 80 : type === "diyas" ? 60 : 50;
+    const particleCount = type === "snowfall" ? 100 : type === "hearts" ? 30 : type === "sparkles" ? 80 : type === "diyas" ? 60 : type === "bubbles" ? 40 : type === "rain" ? 150 : type === "butterflies" ? 15 : type === "sunrays" ? 8 : type === "aurora" ? 5 : type === "fireflies" ? 50 : 50;
 
     const createParticle = () => {
       const baseParticle = {
@@ -73,6 +73,69 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
           return { ...baseParticle, color: "#ffd700", size: Math.random() * 6 + 3, twinkle: Math.random() * Math.PI * 2 };
         case "fireworks":
           return { ...baseParticle, color: ["#ff0000", "#ffd700", "#00ff00", "#00ffff", "#ff00ff"][Math.floor(Math.random() * 5)], exploded: false, explosionParticles: [] };
+        case "bubbles":
+          return { 
+            ...baseParticle, 
+            color: ["#87ceeb", "#add8e6", "#b0e0e6", "#e0ffff"][Math.floor(Math.random() * 4)],
+            size: Math.random() * 20 + 10,
+            speedY: -(Math.random() * 1 + 0.5),
+            y: canvas.height + 30,
+            wobble: Math.random() * Math.PI * 2,
+            wobbleSpeed: Math.random() * 0.05 + 0.02
+          };
+        case "rain":
+          return { 
+            ...baseParticle, 
+            color: "#a4c8e1",
+            size: Math.random() * 2 + 1,
+            length: Math.random() * 20 + 15,
+            speedY: Math.random() * 15 + 10,
+            speedX: Math.random() * 2 - 1
+          };
+        case "butterflies":
+          return { 
+            ...baseParticle, 
+            color: ["#ff69b4", "#ffa500", "#87ceeb", "#dda0dd", "#f0e68c"][Math.floor(Math.random() * 5)],
+            size: Math.random() * 15 + 10,
+            wingPhase: Math.random() * Math.PI * 2,
+            wingSpeed: Math.random() * 0.2 + 0.1,
+            speedY: Math.random() * 0.5 - 0.25,
+            speedX: Math.random() * 2 - 1,
+            amplitude: Math.random() * 50 + 30
+          };
+        case "sunrays":
+          return { 
+            ...baseParticle, 
+            color: "#ffd700",
+            x: canvas.width / 2,
+            y: -50,
+            angle: Math.random() * Math.PI * 2,
+            length: canvas.height * 1.5,
+            opacity: 0.1 + Math.random() * 0.1,
+            pulse: Math.random() * Math.PI * 2
+          };
+        case "aurora":
+          return { 
+            ...baseParticle, 
+            colors: ["#00ff88", "#00ffcc", "#00ccff", "#0088ff", "#8800ff"],
+            y: Math.random() * canvas.height * 0.4,
+            amplitude: Math.random() * 100 + 50,
+            frequency: Math.random() * 0.01 + 0.005,
+            phase: Math.random() * Math.PI * 2,
+            opacity: Math.random() * 0.3 + 0.1
+          };
+        case "fireflies":
+          return { 
+            ...baseParticle, 
+            color: "#ffff66",
+            size: Math.random() * 4 + 2,
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            targetX: Math.random() * canvas.width,
+            targetY: Math.random() * canvas.height,
+            glowPhase: Math.random() * Math.PI * 2,
+            speed: Math.random() * 0.5 + 0.2
+          };
         default:
           return baseParticle;
       }
@@ -236,6 +299,143 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
             p.twinkle += 0.05;
             const starOpacity = 0.3 + Math.sin(p.twinkle) * 0.7;
             drawStar(ctx, p.x, p.y, p.size, p.color, starOpacity);
+            break;
+
+          case "bubbles":
+            p.y += p.speedY;
+            p.wobble += p.wobbleSpeed;
+            p.x += Math.sin(p.wobble) * 0.5;
+            ctx.save();
+            ctx.globalAlpha = p.opacity * 0.6;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.strokeStyle = p.color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(p.x - p.size * 0.3, p.y - p.size * 0.3, p.size * 0.2, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(255,255,255,0.6)";
+            ctx.fill();
+            ctx.restore();
+            if (p.y < -p.size) {
+              particles[index] = createParticle();
+            }
+            break;
+
+          case "rain":
+            p.y += p.speedY;
+            p.x += p.speedX;
+            ctx.save();
+            ctx.globalAlpha = p.opacity * 0.5;
+            ctx.strokeStyle = p.color;
+            ctx.lineWidth = p.size;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p.x + p.speedX * 2, p.y + p.length);
+            ctx.stroke();
+            ctx.restore();
+            if (p.y > canvas.height) {
+              particles[index] = createParticle();
+            }
+            break;
+
+          case "butterflies":
+            p.wingPhase += p.wingSpeed;
+            p.x += p.speedX + Math.sin(p.wingPhase * 0.5) * 2;
+            p.y += p.speedY + Math.cos(p.wingPhase * 0.3) * 1;
+            const wingFlap = Math.sin(p.wingPhase) * 0.5 + 0.5;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.globalAlpha = p.opacity;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.ellipse(-p.size * 0.6 * wingFlap, 0, p.size * 0.8, p.size * 0.5, -0.3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(p.size * 0.6 * wingFlap, 0, p.size * 0.8, p.size * 0.5, 0.3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = "#333";
+            ctx.beginPath();
+            ctx.ellipse(0, 0, p.size * 0.15, p.size * 0.4, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+            if (p.x < -50 || p.x > canvas.width + 50 || p.y < -50 || p.y > canvas.height + 50) {
+              particles[index] = createParticle();
+            }
+            break;
+
+          case "sunrays":
+            p.pulse += 0.02;
+            const rayOpacity = p.opacity * (0.5 + Math.sin(p.pulse) * 0.5);
+            ctx.save();
+            ctx.globalAlpha = rayOpacity;
+            const gradient = ctx.createLinearGradient(
+              canvas.width / 2, 0,
+              canvas.width / 2 + Math.cos(p.angle) * p.length,
+              Math.sin(p.angle) * p.length
+            );
+            gradient.addColorStop(0, "rgba(255,215,0,0.4)");
+            gradient.addColorStop(1, "rgba(255,215,0,0)");
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.moveTo(canvas.width / 2, 0);
+            ctx.lineTo(
+              canvas.width / 2 + Math.cos(p.angle - 0.1) * p.length,
+              Math.sin(p.angle - 0.1) * p.length
+            );
+            ctx.lineTo(
+              canvas.width / 2 + Math.cos(p.angle + 0.1) * p.length,
+              Math.sin(p.angle + 0.1) * p.length
+            );
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+            break;
+
+          case "aurora":
+            p.phase += 0.01;
+            ctx.save();
+            ctx.globalAlpha = p.opacity;
+            for (let i = 0; i < p.colors.length; i++) {
+              ctx.beginPath();
+              ctx.moveTo(0, p.y + i * 30);
+              for (let x = 0; x < canvas.width; x += 10) {
+                const y = p.y + i * 30 + Math.sin(x * p.frequency + p.phase + i) * p.amplitude;
+                ctx.lineTo(x, y);
+              }
+              ctx.lineTo(canvas.width, canvas.height);
+              ctx.lineTo(0, canvas.height);
+              ctx.closePath();
+              const auroraGrad = ctx.createLinearGradient(0, p.y, 0, canvas.height);
+              auroraGrad.addColorStop(0, p.colors[i]);
+              auroraGrad.addColorStop(1, "transparent");
+              ctx.fillStyle = auroraGrad;
+              ctx.fill();
+            }
+            ctx.restore();
+            break;
+
+          case "fireflies":
+            p.glowPhase += 0.05;
+            const dx = p.targetX - p.x;
+            const dy = p.targetY - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 10) {
+              p.targetX = Math.random() * canvas.width;
+              p.targetY = Math.random() * canvas.height;
+            }
+            p.x += (dx / dist) * p.speed;
+            p.y += (dy / dist) * p.speed;
+            const fireflyGlow = 0.3 + Math.sin(p.glowPhase) * 0.7;
+            ctx.save();
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = "#ffff66";
+            ctx.globalAlpha = fireflyGlow;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * fireflyGlow, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
             break;
 
           default:
