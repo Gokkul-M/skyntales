@@ -66,6 +66,12 @@ const isDateInRange = (startDate: string, endDate: string): boolean => {
   return now >= start && now <= end;
 };
 
+const DEFAULT_COLORS = {
+  primary: '180 35% 17%',
+  secondary: '40 30% 94%',
+  accent: '28 45% 65%',
+};
+
 const applyThemeColors = (theme: FestivalTheme | null) => {
   const root = document.documentElement;
   
@@ -102,9 +108,9 @@ const applyThemeColors = (theme: FestivalTheme | null) => {
     root.style.removeProperty('--theme-secondary');
     root.style.removeProperty('--theme-accent');
     root.style.removeProperty('--theme-text');
-    root.style.removeProperty('--primary');
-    root.style.removeProperty('--secondary');
-    root.style.removeProperty('--accent');
+    root.style.setProperty('--primary', DEFAULT_COLORS.primary);
+    root.style.setProperty('--secondary', DEFAULT_COLORS.secondary);
+    root.style.setProperty('--accent', DEFAULT_COLORS.accent);
     root.removeAttribute('data-theme-active');
   }
 };
