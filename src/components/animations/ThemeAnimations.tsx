@@ -23,20 +23,20 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
     
     const getParticleCount = () => {
       switch (type) {
-        case "snowfall": return 60;
-        case "hearts": return 15;
-        case "sparkles": return 40;
-        case "diyas": return 25;
-        case "bubbles": return 20;
-        case "rain": return 80;
-        case "butterflies": return 8;
+        case "snowfall": return 80;
+        case "hearts": return 18;
+        case "sparkles": return 80;
+        case "diyas": return 30;
+        case "bubbles": return 25;
+        case "rain": return 100;
+        case "butterflies": return 10;
         case "sunrays": return 12;
         case "aurora": return 3;
-        case "fireflies": return 30;
-        case "confetti": return 35;
-        case "leaves": return 25;
-        case "petals": return 30;
-        case "stars": return 40;
+        case "fireflies": return 35;
+        case "confetti": return 70;
+        case "leaves": return 30;
+        case "petals": return 40;
+        case "stars": return 50;
         default: return 30;
       }
     };
@@ -79,11 +79,14 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
         case "confetti":
           return { 
             ...baseParticle, 
-            color: ["#d4a574", "#8b7355", "#a08060", "#c9a86c", "#b39660"][Math.floor(Math.random() * 5)], 
-            size: Math.random() * 6 + 3,
-            speedY: Math.random() * 1.2 + 0.6,
-            opacity: Math.random() * 0.4 + 0.2,
-            wobble: Math.random() * Math.PI * 2
+            color: ["#ff69b4", "#9b59b6", "#f1c40f", "#2ecc71", "#3498db", "#e74c3c", "#ff6b6b", "#a29bfe"][Math.floor(Math.random() * 8)], 
+            size: Math.random() * 10 + 5,
+            speedY: Math.random() * 2 + 1,
+            speedX: Math.random() * 4 - 2,
+            opacity: Math.random() * 0.5 + 0.5,
+            wobble: Math.random() * Math.PI * 2,
+            wobbleSpeed: Math.random() * 0.15 + 0.05,
+            shape: Math.floor(Math.random() * 3)
           };
         case "leaves":
           return { 
@@ -119,13 +122,16 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
         case "sparkles":
           return { 
             ...baseParticle, 
-            color: ["#d4a574", "#c9a86c", "#ffffff", "#e8d8c8"][Math.floor(Math.random() * 4)], 
-            size: Math.random() * 3 + 1, 
+            color: ["#ffd700", "#ff6600", "#ffffff", "#ff4500", "#ffcc00", "#ff8c00", "#ffa500"][Math.floor(Math.random() * 7)], 
+            size: Math.random() * 5 + 2, 
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
             life: 1,
-            decay: Math.random() * 0.015 + 0.005,
-            twinkle: Math.random() * Math.PI * 2
+            decay: Math.random() * 0.012 + 0.004,
+            twinkle: Math.random() * Math.PI * 2,
+            burstX: (Math.random() - 0.5) * 6,
+            burstY: (Math.random() - 0.5) * 6,
+            trail: []
           };
         case "stars":
           return { 
@@ -291,17 +297,34 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
 
           case "confetti":
             p.y += p.speedY;
-            p.wobble += 0.05;
-            p.x += Math.sin(p.wobble) * 0.8;
-            p.rotation += p.rotationSpeed * 3;
+            p.x += p.speedX;
+            p.wobble += p.wobbleSpeed;
+            p.x += Math.sin(p.wobble) * 2;
+            p.rotation += p.rotationSpeed * 5;
+            p.speedY += 0.02;
             ctx.save();
             ctx.translate(p.x, p.y);
             ctx.rotate((p.rotation * Math.PI) / 180);
             ctx.fillStyle = p.color;
             ctx.globalAlpha = p.opacity;
-            ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = p.color;
+            if (p.shape === 0) {
+              ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+            } else if (p.shape === 1) {
+              ctx.beginPath();
+              ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+              ctx.fill();
+            } else {
+              ctx.beginPath();
+              ctx.moveTo(0, -p.size / 2);
+              ctx.lineTo(p.size / 2, p.size / 2);
+              ctx.lineTo(-p.size / 2, p.size / 2);
+              ctx.closePath();
+              ctx.fill();
+            }
             ctx.restore();
-            if (p.y > canvas.height + 10) particles[index] = createParticle();
+            if (p.y > canvas.height + 20 || p.x < -50 || p.x > canvas.width + 50) particles[index] = createParticle();
             break;
 
           case "leaves":
@@ -361,18 +384,37 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
             break;
 
           case "sparkles":
-            p.twinkle += 0.08;
+            p.twinkle += 0.12;
             p.life -= p.decay;
+            p.x += p.burstX * p.life;
+            p.y += p.burstY * p.life;
+            p.burstY += 0.08;
             if (p.life > 0) {
-              const sparkleOpacity = p.life * (0.5 + Math.sin(p.twinkle) * 0.5);
+              const sparkleOpacity = p.life * (0.6 + Math.sin(p.twinkle) * 0.4);
               ctx.save();
-              ctx.shadowBlur = 8;
+              ctx.shadowBlur = 20;
               ctx.shadowColor = p.color;
-              ctx.globalAlpha = sparkleOpacity * 0.6;
+              ctx.globalAlpha = sparkleOpacity * 0.9;
               ctx.fillStyle = p.color;
               ctx.beginPath();
-              ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+              ctx.arc(p.x, p.y, p.size * p.life * 1.5, 0, Math.PI * 2);
               ctx.fill();
+              ctx.globalAlpha = sparkleOpacity * 0.4;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size * p.life * 3, 0, Math.PI * 2);
+              ctx.fill();
+              const rays = 4;
+              ctx.strokeStyle = p.color;
+              ctx.lineWidth = 1.5;
+              ctx.globalAlpha = sparkleOpacity * 0.6;
+              for (let i = 0; i < rays; i++) {
+                const angle = (i / rays) * Math.PI * 2 + p.twinkle;
+                const rayLen = p.size * p.life * 4;
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p.x + Math.cos(angle) * rayLen, p.y + Math.sin(angle) * rayLen);
+                ctx.stroke();
+              }
               ctx.restore();
             }
             if (p.life <= 0) particles[index] = createParticle();
