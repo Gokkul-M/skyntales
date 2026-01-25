@@ -43,7 +43,8 @@ const animationOptions = [
   { value: "snowfall", label: "Snowfall (Winter)", icon: Snowflake },
   { value: "leaves", label: "Falling Leaves (Autumn)", icon: Leaf },
   { value: "petals", label: "Flower Petals (Spring)", icon: Sparkles },
-  { value: "diyas", label: "Floating Diyas (Diwali)", icon: Star },
+  { value: "diyas", label: "Glowing Diyas (Diwali)", icon: Star },
+  { value: "sparkles", label: "Cracker Sparkles (Diwali)", icon: Sparkles },
   { value: "stars", label: "Twinkling Stars", icon: Star },
   { value: "fireworks", label: "Fireworks (New Year)", icon: PartyPopper },
 ];
@@ -63,7 +64,7 @@ const themePresets = [
   { name: "November", type: "month", colors: { primary: "#ffa500", secondary: "#ff8c00", accent: "#ffd700", textColor: "#ffffff", overlayColor: "#000000", overlayOpacity: 0.4 }, animation: "diyas", gradient: "linear-gradient(135deg, #ffa500 0%, #ff8c00 50%, #ffd700 100%)" },
   { name: "December", type: "month", colors: { primary: "#c41e3a", secondary: "#165b33", accent: "#ffd700", textColor: "#ffffff", overlayColor: "#000000", overlayOpacity: 0.3 }, animation: "snowfall", gradient: "linear-gradient(135deg, #c41e3a 0%, #165b33 100%)" },
   { name: "Valentine's Day", type: "event", colors: { primary: "#ff6b6b", secondary: "#ee5a5a", accent: "#ff8787", textColor: "#ffffff", overlayColor: "#000000", overlayOpacity: 0.3 }, animation: "hearts", gradient: "linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 50%, #ff8787 100%)" },
-  { name: "Diwali", type: "festival", colors: { primary: "#ffa500", secondary: "#ff8c00", accent: "#ffd700", textColor: "#ffffff", overlayColor: "#000000", overlayOpacity: 0.4 }, animation: "diyas", gradient: "linear-gradient(135deg, #ffa500 0%, #ff8c00 50%, #ffd700 100%)" },
+  { name: "Diwali", type: "festival", colors: { primary: "#ffa500", secondary: "#ff8c00", accent: "#ffd700", textColor: "#ffffff", overlayColor: "#000000", overlayOpacity: 0.4 }, animation: "sparkles", gradient: "linear-gradient(135deg, #ffa500 0%, #ff8c00 50%, #ffd700 100%)" },
   { name: "Christmas", type: "festival", colors: { primary: "#c41e3a", secondary: "#165b33", accent: "#ffd700", textColor: "#ffffff", overlayColor: "#000000", overlayOpacity: 0.3 }, animation: "snowfall", gradient: "linear-gradient(135deg, #c41e3a 0%, #165b33 100%)" },
   { name: "Holi", type: "festival", colors: { primary: "#ff00ff", secondary: "#00ffff", accent: "#ffff00", textColor: "#ffffff", overlayColor: "#000000", overlayOpacity: 0.2 }, animation: "confetti", gradient: "linear-gradient(135deg, #ff00ff 0%, #00ffff 50%, #ffff00 100%)" },
   { name: "New Year", type: "event", colors: { primary: "#ffd700", secondary: "#c0c0c0", accent: "#ffffff", textColor: "#ffffff", overlayColor: "#000000", overlayOpacity: 0.4 }, animation: "fireworks", gradient: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)" },

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 interface AnimationProps {
-  type: "confetti" | "hearts" | "snowfall" | "fireworks" | "leaves" | "petals" | "diyas" | "stars" | "none";
+  type: "confetti" | "hearts" | "snowfall" | "fireworks" | "leaves" | "petals" | "diyas" | "stars" | "sparkles" | "none";
   color?: string;
 }
 
@@ -20,7 +20,7 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
     canvas.height = window.innerHeight;
 
     const particles: any[] = [];
-    const particleCount = type === "snowfall" ? 100 : type === "hearts" ? 30 : 50;
+    const particleCount = type === "snowfall" ? 100 : type === "hearts" ? 30 : type === "sparkles" ? 80 : type === "diyas" ? 60 : 50;
 
     const createParticle = () => {
       const baseParticle = {
@@ -46,7 +46,29 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
         case "petals":
           return { ...baseParticle, color: ["#ffb6c1", "#ffc0cb", "#ff69b4", "#ff1493"][Math.floor(Math.random() * 4)], size: Math.random() * 10 + 6 };
         case "diyas":
-          return { ...baseParticle, color: "#ffa500", size: Math.random() * 8 + 4, speedY: Math.random() * 0.5 + 0.2, y: canvas.height + 20, goingUp: true };
+          return { 
+            ...baseParticle, 
+            color: ["#ffa500", "#ffd700", "#ff6600", "#ffcc00"][Math.floor(Math.random() * 4)], 
+            size: Math.random() * 6 + 3, 
+            speedY: Math.random() * 0.8 + 0.3, 
+            y: canvas.height + 20, 
+            goingUp: true,
+            sparkle: Math.random() * Math.PI * 2,
+            trail: []
+          };
+        case "sparkles":
+          return { 
+            ...baseParticle, 
+            color: ["#ffd700", "#ff6600", "#ffffff", "#ff4500", "#ffcc00"][Math.floor(Math.random() * 5)], 
+            size: Math.random() * 4 + 2, 
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            speedX: (Math.random() - 0.5) * 4,
+            speedY: (Math.random() - 0.5) * 4,
+            life: 1,
+            decay: Math.random() * 0.02 + 0.01,
+            burst: Math.random() > 0.7
+          };
         case "stars":
           return { ...baseParticle, color: "#ffd700", size: Math.random() * 6 + 3, twinkle: Math.random() * Math.PI * 2 };
         case "fireworks":
@@ -160,9 +182,54 @@ const ThemeAnimations = ({ type, color = "#ffffff" }: AnimationProps) => {
           case "diyas":
             if (p.goingUp) {
               p.y -= p.speedY;
-              p.x += Math.sin(p.y / 20) * 0.3;
+              p.x += Math.sin(p.y / 20) * 0.5;
             }
-            drawDiya(ctx, p.x, p.y, p.size, p.opacity * (0.7 + Math.sin(Date.now() / 200 + index) * 0.3));
+            p.sparkle += 0.1;
+            const glowSize = p.size * (1 + Math.sin(p.sparkle) * 0.3);
+            ctx.save();
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, glowSize, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.opacity * (0.6 + Math.sin(Date.now() / 150 + index) * 0.4);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, glowSize * 0.5, 0, Math.PI * 2);
+            ctx.fillStyle = "#ffffff";
+            ctx.globalAlpha = 0.8;
+            ctx.fill();
+            ctx.restore();
+            break;
+
+          case "sparkles":
+            p.x += p.speedX;
+            p.y += p.speedY;
+            p.life -= p.decay;
+            if (p.life > 0) {
+              ctx.save();
+              ctx.shadowBlur = 10;
+              ctx.shadowColor = p.color;
+              ctx.globalAlpha = p.life;
+              ctx.fillStyle = p.color;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+              ctx.fill();
+              for (let i = 0; i < 4; i++) {
+                const angle = (i * Math.PI) / 2;
+                const rayLen = p.size * 2 * p.life;
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p.x + Math.cos(angle) * rayLen, p.y + Math.sin(angle) * rayLen);
+                ctx.strokeStyle = p.color;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+              }
+              ctx.restore();
+            }
+            if (p.life <= 0) {
+              particles[index] = createParticle();
+            }
             break;
 
           case "stars":

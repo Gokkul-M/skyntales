@@ -205,10 +205,6 @@ const HeroSection = () => {
     return () => clearInterval(interval);
   }, [emblaApi]);
 
-  const overlayStyle = activeTheme ? {
-    background: activeTheme.heroGradient || `linear-gradient(135deg, ${activeTheme.colors.overlayColor}${Math.round(activeTheme.colors.overlayOpacity * 255).toString(16).padStart(2, '0')} 0%, ${activeTheme.colors.overlayColor}${Math.round(activeTheme.colors.overlayOpacity * 0.5 * 255).toString(16).padStart(2, '0')} 100%)`,
-  } : {};
-
   return (
     <section className="relative h-screen w-screen overflow-hidden">
       {activeTheme && activeTheme.animation !== "none" && (
@@ -256,10 +252,7 @@ const HeroSection = () => {
                 }}
               />
 
-              <div 
-                className="absolute inset-0 transition-all duration-500"
-                style={activeTheme ? overlayStyle : { backgroundColor: 'rgba(0,0,0,0.3)' }}
-              />
+              <div className="absolute inset-0 bg-black/30" />
 
               {index === selectedIndex && (
                 <div
