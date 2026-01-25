@@ -14,6 +14,13 @@ import { toast } from "@/hooks/use-toast";
 import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
+interface Order {
+  id: string;
+  customerEmail: string;
+  userId?: string;
+  total: number;
+}
+
 interface User {
   id: string;
   displayName: string;
@@ -34,6 +41,7 @@ interface User {
 
 const AdminUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -43,7 +51,7 @@ const AdminUsers = () => {
     const usersRef = collection(db, "users");
     const q = query(usersRef, orderBy("createdAt", "desc"));
     
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribeUsers = onSnapshot(q, (snapshot) => {
       const usersData: User[] = [];
       snapshot.forEach((doc) => {
         const data = doc.data();
@@ -54,8 +62,8 @@ const AdminUsers = () => {
           phone: data.phone,
           createdAt: data.createdAt,
           address: data.address,
-          orderCount: data.orderCount || 0,
-          totalSpent: data.totalSpent || 0,
+          orderCount: 0,
+          totalSpent: 0,
           status: data.status || "Active",
         });
       });
@@ -66,10 +74,41 @@ const AdminUsers = () => {
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    const ordersRef = collection(db, "orders");
+    const unsubscribeOrders = onSnapshot(ordersRef, (snapshot) => {
+      const ordersData: Order[] = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        ordersData.push({
+          id: doc.id,
+          customerEmail: data.customerEmail || data.email || "",
+          userId: data.userId,
+          total: data.total || 0,
+        });
+      });
+      setOrders(ordersData);
+    }, (error) => {
+      console.error("Error fetching orders:", error);
+    });
+
+    return () => {
+      unsubscribeUsers();
+      unsubscribeOrders();
+    };
   }, []);
 
-  const filteredUsers = users.filter((user) => {
+  const usersWithStats = users.map((user) => {
+    const userOrders = orders.filter(
+      (order) => order.customerEmail.toLowerCase() === user.email.toLowerCase() || order.userId === user.id
+    );
+    return {
+      ...user,
+      orderCount: userOrders.length,
+      totalSpent: userOrders.reduce((sum, order) => sum + order.total, 0),
+    };
+  });
+
+  const filteredUsers = usersWithStats.filter((user) => {
     const matchesSearch = user.displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || user.status === statusFilter;
@@ -82,7 +121,7 @@ const AdminUsers = () => {
         ? { ...u, status: u.status === "Active" ? "Suspended" : "Active" } 
         : u
     ));
-    const user = users.find((u) => u.id === userId);
+    const user = usersWithStats.find((u) => u.id === userId);
     toast({ 
       title: "User updated", 
       description: `${user?.displayName} has been ${user?.status === "Active" ? "suspended" : "reactivated"}.` 
@@ -93,9 +132,9 @@ const AdminUsers = () => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
-  const totalUsers = users.length;
-  const activeUsers = users.filter((u) => u.status === "Active").length;
-  const totalRevenue = users.reduce((sum, u) => sum + (u.totalSpent || 0), 0);
+  const totalUsers = usersWithStats.length;
+  const activeUsers = usersWithStats.filter((u) => u.status === "Active").length;
+  const totalRevenue = usersWithStats.reduce((sum, u) => sum + (u.totalSpent || 0), 0);
 
   if (loading) {
     return (
