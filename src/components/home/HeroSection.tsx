@@ -261,21 +261,31 @@ const HeroSection = () => {
                 >
                   <div className="max-w-md animate-hero-text">
                     <h1 className="mb-6">
-                      <span className="block text-[clamp(3rem,10vw,6.5rem)] font-heading text-white leading-none">
+                      <span 
+                        className="block text-[clamp(3rem,10vw,6.5rem)] font-heading leading-none"
+                        style={{ color: activeTheme?.colors?.textColor || '#ffffff' }}
+                      >
                         {slide.title[0]}
                       </span>
-                      <span className="block text-[clamp(3rem,10vw,6.5rem)] font-heading italic text-white/80 leading-none">
+                      <span 
+                        className="block text-[clamp(3rem,10vw,6.5rem)] font-heading italic leading-none"
+                        style={{ color: activeTheme?.colors?.textColor ? `${activeTheme.colors.textColor}cc` : 'rgba(255,255,255,0.8)' }}
+                      >
                         {slide.title[1]}
                       </span>
                     </h1>
 
-                    <p className="text-base md:text-lg text-white/90 mb-10 max-w-sm leading-relaxed">
+                    <p 
+                      className="text-base md:text-lg mb-10 max-w-sm leading-relaxed"
+                      style={{ color: activeTheme?.colors?.textColor ? `${activeTheme.colors.textColor}e6` : 'rgba(255,255,255,0.9)' }}
+                    >
                       {slide.description}
                     </p>
 
                     <Link
                       to="/shop"
-                      className="inline-block text-sm text-white font-medium underline underline-offset-4 hover:text-[#d4c4b5] transition"
+                      className="inline-block text-sm font-medium underline underline-offset-4 hover:opacity-80 transition"
+                      style={{ color: activeTheme?.colors?.textColor || '#ffffff' }}
                       data-testid="link-shop-now"
                     >
                       Shop Now
@@ -334,21 +344,27 @@ const HeroSection = () => {
       <button
         onClick={scrollPrev}
         className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 
-        bg-white/30 backdrop-blur-xl rounded-full flex items-center justify-center 
-        hover:bg-white/50 hover:scale-110 transition-all duration-300 shadow-lg z-30"
+        backdrop-blur-xl rounded-full flex items-center justify-center 
+        hover:scale-110 transition-all duration-300 shadow-lg z-30"
+        style={{ 
+          backgroundColor: activeTheme?.colors?.textColor ? `${activeTheme.colors.textColor}4d` : 'rgba(255,255,255,0.3)',
+        }}
         data-testid="button-hero-prev"
       >
-        <ChevronLeft className="h-6 w-6 text-white" />
+        <ChevronLeft className="h-6 w-6" style={{ color: activeTheme?.colors?.textColor || '#ffffff' }} />
       </button>
 
       <button
         onClick={scrollNext}
         className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 
-        bg-white/30 backdrop-blur-xl rounded-full flex items-center justify-center 
-        hover:bg-white/50 hover:scale-110 transition-all duration-300 shadow-lg z-30"
+        backdrop-blur-xl rounded-full flex items-center justify-center 
+        hover:scale-110 transition-all duration-300 shadow-lg z-30"
+        style={{ 
+          backgroundColor: activeTheme?.colors?.textColor ? `${activeTheme.colors.textColor}4d` : 'rgba(255,255,255,0.3)',
+        }}
         data-testid="button-hero-next"
       >
-        <ChevronRight className="h-6 w-6 text-white" />
+        <ChevronRight className="h-6 w-6" style={{ color: activeTheme?.colors?.textColor || '#ffffff' }} />
       </button>
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-x-3 z-30">
@@ -356,11 +372,14 @@ const HeroSection = () => {
           <button
             key={index}
             onClick={() => scrollTo(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              selectedIndex === index
-                ? "bg-white scale-125 shadow-md"
-                : "bg-white/40 hover:bg-white/70"
-            }`}
+            className="w-3 h-3 rounded-full transition-all duration-300"
+            style={{
+              backgroundColor: selectedIndex === index 
+                ? (activeTheme?.colors?.textColor || '#ffffff')
+                : (activeTheme?.colors?.textColor ? `${activeTheme.colors.textColor}66` : 'rgba(255,255,255,0.4)'),
+              transform: selectedIndex === index ? 'scale(1.25)' : 'scale(1)',
+              boxShadow: selectedIndex === index ? '0 2px 4px rgba(0,0,0,0.2)' : 'none'
+            }}
             data-testid={`button-dot-${index}`}
           />
         ))}
