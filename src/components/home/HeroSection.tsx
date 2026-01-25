@@ -4,6 +4,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { collection, query, onSnapshot, doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { useTheme } from "@/contexts/ThemeContext";
+import ThemeAnimations from "@/components/animations/ThemeAnimations";
 
 import {
   Popover,
@@ -82,6 +84,7 @@ const HeroSection = () => {
   const [slides, setSlides] = useState<SlideData[]>(defaultSlides);
   const [loading, setLoading] = useState(true);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const { activeTheme } = useTheme();
 
   useEffect(() => {
     const featuredRef = collection(db, "featuredProducts");
@@ -202,8 +205,31 @@ const HeroSection = () => {
     return () => clearInterval(interval);
   }, [emblaApi]);
 
+  const overlayStyle = activeTheme ? {
+    background: activeTheme.heroGradient || `linear-gradient(135deg, ${activeTheme.colors.overlayColor}${Math.round(activeTheme.colors.overlayOpacity * 255).toString(16).padStart(2, '0')} 0%, ${activeTheme.colors.overlayColor}${Math.round(activeTheme.colors.overlayOpacity * 0.5 * 255).toString(16).padStart(2, '0')} 100%)`,
+  } : {};
+
   return (
     <section className="relative h-screen w-screen overflow-hidden">
+      {activeTheme && activeTheme.animation !== "none" && (
+        <ThemeAnimations 
+          type={activeTheme.animation as any} 
+          color={activeTheme.colors.primary} 
+        />
+      )}
+      
+      {activeTheme?.bannerText && (
+        <div 
+          className="absolute top-0 left-0 right-0 z-40 py-2 px-4 text-center text-sm font-medium"
+          style={{ 
+            backgroundColor: activeTheme.colors.primary,
+            color: activeTheme.colors.textColor 
+          }}
+        >
+          {activeTheme.bannerText}
+        </div>
+      )}
+      
       <div ref={emblaRef} className="h-screen w-screen overflow-hidden">
         <div className="flex h-screen w-screen">
           {slides.map((slide, index) => (
@@ -230,7 +256,10 @@ const HeroSection = () => {
                 }}
               />
 
-              <div className="absolute inset-0 bg-black/30" />
+              <div 
+                className="absolute inset-0 transition-all duration-500"
+                style={activeTheme ? overlayStyle : { backgroundColor: 'rgba(0,0,0,0.3)' }}
+              />
 
               {index === selectedIndex && (
                 <div

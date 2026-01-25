@@ -15,7 +15,8 @@ import {
   Megaphone,
   FileText,
   Instagram,
-  Send
+  Send,
+  Palette
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,7 @@ const menuItems = [
   { icon: Package, label: "Products", href: "/admin/products" },
   { icon: FolderOpen, label: "Collections", href: "/admin/collections" },
   { icon: Sparkles, label: "Featured", href: "/admin/featured" },
+  { icon: Palette, label: "Themes", href: "/admin/themes" },
   { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
   { icon: Users, label: "Users", href: "/admin/users" },
   { icon: Mail, label: "Contact", href: "/admin/contact" },

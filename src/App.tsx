@@ -38,12 +38,15 @@ import AdminCollections from "./pages/admin/AdminCollections";
 import AdminFeaturedProducts from "./pages/admin/AdminFeaturedProducts";
 import CustomCursor from "./components/ui/CustomCursor";
 import { CollectionsProvider } from "@/contexts/CollectionsContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import AdminThemes from "./pages/admin/AdminThemes";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
+      <ThemeProvider>
       <CollectionsProvider>
         <CartProvider>
           <WishlistProvider>
@@ -82,6 +85,7 @@ const App = () => (
                 <Route path="/admin/ads" element={<AdminAds />} />
                 <Route path="/admin/blogs" element={<AdminBlogs />} />
                 <Route path="/admin/instagram" element={<AdminInstagram />} />
+                <Route path="/admin/themes" element={<AdminThemes />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
@@ -89,6 +93,7 @@ const App = () => (
           </WishlistProvider>
         </CartProvider>
       </CollectionsProvider>
+      </ThemeProvider>
     </AuthProvider>
   </QueryClientProvider>
 );
